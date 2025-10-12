@@ -1,4 +1,4 @@
-# 🏬 retail-vendor-insightss
+# 🏬 Retail-vendor-insights
 > 📊 **Data-driven retail-vendor-insights and Analysis**
 > Analyze sales, profitability, and inventory efficiency across vendors using **Python, SQL, and statistical modeling**.
 >

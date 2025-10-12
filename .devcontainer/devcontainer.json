@@ -4,7 +4,7 @@
     "docker-compose-k8s.yml"
   ],
   "service": "rsm-msba",
-  "workspaceFolder": "/home/jovyan/MSBA/Quarters/Fall_2025_QRTR/453_Business_Analytics/Assignments/Assignment2/Insurance_fraud",
+  "workspaceFolder": "/home/jovyan/MSBA/02_PROJECTS/vendor_performance",
   "remoteUser": "jovyan",
   "overrideCommand": false,
   "shutdownAction": "none",
