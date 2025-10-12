@@ -10,9 +10,34 @@
 >
 > 💡 *Actionable insights for optimizing pricing, vendor strategy, and profit growth.*
 
+### ✨ Skills Demonstrated
+
+- **Data Engineering (PostgreSQL + SQLAlchemy):** Designed a multi-layer data pipeline (raw → staging → mart), performed schema validation, deduplication, and optimized joins across 15M+ rows for analytical modeling.
+- **Data Analysis (Python | Pandas | NumPy | SciPy):** Conducted in-depth exploratory analysis, derived profitability and efficiency KPIs, and executed statistical tests (confidence intervals, t-tests) to validate hypotheses.
+- **Data Visualization (Matplotlib | Seaborn):** Built visual dashboards for sales trends, vendor performance distribution, and inventory turnover; used clear, publication-ready visuals to communicate insights.
+- **Business Analytics:** Segmented vendors by profitability and sales efficiency, quantified procurement dependency, and modeled inventory turnover to identify high-margin opportunities and supply risks.
+- **Automated Reporting (Quarto):** Developed reproducible, publication-grade reports integrating SQL queries, Python analysis, and visual storytelling for decision-ready insights.
+
+
 ### 📊 Overview
 This project analyzes retail- vendor performance data to uncover insights about **sales efficiency, pricing strategies, profit margins, and inventory management**.
 It combines **data engineering, exploratory analysis, and statistical inference** to support business decisions on vendor optimization.
+
+### 🧮 Data Overview
+
+The dataset integrates transactional records from multiple retail systems, totaling over **15 million rows** across 6 tables.
+Each table captures a distinct aspect of vendor operations:
+
+| Table | Description | Key Columns |
+|:--|:--|:--|
+| `sales` | Individual sales transactions | `vendor_number`, `brand`, `quantity_sold`, `sales_amount` |
+| `purchases` | Purchase orders and receipts | `vendor_number`, `brand`, `quantity_purchased`, `unit_cost` |
+| `purchase_prices` | Vendor pricing by SKU | `vendor_number`, `brand`, `effective_date`, `unit_price` |
+| `begin_inventory` / `end_inventory` | Inventory balances at start/end of period | `brand`, `quantity`, `inventory_value` |
+| `vendor_invoice` | Payment and invoice details | `vendor_number`, `invoice_id`, `amount_due` |
+
+A lightweight subset of sample data (`data/sample_*.csv`) is provided for demonstration and reproducibility.
+Full raw data is excluded due to size constraints.
 
 ### 🧱 Data Pipeline
 
