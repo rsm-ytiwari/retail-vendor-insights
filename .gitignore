@@ -12,3 +12,5 @@ data/purchases.csv
 data/sales.csv
 data/*.csv
 !data/sample_*.csv
+
+/.quarto/

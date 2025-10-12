@@ -1,6 +1,6 @@
 ## 🧭 Project Overview
 
-This report analyzes **vendor performance** by examining sales, pricing, and purchasing patterns across multiple brands and suppliers.
+This report analyzes **retail-vendor performance** by examining sales, pricing, and purchasing patterns across multiple brands and suppliers.
 The goal is to identify key insights that can inform better **vendor management** and **pricing strategies**.
 
 
@@ -1274,4 +1274,3 @@ The difference in profit margins between top and low-performing vendors is **sta
 > *Passionate about blending analytical rigor with creative problem-solving.*
 
 ---
-

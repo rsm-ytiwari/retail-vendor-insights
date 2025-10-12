@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>vendor_performance_analysis</title>
+<title>retail-vendor-performance-analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -58,17 +58,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="06_vendor_performance_analysis_files/libs/clipboard/clipboard.min.js"></script>
-<script src="06_vendor_performance_analysis_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="06_vendor_performance_analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="06_vendor_performance_analysis_files/libs/quarto-html/popper.min.js"></script>
-<script src="06_vendor_performance_analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="06_vendor_performance_analysis_files/libs/quarto-html/anchor.min.js"></script>
-<link href="06_vendor_performance_analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="06_vendor_performance_analysis_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="06_vendor_performance_analysis_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="06_vendor_performance_analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="06_vendor_performance_analysis_files/libs/bootstrap/bootstrap-0b6f55a02c0e84a1b4f13bcc2a2cd5dc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="06_retail-vendor-performance-Analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="06_retail-vendor-performance-Analysis_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="06_retail-vendor-performance-Analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="06_retail-vendor-performance-Analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="06_retail-vendor-performance-Analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="06_retail-vendor-performance-Analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="06_retail-vendor-performance-Analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="06_retail-vendor-performance-Analysis_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="06_retail-vendor-performance-Analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="06_retail-vendor-performance-Analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="06_retail-vendor-performance-Analysis_files/libs/bootstrap/bootstrap-0b6f55a02c0e84a1b4f13bcc2a2cd5dc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -189,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This report analyzes <strong>vendor performance</strong> by examining sales, pricing, and purchasing patterns across multiple brands and suppliers. The goal is to identify key insights that can inform better <strong>vendor management</strong> and <strong>pricing strategies</strong>.</p>
+<p>This report analyzes <strong>retail-vendor performance</strong> by examining sales, pricing, and purchasing patterns across multiple brands and suppliers. The goal is to identify key insights that can inform better <strong>vendor management</strong> and <strong>pricing strategies</strong>.</p>
 <section id="executive-summary-and-key-recommendations" class="level2">
 <h2 class="anchored" data-anchor-id="executive-summary-and-key-recommendations">🧾 Executive Summary and Key Recommendations</h2>
 <section id="project-overview" class="level3">
@@ -231,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="environment-setup" class="level2">
 <h2 class="anchored" data-anchor-id="environment-setup">⚙️ Environment Setup</h2>
 <p>We begin by importing the required Python libraries for data manipulation, statistical analysis, and visualization.</p>
-<div id="35d344ff" class="cell" data-execution_count="1">
+<div id="b287cc1a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -252,7 +252,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Explanation:</strong> - <code>.env</code> variables keep credentials secure and prevent hardcoding sensitive information. - The connection string uses <code>sqlalchemy</code> and <code>psycopg2</code> to create a PostgreSQL engine. - Data is extracted from the table <code>mart.vendor_sales_summary</code>, which contains vendor-level sales details.</p>
 <section id="preview-of-the-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="preview-of-the-dataset">🔍 Preview of the Dataset</h3>
-<div id="fbf34167" class="cell" data-execution_count="2">
+<div id="30a70c97" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># creating database connection</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dotenv <span class="im">import</span> load_dotenv</span>
@@ -271,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.read_sql_query(<span class="st">"select * from mart.vendor_sales_summary"</span>, engine)</span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="212">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
@@ -475,12 +475,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The table below summarizes key descriptive statistics for all numeric and categorical variables in the dataset. This helps identify missing values, detect potential outliers, and understand central tendencies and variability.</p>
 <p><strong>Key Insights from Summary Statistics:</strong> - The dataset contains <strong>10,692 records</strong>, representing multiple vendors and brands across a wide range of products. - <code>vendor_name</code> has <strong>128 unique vendors</strong>, while <code>brand</code> shows <strong>over 10,600 unique entries</strong>, suggesting that most brands are tied to specific vendors. - <code>purchase_price</code> (mean ≈ 24.38, max ≈ 5681.81) and <code>actual_price</code> (mean ≈ 35.64, max ≈ 7499.99) show <strong>extreme upper outliers</strong>, possibly reflecting premium or imported items. - <code>profit_margin</code> has a <strong>mean of -15.89</strong> with a very large standard deviation (≈ 447), indicating that several products were sold below cost or with inconsistent pricing. - <code>gross_profit</code> ranges widely (from -52,002 to 1,290,667), confirming the presence of both profitable and loss-making transactions. - The <code>sales_to_purchase_ratio</code> varies dramatically (mean ≈ 2.55, max ≈ 352.9), showing substantial disparities in how efficiently vendors convert purchases into sales. - <code>stock_turnover</code> values are generally low (median ≈ 0.98), suggesting <strong>slow-moving inventory</strong> for many vendors, with a few outliers that exhibit rapid turnover. - Columns like <code>total_sales_dollars</code> and <code>total_purchase_dollars</code> have high variance, reflecting <strong>significant differences in vendor scale</strong> — some vendors dominate sales volume, while others operate in niche segments.</p>
 <p><strong>Data Quality Observations:</strong> - A few metrics (e.g., <code>total_sales_quantity</code>, <code>gross_profit</code>, <code>profit_margin</code>) have slightly fewer observations than total rows, indicating <strong>missing data</strong> in certain vendor entries. - Large standard deviations across most numeric columns highlight potential <strong>skewness and heavy-tailed distributions</strong>, which will require transformation or outlier handling.</p>
-<div id="0076ccc4" class="cell" data-execution_count="3">
+<div id="2dfb103e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pd.read_sql_query(<span class="st">"select * from mart.vendor_sales_summary"</span>, engine)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary statistics.</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df.describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="213">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
@@ -677,7 +677,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The histograms below visualize the distribution of all numeric columns in the dataset. These plots reveal important characteristics of the data such as skewness, outliers, and concentration ranges.</p>
 <p><strong>Observations:</strong> - Most numerical variables are <strong>right-skewed</strong>, indicating a small number of vendors with extremely high values. - Metrics like <code>total_sales_dollars</code> and <code>gross_profit</code> show heavy tails, consistent with a few dominant vendors driving the majority of sales. - The <code>profit_margin</code> distribution contains negative values, suggesting some transactions may have been made at a loss or under promotional discounts. - Continuous variables such as <code>freight_cost</code> and <code>stock_turnover</code> show more varied patterns, warranting further analysis in subsequent sections.</p>
 <hr>
-<div id="0734841e" class="cell" data-execution_count="4">
+<div id="3c5617ca" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>numerical_cols<span class="op">=</span>df.select_dtypes(include<span class="op">=</span>np.number).columns</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">10</span>))</span>
@@ -690,13 +690,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>to see what are the outliers we are going to use box plots.</p>
-<div id="16262774" class="cell" data-execution_count="5">
+<div id="e6c10dda" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">10</span>))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(numerical_cols):</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">4</span>,<span class="dv">4</span>,i<span class="op">+</span><span class="dv">1</span>)</span>
@@ -707,7 +707,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -745,7 +745,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We retained only those records that met the following conditions: - <code>gross_profit</code> &gt; 0 — ensures that only profitable or valid transactions are included. - <code>profit_margin</code> &gt; 0 — removes loss-making or invalid entries. - <code>total_sales_quantity</code> &gt; 0 — excludes records without actual sales activity.</p>
 <p>After applying these filters, the dataset reduced from <strong>10,692 to 8,564 records</strong>, removing approximately <strong>20% of invalid or incomplete entries</strong>.</p>
 <hr>
-<div id="70017bfe" class="cell" data-execution_count="6">
+<div id="7cb1eb58" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#filtering out the data by removing inconsistencies.</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span> pd.read_sql_query(<span class="st">"""</span></span>
@@ -757,7 +757,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>, engine)</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="216">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
 
@@ -1031,7 +1031,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Key Observations:</strong> - The <code>profit_margin</code> distribution now centers around <strong>25%–40%</strong>, reflecting a more realistic profitability range. - <code>gross_profit</code> and <code>total_sales_price</code> remain right-skewed, indicating that a few large vendors still dominate total earnings — a normal characteristic of vendor sales data. - The overall spread of cost-related variables such as <code>freight_cost</code> has narrowed, confirming that most invalid or anomalous cost records were successfully removed. - Metrics such as <code>stock_turnover</code> and <code>sales_to_purchase_ratio</code> continue to exhibit long tails, showing operational variability among vendors that will be explored further.</p>
 <hr>
 <p><strong>Conclusion:</strong> This cleaning step ensures that subsequent analyses focus on <strong>valid, profit-generating vendor transactions</strong>, reducing bias from incorrect or incomplete data. The resulting dataset is now consistent, reliable, and ready for <strong>comparative performance analysis</strong> across vendors and brands.</p>
-<div id="b9810f0b" class="cell" data-execution_count="7">
+<div id="2eef8261" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">10</span>))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(numerical_cols):</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">4</span>,<span class="dv">4</span>,i<span class="op">+</span><span class="dv">1</span>) <span class="co">#Adjust grid layout as needed</span></span>
@@ -1042,7 +1042,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1056,7 +1056,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="top-vendors-and-products" class="level3">
 <h3 class="anchored" data-anchor-id="top-vendors-and-products">📊 Top Vendors and Products</h3>
 <p>The charts below display the <strong>top 10 vendors</strong> and <strong>top 10 products</strong> based on record frequency.</p>
-<div id="74b86ac0" class="cell" data-execution_count="8">
+<div id="b1ed93d5" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>categorical_cols<span class="op">=</span> [<span class="st">'vendor_name'</span>, <span class="st">'description'</span>]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
@@ -1070,7 +1070,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1083,7 +1083,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="correlation-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="correlation-analysis">🔗 Correlation Analysis</h2>
 <p>To examine how numerical variables relate to one another, we computed the <strong>correlation matrix</strong> and visualized it using a heatmap.</p>
-<div id="b9f596d8" class="cell" data-execution_count="9">
+<div id="39e42d5a" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#correlational heatmap</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>correlation_matrix<span class="op">=</span>df[numerical_cols].corr()</span>
@@ -1093,7 +1093,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1119,14 +1119,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="step-1-brand-level-aggregation" class="level3">
 <h3 class="anchored" data-anchor-id="step-1-brand-level-aggregation">Step 1 — Brand-level aggregation</h3>
 <p><em>(Runs the first code block: build <code>brand_performance</code> with <code>total_sales_dollars</code> and mean <code>profit_margin</code>.)</em></p>
-<div id="e132b649" class="cell" data-execution_count="10">
+<div id="2312bbb4" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>brand_performance<span class="op">=</span>df.groupby(<span class="st">'description'</span>).agg({</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'total_sales_dollars'</span>:<span class="st">'sum'</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'profit_margin'</span>: <span class="st">'mean'</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>}).reset_index()</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>brand_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="220">
+<div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 
 
@@ -1217,7 +1217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="step-2-thresholds" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-thresholds">Step 2 — Thresholds</h3>
 <p><em>(Runs the second code block: compute the 15th-percentile sales and 85th-percentile margin thresholds.)</em> These create objective cutoffs for “low sales” and “high margin.”</p>
-<div id="ba382707" class="cell" data-execution_count="11">
+<div id="4d20205b" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>low_sales_threshold<span class="op">=</span>brand_performance[<span class="st">'total_sales_dollars'</span>].quantile(<span class="fl">0.15</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>high_margin_threshold<span class="op">=</span>brand_performance[<span class="st">'profit_margin'</span>].quantile(<span class="fl">0.85</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1230,7 +1230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="step-3-target-list" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-target-list">Step 3 — Target list</h3>
 <p><em>(Runs the third code block: filter into <code>target_brands</code> and display the table, sorted by sales.)</em> <strong>Interpretation:</strong> Brands listed here are <strong>high-margin underperformers</strong> — strong candidates for <strong>awareness campaigns</strong>, <strong>bundling</strong>, <strong>shelf placement</strong>, or <strong>price testing</strong>.</p>
-<div id="c3943a1c" class="cell" data-execution_count="12">
+<div id="69c78492" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filter brand with low sales but high performance margins.</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>target_brands<span class="op">=</span> brand_performance[</span>
@@ -1334,7 +1334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="step-4-scatter-plot-all-brands" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-scatter-plot-all-brands">Step 4 — Scatter plot (all brands)</h3>
 <p><em>(Runs the fourth code block: scatter of <code>total_sales_dollars</code> vs.&nbsp;<code>profit_margin</code>, with thresholds and highlighted targets.)</em> <strong>Read the chart:</strong> - <strong>Upper-left quadrant</strong> = <strong>low sales / high margin</strong> → <strong>focus</strong>. - <strong>Lower-right</strong> = high sales / low margin → margin recovery opportunities (outside this analysis’ scope).</p>
-<div id="1863eacb" class="cell" data-execution_count="13">
+<div id="285312e6" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(data<span class="op">=</span>brand_performance, x<span class="op">=</span><span class="st">'total_sales_dollars'</span>, y<span class="op">=</span><span class="st">'profit_margin'</span>, color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'All brands'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
@@ -1352,7 +1352,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1362,7 +1362,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="step-5-zoomed-view-mitigate-outliers">Step 5 — Zoomed view (mitigate outliers)</h3>
 <p><em>(Runs the fifth code block: re-plot after subsetting brands with <code>total_sales_dollars</code> &lt; <strong>8,000</strong>.)</em> This makes <strong>low-revenue, high-margin brands</strong> easier to spot visually.</p>
 <hr>
-<div id="85ba6a9b" class="cell" data-execution_count="14">
+<div id="c8d68005" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>brand_performance_segment<span class="op">=</span> brand_performance[brand_performance[<span class="st">'total_sales_dollars'</span>]<span class="op">&lt;</span><span class="dv">8000</span>]</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
@@ -1382,7 +1382,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1404,11 +1404,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="analysis-2-top-vendors-and-brands-by-sales" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-2-top-vendors-and-brands-by-sales">💰 Analysis 2 — Top Vendors and Brands by Sales</h2>
 <p><strong>Business Objective:</strong> Identify which vendors and brands generate the <strong>highest total sales</strong> to highlight key revenue drivers.</p>
-<div id="604e9d16" class="cell" data-execution_count="15">
+<div id="d5269242" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>top_vendors<span class="op">=</span> df.groupby(<span class="st">"vendor_name"</span>)[<span class="st">"total_sales_dollars"</span>].<span class="bu">sum</span>().nlargest(<span class="dv">10</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>top_brands<span class="op">=</span> df.groupby(<span class="st">"description"</span>)[<span class="st">"total_sales_dollars"</span>].<span class="bu">sum</span>().nlargest(<span class="dv">10</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>top_vendors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="225">
+<div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>vendor_name
 DIAGEO NORTH AMERICA INC      67990099.42
 MARTIGNETTI COMPANIES         39330359.36
@@ -1430,7 +1430,7 @@ Name: total_sales_dollars, dtype: float64</code></pre>
 <p><strong>Top Vendors (by total sales):</strong> - <strong>DIAGEO NORTH AMERICA INC</strong> leads with approximately <strong>$67.99M</strong>, far exceeding other distributors. - <strong>MARTIGNETTI COMPANIES</strong> and <strong>PERNOD RICARD USA</strong> follow with <strong>$39.33M</strong> and <strong>$32.06M</strong>, respectively. - The top five vendors collectively contribute a major share of overall revenue, showing strong concentration in a few market leaders.</p>
 <p><strong>Top Brands (by total sales):</strong> - <strong>Jack Daniels No 7 Black</strong> tops the list at <strong>$7.96M</strong>, closely followed by <strong>Tito’s Handmade Vodka</strong> (<strong>$7.40M</strong>) and <strong>Grey Goose Vodka</strong> (<strong>$7.21M</strong>). - Well-known premium spirits dominate the top 10 list, emphasizing <strong>brand recognition and consumer loyalty</strong> as key performance drivers.</p>
 <hr>
-<div id="f157a376" class="cell" data-execution_count="16">
+<div id="1b32bb7f" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> format_dollars(value):</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> value <span class="op">&gt;=</span> <span class="dv">1_000_000</span>:</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>value<span class="op">/</span><span class="dv">1_000_000</span><span class="sc">:.2f}</span><span class="ss">M"</span></span>
@@ -1439,9 +1439,9 @@ Name: total_sales_dollars, dtype: float64</code></pre>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">str</span>(value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="f6f79bcb" class="cell" data-execution_count="17">
+<div id="f6b079be" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>top_brands.<span class="bu">apply</span>(<span class="kw">lambda</span> x: format_dollars(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="227">
+<div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>description
 Jack Daniels No 7 Black    7.96M
 Tito's Handmade Vodka      7.40M
@@ -1456,7 +1456,7 @@ Tanqueray                  3.46M
 Name: total_sales_dollars, dtype: object</code></pre>
 </div>
 </div>
-<div id="6e085d10" class="cell" data-execution_count="18">
+<div id="c1a04288" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">5</span>))</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot for top vendors</span></span>
@@ -1486,7 +1486,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1510,7 +1510,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <h3 class="anchored" data-anchor-id="overview">📊 Overview</h3>
 <p>The dataset was grouped by <code>vendor_name</code> to calculate: - Total <strong>purchase dollars</strong>, <strong>sales dollars</strong>, and <strong>gross profit</strong> per vendor. - Each vendor’s <strong>purchase contribution percentage</strong> (share of total purchases). - The <strong>cumulative contribution</strong> to visualize top contributors via a Pareto chart.</p>
 <hr>
-<div id="9a53b76e" class="cell" data-execution_count="19">
+<div id="e43448cb" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>vendor_performance<span class="op">=</span> df.groupby(<span class="st">'vendor_name'</span>).agg({</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'total_purchase_dollars'</span>: <span class="st">'sum'</span>,</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'gross_profit'</span>: <span class="st">'sum'</span>,</span>
@@ -1518,7 +1518,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>}).reset_index()</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>vendor_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="229">
+<div class="cell-output cell-output-display" data-execution_count="19">
 <div>
 
 
@@ -1618,20 +1618,20 @@ Name: total_sales_dollars, dtype: object</code></pre>
 </div>
 </div>
 <p>Here, I am adding a new column for purchase contribution</p>
-<div id="18775953" class="cell" data-execution_count="20">
+<div id="3c9aea2d" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>vendor_performance[<span class="st">'purchase_contribution_percentage'</span>]<span class="op">=</span> <span class="dv">100</span><span class="op">*</span>vendor_performance[<span class="st">'total_purchase_dollars'</span>]<span class="op">/</span>vendor_performance[<span class="st">'total_purchase_dollars'</span>].<span class="bu">sum</span>()</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>vendor_performance<span class="op">=</span><span class="bu">round</span>(vendor_performance.sort_values(<span class="st">'purchase_contribution_percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>), <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The Top vendors can be seen the the table below.</p>
-<div id="a34e7707" class="cell" data-execution_count="21">
+<div id="9bf7103f" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>top_vendors<span class="op">=</span>vendor_performance.head(<span class="dv">10</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>top_vendors[<span class="st">'total_sales_dollars'</span>]<span class="op">=</span>top_vendors[<span class="st">'total_sales_dollars'</span>].<span class="bu">apply</span>(format_dollars)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>top_vendors[<span class="st">'total_purchase_dollars'</span>]<span class="op">=</span>top_vendors[<span class="st">'total_purchase_dollars'</span>].<span class="bu">apply</span>(format_dollars)</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>top_vendors[<span class="st">'gross_profit'</span>]<span class="op">=</span>top_vendors[<span class="st">'gross_profit'</span>].<span class="bu">apply</span>(format_dollars)</span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>top_vendors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="231">
+<div class="cell-output cell-output-display" data-execution_count="21">
 <div>
 
 
@@ -1733,10 +1733,10 @@ Name: total_sales_dollars, dtype: object</code></pre>
 </div>
 </div>
 </div>
-<div id="e7bb3483" class="cell" data-execution_count="22">
+<div id="b02d0663" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>top_vendors[<span class="st">'cumulative_contribution_percentage'</span>]<span class="op">=</span>top_vendors[<span class="st">'purchase_contribution_percentage'</span>].cumsum()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="14515042" class="cell" data-execution_count="23">
+<div id="a08e0209" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the figure and primary axis</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>fig, ax1 <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1779,7 +1779,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-24-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-24-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1816,7 +1816,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <section id="question-1-how-much-of-total-procurement-depends-on-top-vendors" class="level3">
 <h3 class="anchored" data-anchor-id="question-1-how-much-of-total-procurement-depends-on-top-vendors">Question 1 — How much of total procurement depends on top vendors?</h3>
 <p>The <strong>top 10 vendors</strong> collectively account for <strong>65.69% of total purchases</strong>, as shown below. This indicates a strong dependency on a small number of suppliers.</p>
-<div id="a7da4dbb" class="cell" data-execution_count="24">
+<div id="ebbf9907" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>total_contribution <span class="op">=</span> <span class="bu">round</span>(top_vendors[<span class="st">'purchase_contribution_percentage'</span>].<span class="bu">sum</span>(), <span class="dv">2</span>)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total Purchase Contribution of top 10 vendors is </span><span class="sc">{</span>total_contribution<span class="sc">}</span><span class="ss"> %"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1825,7 +1825,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 </div>
 <p><strong>Key Insights:</strong> - Procurement is <strong>highly concentrated</strong>, with <strong>DIAGEO NORTH AMERICA INC</strong> alone contributing over <strong>16%</strong> of total purchases. - The <strong>donut chart</strong> clearly shows that nearly <strong>two-thirds</strong> of all purchase dollars flow through these top vendors. - Such dependence increases both <strong>bargaining leverage</strong> (for discounts) and <strong>risk exposure</strong> (in case of supply disruption).</p>
 <p><strong>Business Implication:</strong> Strategic diversification could reduce procurement risk while maintaining favorable pricing relationships with key suppliers.</p>
-<div id="4f30f4a2" class="cell" data-execution_count="25">
+<div id="6c87e1cd" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.colors <span class="im">as</span> mcolors</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1912,7 +1912,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-26-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-26-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1921,14 +1921,14 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <section id="question-2-does-purchasing-in-bulk-reduce-the-unit-price" class="level3">
 <h3 class="anchored" data-anchor-id="question-2-does-purchasing-in-bulk-reduce-the-unit-price">Question 2 — Does purchasing in bulk reduce the unit price?</h3>
 <p>To evaluate the <strong>impact of order size on unit purchase price</strong>, purchases were grouped into <strong>Small</strong>, <strong>Medium</strong>, and <strong>Large</strong> quantile-based categories.</p>
-<div id="bc6b8c51" class="cell" data-execution_count="26">
+<div id="c6d1e2aa" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'unit_purchase_price'</span>]<span class="op">=</span>df[<span class="st">'total_purchase_dollars'</span>]<span class="op">/</span>df[<span class="st">'total_purchase_quantity'</span>]</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#creating 3 equal quantile buckets.</span></span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'order_size'</span>]<span class="op">=</span> pd.qcut(df[<span class="st">'total_purchase_quantity'</span>], q<span class="op">=</span><span class="dv">3</span>, labels<span class="op">=</span>[<span class="st">"Small"</span>, <span class="st">"Medium"</span>, <span class="st">"Large"</span>])</span>
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">'order_size'</span>, <span class="st">'total_purchase_quantity'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="236">
+<div class="cell-output cell-output-display" data-execution_count="26">
 <div>
 
 
@@ -2004,7 +2004,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 </div>
 </div>
 <p>calculating mean for each category</p>
-<div id="56b6a537" class="cell" data-execution_count="27">
+<div id="ef2f5a35" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'order_size'</span>)[[<span class="st">'unit_purchase_price'</span>]].mean()</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
@@ -2016,7 +2016,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -2035,9 +2035,9 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <p><strong>Lowest Turnover Vendors:</strong> - ALISA CARR BEVERAGES — 0.62 - HIGHLAND WINE MERCHANTS LLC — 0.71 - PARK STREET IMPORTS LLC — 0.75 - DUNN WINE BROKERS — 0.77 - TAMWORTH DISTILLING — 0.80</p>
 <p><strong>Interpretation:</strong> A stock turnover below 1 means these vendors sell their entire inventory <strong>less than once per year</strong>, leading to excess holding costs and reduced liquidity.</p>
 <hr>
-<div id="d2092633" class="cell" data-execution_count="28">
+<div id="17467bd1" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df[df[<span class="st">'stock_turnover'</span>]<span class="op">&lt;</span><span class="dv">1</span>].groupby(<span class="st">'vendor_name'</span>)[[<span class="st">'stock_turnover'</span>]].mean().sort_values(<span class="st">'stock_turnover'</span>, ascending<span class="op">=</span><span class="va">True</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="238">
+<div class="cell-output cell-output-display" data-execution_count="28">
 <div>
 
 
@@ -2106,14 +2106,14 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <p>Across all vendors, the <strong>total unsold capital</strong> amounts to approximately <strong>$2.71M</strong>, representing the value of stock purchased but not yet sold.</p>
 <p><strong>Top Vendors by Unsold Capital:</strong> - DIAGEO NORTH AMERICA INC — <strong>$722K</strong> - JIM BEAM BRANDS COMPANY — <strong>$555K</strong> - PERNOD RICARD USA — <strong>$471K</strong> - WILLIAM GRANT &amp; SONS INC — <strong>$402K</strong> - E &amp; J GALLO WINERY — <strong>$228K</strong></p>
 <hr>
-<div id="819daf84" class="cell" data-execution_count="29">
+<div id="8f65bd6f" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'unsold_inventory_value'</span>]<span class="op">=</span>(df[<span class="st">'total_purchase_quantity'</span>]<span class="op">-</span>df[<span class="st">'total_sales_quantity'</span>])<span class="op">*</span> df[<span class="st">'purchase_price'</span>]</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'total_unsold_capital:'</span>, format_dollars(df[<span class="st">'unsold_inventory_value'</span>].<span class="bu">sum</span>()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>total_unsold_capital: 2.71M</code></pre>
 </div>
 </div>
-<div id="94c53f0a" class="cell" data-execution_count="30">
+<div id="822e4909" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate Capital Locked per Vendor</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>inventory_value_per_vendor <span class="op">=</span> df.groupby(<span class="st">"vendor_name"</span>)[<span class="st">"unsold_inventory_value"</span>].<span class="bu">sum</span>().reset_index()</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -2122,7 +2122,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>inventory_value_per_vendor[<span class="st">'unsold_inventory_value'</span>] <span class="op">=</span> inventory_value_per_vendor[<span class="st">'unsold_inventory_value'</span>].<span class="bu">apply</span>(format_dollars)</span>
 <span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>inventory_value_per_vendor.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="240">
+<div class="cell-output cell-output-display" data-execution_count="30">
 <div>
 
 
@@ -2206,11 +2206,11 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <section id="analysis-6-profit-margin-confidence-intervals-for-top-vs.-low-vendors" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-6-profit-margin-confidence-intervals-for-top-vs.-low-vendors">💹 Analysis 6 — Profit Margin Confidence Intervals for Top vs.&nbsp;Low Vendors</h2>
 <p><strong>Business Objective:</strong> Compare profit margins between <strong>top-performing vendors (high sales)</strong> and <strong>low-performing vendors (low sales)</strong> to understand profitability patterns.</p>
-<div id="eb01720e" class="cell" data-execution_count="31">
+<div id="f5764717" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>top_threshold<span class="op">=</span> df[<span class="st">'total_sales_dollars'</span>].quantile(<span class="fl">0.75</span>)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>low_threshold<span class="op">=</span> df[<span class="st">'total_sales_dollars'</span>].quantile(<span class="fl">0.25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="5dab3250" class="cell" data-execution_count="32">
+<div id="45a4b897" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>top_vendors <span class="op">=</span> df[df[<span class="st">"total_sales_dollars"</span>] <span class="op">&gt;=</span> top_threshold][<span class="st">"profit_margin"</span>].dropna()</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>low_vendors <span class="op">=</span> df[df[<span class="st">"total_sales_dollars"</span>] <span class="op">&lt;=</span> low_threshold][<span class="st">"profit_margin"</span>].dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -2239,7 +2239,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 </tbody>
 </table>
 <hr>
-<div id="c9dba39e" class="cell" data-execution_count="33">
+<div id="dfb92a12" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># to calculate the confidence interval</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> confidence_interval(data, confidence<span class="op">=</span><span class="fl">0.95</span>):</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    mean_val<span class="op">=</span>np.mean(data)</span>
@@ -2248,7 +2248,7 @@ Name: total_sales_dollars, dtype: object</code></pre>
 <span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    margin_of_error<span class="op">=</span> t_critical <span class="op">*</span>std_err</span>
 <span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mean_val, mean_val<span class="op">-</span>margin_of_error, mean_val<span class="op">+</span>margin_of_error</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b48865a3" class="cell" data-execution_count="34">
+<div id="6fe55758" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute confidence intervals for top and low vendors</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>top_mean, top_lower, top_upper <span class="op">=</span> confidence_interval(top_vendors)</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>low_mean, low_lower, low_upper <span class="op">=</span> confidence_interval(low_vendors)</span>
@@ -2286,7 +2286,7 @@ Low Vendors 95% CI: (40.50, 42.64), Mean: 41.57</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06_vendor_performance_analysis_files/figure-html/cell-35-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="06_retail-vendor-performance-Analysis_files/figure-html/cell-35-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -2328,7 +2328,7 @@ Low Vendors 95% CI: (40.50, 42.64), Mean: 41.57</code></pre>
 <h3 class="anchored" data-anchor-id="method">⚙️ Method</h3>
 <p>A <strong>two-sample independent t-test (unequal variances)</strong> was conducted using vendor-level profit margins: - <strong>Top Vendors:</strong> Sales above the 75th percentile - <strong>Low Vendors:</strong> Sales below the 25th percentile</p>
 <hr>
-<div id="666ed1ed" class="cell" data-execution_count="35">
+<div id="3f37b486" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ttest_ind</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define thresholds for top and low vendors (based on quartiles)</span></span>
