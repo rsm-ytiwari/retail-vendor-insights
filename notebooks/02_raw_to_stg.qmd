@@ -1,0 +1,272 @@
+after the importing script all the csv files are in the raw schema but all of the column types are text (we did this to simply bulk adding of files) Now we want to convert /typecast each column, for that we are going to use a repeatable pattern.
+1. We will keep raw.* as-is (ALl Text)
+2. We will creating staging (stg) table/ views to cast /clean with robust rules
+3. We will build mart facts/dims from stg (types are already clean)
+
+```{sql}
+-- Creating Layers
+create schema if not exists stg;
+create schema if not exists mart;
+```
+
+short note on what each patter is going to do
+We are going to be using these patterns to casts text columns into integers, numerics, and dates, halding blanks and bad characters, before using them in analytics models.
+    1. Integers: NULLIF(replace(trim(col), ',', ''), '')::int
+        <!-- NULLIF (..., '') prevents casting blanks to numbers -->
+    2. Money/decimals: NULLIF(regexp_replace(trim(col), '[\$,]', '', 'g'), '')::numeric(12,2)
+        <!-- regexp_replace(...,'[\$]', '') removes $ or commas from currency  -->
+    3. Dates (tries ISO and MM/DD/YYYY):
+    4. COALESCE(
+        to_date(NULLIF(trim(col),''), 'YYYY-MM-DD'),
+        to_date(NULLIF(trim(col),''), 'MM/DD/YYYY')
+        )
+        <!-- This handles multiple date formats  -->
+<!-- -- we drop and recreate staging tables because we want idempotency.
+    1. Idempotent basically means that you can rerun the script multiple times and you will get the same results
+    without drop you will get the error "table already exists"
+    with drop, each run wipes the old version and creates a fresh one.
+    2. This also helps with schema evolution, if we change the column definitions ( like adjusting a cast form int to numeric, the drop ensures that new definition replaces the old one. )
+    3. Staging tables (stg.* ) are usually rebuildable from raw every time. So it is safe and usually expected to wipe and reload them. from mart.* too we might want to rebuild them nightly from stg.
+-->
+
+I am dropping and recreating staging tables so the pipeline is idempotent: re-running it always produces a clean, consistent state, even if upstream data or logic changes. Staging and mart tables are rebuildable from raw, so it's safe to wipe them in each load.
+
+1. stg.begin_inventory
+```{sql}
+drop table if exists stg.begin_inventory;
+create table stg.begin_inventory AS
+SELECT
+  NULLIF(trim(inventoryid),'')::text AS inventory_id,
+  NULLIF(trim(store),'')::text       AS store_code,
+  NULLIF(trim(city),'')::text        AS store_city,
+  NULLIF(trim(brand),'')::text       AS brand,
+  NULLIF(trim(description),'')::text AS description,
+  NULLIF(trim(size),'')::text        AS size,
+  NULLIF(replace(trim(onhand), ',', ''), '')::int AS on_hand_qty,
+  NULLIF(regexp_replace(trim(price), '[\$,]', '', 'g'), '')::numeric(12,2) AS unit_price,
+  COALESCE(
+    to_date(NULLIF(trim(startdate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(startdate),''), 'MM/DD/YYYY')
+  ) AS start_date
+FROM raw.begin_inventory;
+
+
+```
+
+2. stg.end_inventory
+```{sql}
+DROP TABLE IF EXISTS stg.end_inventory;
+CREATE TABLE stg.end_inventory AS
+SELECT
+  NULLIF(trim(inventoryid),'')::text AS inventory_id,
+  NULLIF(trim(store),'')::text       AS store_code,
+  NULLIF(trim(city),'')::text        AS store_city,
+  NULLIF(trim(brand),'')::text       AS brand,
+  NULLIF(trim(description),'')::text AS description,
+  NULLIF(trim(size),'')::text        AS size,
+  NULLIF(replace(trim(onhand), ',', ''), '')::int AS on_hand_qty,
+  NULLIF(regexp_replace(trim(price), '[\$,]', '', 'g'), '')::numeric(12,2) AS unit_price,
+  COALESCE(
+    to_date(NULLIF(trim(enddate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(enddate),''), 'MM/DD/YYYY')
+  ) AS end_date
+FROM raw.end_inventory;
+
+
+
+```
+
+
+3. stg.purchase_inventory
+
+```{sql}
+DROP TABLE IF EXISTS stg.purchase_prices;
+CREATE TABLE stg.purchase_prices AS
+SELECT
+  NULLIF(trim(brand),'')::text        AS brand,
+  NULLIF(trim(description),'')::text  AS description,
+--   NULLIF(replace(trim(volume), ',', ''), '')::numeric(12,2) AS volume,   -- numeric if it's a measure
+--  The above line produces and error ERROR: invalid input syntax for type numeric: "Unknown". This is because our purchases_prices file has at least one row that has "Unknown in a column" that we are trying to typecast into numeric. Postgres doesn't know how to turn "unknown into a number" so it fails to we are giong to use broader "safe cast " using NULLIF+ REGREX in nullif to numeric conversion
+  -- Safe numeric cast for list_price
+  CASE
+    WHEN regexp_replace(trim(price), '[\$,]', '', 'g') ~ '^\d+(\.\d+)?$'
+      THEN regexp_replace(trim(price), '[\$,]', '', 'g')::numeric(12,2)
+    ELSE NULL
+  END AS list_price,
+
+  NULLIF(trim(size),'')::text         AS size,
+
+  -- Safe numeric cast for volume
+  CASE
+    WHEN regexp_replace(trim(volume), '[\$,]', '', 'g') ~ '^\d+(\.\d+)?$'
+      THEN regexp_replace(trim(volume), '[\$,]', '', 'g')::numeric(12,2)
+    ELSE NULL
+  END AS volume,
+
+  NULLIF(trim(classification),'')::text AS classification,
+
+  -- Safe numeric cast for purchase_price
+  CASE
+    WHEN regexp_replace(trim(purchaseprice), '[\$,]', '', 'g') ~ '^\d+(\.\d+)?$'
+      THEN regexp_replace(trim(purchaseprice), '[\$,]', '', 'g')::numeric(12,2)
+    ELSE NULL
+  END AS purchase_price,
+
+  NULLIF(trim(vendornumber),'')::int AS vendor_number,
+  NULLIF(trim(vendorname),'')::text   AS vendor_name
+FROM raw.purchase_prices;
+
+
+
+```
+
+4. stg.purchases
+
+```{sql}
+
+DROP TABLE IF EXISTS stg.purchases;
+CREATE TABLE stg.purchases AS
+SELECT
+  NULLIF(trim(inventoryid),'')::text AS inventory_id,
+  NULLIF(trim(store),'')::text       AS store_code,
+  NULLIF(trim(brand),'')::text       AS brand,
+  NULLIF(trim(description),'')::text AS description,
+  NULLIF(trim(size),'')::text        AS size,
+  NULLIF(trim(vendornumber),'')::int AS vendor_number,
+  NULLIF(trim(vendorname),'')::text   AS vendor_name,
+  NULLIF(trim(ponumber),'')::text     AS po_number,
+  COALESCE(
+    to_date(NULLIF(trim(podate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(podate),''), 'MM/DD/YYYY')
+  ) AS po_date,
+  COALESCE(
+    to_date(NULLIF(trim(receivingdate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(receivingdate),''), 'MM/DD/YYYY')
+  ) AS receiving_date,
+  COALESCE(
+    to_date(NULLIF(trim(invoicedate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(invoicedate),''), 'MM/DD/YYYY')
+  ) AS invoice_date,
+  COALESCE(
+    to_date(NULLIF(trim(paydate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(paydate),''), 'MM/DD/YYYY')
+  ) AS pay_date,
+  NULLIF(regexp_replace(trim(purchaseprice), '[\$,]', '', 'g'), '')::numeric(12,2) AS purchase_price,
+  NULLIF(replace(trim(quantity), ',', ''), '')::int AS quantity,
+  NULLIF(regexp_replace(trim(dollars), '[\$,]', '', 'g'), '')::numeric(12,2) AS dollars,
+  NULLIF(trim(classification),'')::text AS classification
+FROM raw.purchases;
+
+
+```
+
+
+5. stg.sales
+
+```{sql}
+DROP TABLE IF EXISTS stg.sales;
+CREATE TABLE stg.sales AS
+SELECT
+  NULLIF(trim(inventoryid),'')::text AS inventory_id,
+  NULLIF(trim(store),'')::text       AS store_code,
+  NULLIF(trim(brand),'')::text       AS brand,
+  NULLIF(trim(description),'')::text AS description,
+  NULLIF(trim(size),'')::text        AS size,
+  NULLIF(replace(trim(salesquantity), ',', ''), '')::int AS sales_quantity,
+  NULLIF(regexp_replace(trim(salesdollars), '[\$,]', '', 'g'), '')::numeric(12,2) AS sales_dollars,
+  NULLIF(regexp_replace(trim(salesprice),  '[\$,]', '', 'g'), '')::numeric(12,2) AS sales_price,
+  COALESCE(
+    to_date(NULLIF(trim(salesdate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(salesdate),''), 'MM/DD/YYYY')
+  ) AS sales_date,
+  NULLIF(replace(trim(volume), ',', ''), '')::numeric(12,2) AS volume,   -- if it's a measure
+  NULLIF(trim(classification),'')::text AS classification,
+  NULLIF(regexp_replace(trim(excisetax), '[\$,]', '', 'g'), '')::numeric(12,2) AS excise_tax,
+  NULLIF(trim(vendorno),'')::int AS vendor_number,
+  NULLIF(trim(vendorname),'')::text     AS vendor_name
+FROM raw.sales;
+
+
+
+```
+
+
+6. stg.vendor_invoice
+
+```{sql}
+DROP TABLE IF EXISTS stg.vendor_invoice;
+CREATE TABLE stg.vendor_invoice AS
+SELECT
+  NULLIF(trim(vendornumber),'')::int AS vendor_number,
+  NULLIF(trim(vendorname),'')::text   AS vendor_name,
+  COALESCE(
+    to_date(NULLIF(trim(invoicedate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(invoicedate),''), 'MM/DD/YYYY')
+  ) AS invoice_date,
+  NULLIF(trim(ponumber),'')::text     AS po_number,
+  COALESCE(
+    to_date(NULLIF(trim(podate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(podate),''), 'MM/DD/YYYY')
+  ) AS po_date,
+  COALESCE(
+    to_date(NULLIF(trim(paydate),''), 'YYYY-MM-DD'),
+    to_date(NULLIF(trim(paydate),''), 'MM/DD/YYYY')
+  ) AS pay_date,
+  NULLIF(replace(trim(quantity), ',', ''), '')::int AS quantity,
+  NULLIF(regexp_replace(trim(dollars),  '[\$,]', '', 'g'), '')::numeric(12,2) AS dollars,
+  NULLIF(regexp_replace(trim(freight),  '[\$,]', '', 'g'), '')::numeric(12,2) AS freight,
+  NULLIF(trim(approval),'')::text AS approval_status
+FROM raw.vendor_invoice;
+
+
+
+```
+
+
+Now I am going to add lightweight indexes only on join keys and date columns, because those are the most common filter/join fields in analytics queries. this will improve query performance without bloating storage or slowing insersts too much.
+    <!-- Index is a dta structure( like a sorted lookup ), that makes filters/ joins faster. Without an index, postgres scans the whole table for every query. with an index postgres direcly jumps to the relevant rows -->
+    <!--
+    We are often going to join/filter on things like
+        sales.sales_date  ( for time series filtering)
+        purchases.po_number or vendor_invoice.vendor_number-> to join vendors/purchases
+        inventory_id (to join inventory)-(product dimension) -->
+```{sql}
+CREATE INDEX IF NOT EXISTS stg_sales_date_idx ON stg.sales (sales_date);
+CREATE INDEX IF NOT EXISTS stg_purchases_po_idx ON stg.purchases (po_number);
+CREATE INDEX IF NOT EXISTS stg_vendor_invoice_vendor_idx ON stg.vendor_invoice (vendor_number);
+CREATE INDEX IF NOT EXISTS stg_begin_inv_inv_idx ON stg.begin_inventory (inventory_id);
+CREATE INDEX IF NOT EXISTS stg_end_inv_inv_idx ON stg.end_inventory (inventory_id);
+
+
+
+```
+
+
+QA Checks - After casting to staging, I am running QA queries to profile the data - checking for nulls in any key fields, bad dates or negative quantities. This is going to ensure that there is data integrity before modelling in the mart schema. This is a good practice for thoughtful and production ready pipeline.
+```{sql}
+-- any rows with NULL dates after parsing?
+SELECT 'sales' AS tbl, COUNT(*)
+FROM stg.sales WHERE sales_date IS NULL
+UNION ALL
+SELECT 'purchases', COUNT(*) FROM stg.purchases WHERE po_date IS NULL AND receiving_date IS NULL AND invoice_date IS NULL
+UNION ALL
+SELECT 'vendor_invoice', COUNT(*) FROM stg.vendor_invoice WHERE invoice_date IS NULL;
+
+-- negative or zero quantities or dollars?
+SELECT 'sales_bad_qty' AS check, COUNT(*) FROM stg.sales WHERE sales_quantity IS NULL OR sales_quantity < 0
+UNION ALL
+SELECT 'purchases_bad_qty', COUNT(*) FROM stg.purchases WHERE quantity IS NULL OR quantity < 0;
+
+
+
+```
+
+
+
+sanity checks
+
+```{python}
+
+
+
+```

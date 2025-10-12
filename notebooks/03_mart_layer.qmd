@@ -1,0 +1,443 @@
+After staging everything we move on to the mart layer (dims & facts) so that we can analyze the dashboard fast.
+<!--
+We are creating data mart to organize our staged data.
+The marts are indexed, aggregated, and structure for faster joins.
+These marts induce clarity as they reflect business language (Sales, purchases, vendors)
+
+This pattern is what we call star Schema, ( facts are in the center and dimensions surround them ). It is the foundation of analytics engineering (DBT, snowflake etc. )
+    1. Facts are measurable events
+    2. Dimensions are descriptive context
+    3. Grain is well defined
+        - fact sales: daily/store/product
+        - fact purchases: PO/product
+        - fact inventory: snapshot date/store/product
+    4. Goal is to create business ready models for dashboards, KPIs and Analytics.
+ -->
+
+```{sql}
+Create schema if not exists mart;
+
+
+```
+
+<!--
+Describing dimensions and facts.
+    1. Dimension tables store descriptive attributes ( the "who, what, where, when");
+        dim_product= brand, description, size
+        dim_store= location details.
+        dim_vendor= supplier info.
+        dim_date= calendar attributes (month, year, weekend flag)
+    2. fact tables store measured events (the " how much , when "
+        fct_sales= quantity, dollars sold, by date/store/product.
+        fct_purchases= PO quantities & costs, by vendor/product
+        fct_inventory_snapshot= how much stock existed on a given day.
+    This is what allows easy slicing and dicing of data (what we are studying in MGTA452)
+    ex-> show sales dollars by brand in city in Q4= join facts to product, store and date dims.
+        Here is where the indexes help too.
+            Facts can have millions of rows. Indexes on dates, product_id, vendor_id make filters and joins fast. and we only add indexes on common joins because this ensures we are getting the perfomance gain without having overhead.
+
+ -->
+1. Dimensions
+    1.1 dim date (from our date ranges)
+```{sql}
+DROP TABLE IF EXISTS mart.dim_date;
+CREATE TABLE mart.dim_date AS
+WITH bounds AS (
+  SELECT
+    LEAST(
+      (SELECT MIN(sales_date)     FROM stg.sales),
+      (SELECT MIN(po_date)        FROM stg.purchases),
+      (SELECT MIN(start_date)     FROM stg.begin_inventory),
+      (SELECT MIN(end_date)       FROM stg.end_inventory)
+    ) AS dmin,
+    GREATEST(
+      (SELECT MAX(sales_date)     FROM stg.sales),
+      (SELECT MAX(receiving_date) FROM stg.purchases),
+      (SELECT MAX(end_date)       FROM stg.end_inventory)
+    ) AS dmax
+),
+series AS (
+  SELECT generate_series(dmin, dmax, interval '1 day')::date AS d
+  FROM bounds
+)
+SELECT
+  d                                         AS date_key,
+  EXTRACT(YEAR  FROM d)::int                AS year,
+  EXTRACT(QUARTER FROM d)::int              AS quarter,
+  EXTRACT(MONTH FROM d)::int                AS month,
+  EXTRACT(DAY   FROM d)::int                AS day,
+  TO_CHAR(d,'YYYY-MM')                      AS year_month,
+  TO_CHAR(d,'Dy')                           AS dow_short,
+  EXTRACT(ISODOW FROM d)::int               AS dow_num,
+  (EXTRACT(ISODOW FROM d) IN (6,7))         AS is_weekend
+FROM series;
+CREATE UNIQUE INDEX ON mart.dim_date(date_key);
+
+
+
+```
+
+    1.2 dim_product
+```{sql}
+DROP TABLE IF EXISTS mart.dim_product;
+CREATE TABLE mart.dim_product AS
+WITH all_products AS (
+  SELECT inventory_id, brand, size, description FROM stg.begin_inventory
+  UNION ALL
+  SELECT inventory_id, brand, size, description FROM stg.end_inventory
+  UNION ALL
+  SELECT inventory_id, brand, size, description FROM stg.sales
+  UNION ALL
+  SELECT inventory_id, brand, size, description FROM stg.purchases
+),
+cleaned AS (
+  SELECT trim(inventory_id) AS inventory_id,
+         NULLIF(trim(brand),'')       AS brand,
+         NULLIF(trim(size),'')        AS size,
+         NULLIF(trim(description),'') AS description
+  FROM all_products
+  WHERE inventory_id IS NOT NULL
+),
+dedup AS (
+  SELECT
+    inventory_id,
+    MIN(brand)       AS brand,        -- fallback rule: pick alphabetically smallest non-null
+    MIN(size)        AS size,
+    MIN(description) AS description
+  FROM cleaned
+  GROUP BY inventory_id
+)
+SELECT * FROM dedup;
+
+ALTER TABLE mart.dim_product ADD PRIMARY KEY (inventory_id);
+
+
+
+```
+
+    1.3 dim_store
+```{sql}
+DROP TABLE IF EXISTS mart.dim_store;
+CREATE TABLE mart.dim_store AS
+SELECT store_code,
+       MIN(store_city) AS store_city   -- collapse duplicates
+FROM (
+  SELECT DISTINCT store_code, store_city FROM stg.begin_inventory
+  UNION
+  SELECT DISTINCT store_code, store_city FROM stg.end_inventory
+) t
+GROUP BY store_code;
+
+ALTER TABLE mart.dim_store ADD PRIMARY KEY (store_code);
+
+-- I don't know this yet but if same store_code belongs to different cities at different times (which i think is rare) or if the codes recycle I should use a composite primary key uniqueness is (store_code, store_city)
+
+-- -- DROP TABLE IF EXISTS mart.dim_store;
+-- CREATE TABLE mart.dim_store AS
+-- SELECT DISTINCT store_code, store_city
+-- FROM (
+--   SELECT store_code, store_city FROM stg.begin_inventory
+--   UNION
+--   SELECT store_code, store_city FROM stg.end_inventory
+-- ) t;
+
+-- ALTER TABLE mart.dim_store ADD PRIMARY KEY (store_code, store_city);
+
+```
+
+    1.4 dim_vendor
+
+<!-- This gave me PK Failure, indicated same business key (vendor_number) arrived with multiple vendor_name values across sources. TO solve it i am giong to use deduplication: unioning all sources, trimming/cleaning, and then choosing a canonical name per vendor- either the most frequent name (mode()) or a deterministic fallback (shortest/alpha). Then I am giong to enforce PRIMARY KEY (vendor_number) in dim_vendor. To further ensure referential sanity i am going to check for orphan fact.
+ERROR: ERROR: could not create unique index "dim_vendor_pkey"
+-->
+```{sql}
+-- DROP TABLE IF EXISTS mart.dim_vendor;
+-- CREATE TABLE mart.dim_vendor AS
+-- SELECT DISTINCT vendor_number, vendor_name FROM stg.vendor_invoice WHERE vendor_number IS NOT NULL
+-- UNION
+-- SELECT DISTINCT vendor_number, vendor_name FROM stg.purchases      WHERE vendor_number IS NOT NULL
+-- UNION
+-- SELECT DISTINCT vendor_number, vendor_name FROM stg.sales          WHERE vendor_number IS NOT NULL;
+-- ALTER TABLE mart.dim_vendor ADD PRIMARY KEY (vendor_number);
+
+
+```
+
+     1.4.1 See wht is causing the conflict: this finds all the vendor numbers that appear with multiple names across our staging tables.
+```{sql}
+WITH all_vendors AS (
+  SELECT NULLIF(trim(vendor_number),'') AS vendor_number,
+         NULLIF(trim(vendor_name),'')   AS vendor_name
+  FROM stg.vendor_invoice
+  UNION ALL
+  SELECT NULLIF(trim(vendor_number),''),
+         NULLIF(trim(vendor_name),'')
+  FROM stg.purchases
+  UNION ALL
+  SELECT NULLIF(trim(vendor_number),''),
+         NULLIF(trim(vendor_name),'')
+  FROM stg.sales
+)
+SELECT vendor_number,
+       COUNT(DISTINCT vendor_name) AS distinct_names,
+       ARRAY_AGG(DISTINCT vendor_name) AS names_sample
+FROM all_vendors
+WHERE vendor_number IS NOT NULL
+GROUP BY vendor_number
+HAVING COUNT(DISTINCT vendor_name) > 1
+ORDER BY distinct_names DESC, vendor_number
+LIMIT 50;
+
+-- the following vendor names berak the PK
+-- 2 rows returned
+-- vendor_number
+-- text
+-- distinct_names
+-- bigint
+-- names_sample
+-- text[]
+-- 1	1587	2	VINEYARD BRANDS INC,VINEYARD BRANDS LLC
+-- 2	2000	2	SOUTHERN GLAZERS W&S OF NE,SOUTHERN WINE & SPIRITS NE
+```
+
+    1.4.2 Building a robust dim_vendor (dedupe +canonical name)
+        assumption: postgres supports mode()
+```{sql}
+DROP TABLE IF EXISTS mart.dim_vendor;
+CREATE TABLE mart.dim_vendor AS
+WITH all_vendors AS (
+  SELECT NULLIF(trim(vendor_number),'') AS vendor_number,
+         NULLIF(trim(vendor_name),'')   AS vendor_name
+  FROM stg.vendor_invoice
+  UNION ALL
+  SELECT NULLIF(trim(vendor_number),''),
+         NULLIF(trim(vendor_name),'')
+  FROM stg.purchases
+  UNION ALL
+  SELECT NULLIF(trim(vendor_number),''),
+         NULLIF(trim(vendor_name),'')
+  FROM stg.sales
+),
+clean AS (
+  SELECT vendor_number, vendor_name
+  FROM all_vendors
+  WHERE vendor_number IS NOT NULL
+),
+dedup AS (
+  SELECT
+    vendor_number,
+    -- pick the most frequent vendor_name; if tie/NULL, fallback to MIN
+    COALESCE(
+      mode() WITHIN GROUP (ORDER BY vendor_name),
+      MIN(vendor_name)
+    ) AS vendor_name
+  FROM clean
+  GROUP BY vendor_number
+)
+SELECT * FROM dedup;
+
+ALTER TABLE mart.dim_vendor ADD PRIMARY KEY (vendor_number);
+
+
+
+```
+
+
+
+2. Facts
+    2.1 fct_sales ( grain: date x store x product)
+
+```{sql}
+DROP TABLE IF EXISTS mart.fct_sales;
+CREATE TABLE mart.fct_sales AS
+SELECT
+  s.sales_date                             AS date_key,
+  s.store_code,
+  s.inventory_id,
+  COALESCE(s.sales_quantity, 0)            AS qty,
+  COALESCE(s.sales_dollars,  0)::numeric(14,2) AS dollars,
+  s.sales_price::numeric(12,2)             AS unit_price,   -- may be null if not provided
+  COALESCE(s.excise_tax, 0)::numeric(12,2) AS excise_tax,
+  s.vendor_number
+FROM stg.sales s
+WHERE s.sales_date IS NOT NULL;
+
+-- helpful indexes
+CREATE INDEX ON mart.fct_sales (date_key);
+CREATE INDEX ON mart.fct_sales (store_code);
+CREATE INDEX ON mart.fct_sales (inventory_id);
+
+
+
+```
+
+    2.2 fct_purchases (grain: PO x product )
+
+```{sql}
+DROP TABLE IF EXISTS mart.fct_purchases;
+CREATE TABLE mart.fct_purchases AS
+SELECT
+  COALESCE(p.receiving_date, p.po_date, p.invoice_date) AS date_key,
+  p.po_number,
+  p.vendor_number,
+  p.inventory_id,
+  p.store_code,
+  COALESCE(p.quantity, 0)                AS qty,
+  COALESCE(p.dollars,  0)::numeric(14,2) AS dollars,
+  p.purchase_price::numeric(12,2)        AS unit_price,
+  p.classification
+FROM stg.purchases p
+WHERE COALESCE(p.receiving_date, p.po_date, p.invoice_date) IS NOT NULL;
+
+CREATE INDEX ON mart.fct_purchases (date_key);
+CREATE INDEX ON mart.fct_purchases (po_number);
+CREATE INDEX ON mart.fct_purchases (vendor_number);
+CREATE INDEX ON mart.fct_purchases (inventory_id);
+
+
+
+```
+
+
+    2.3 fct_inventory_snapshot (grain is snapshot_date x store x product )
+```{sql}
+DROP TABLE IF EXISTS mart.fct_inventory_snapshot;
+CREATE TABLE mart.fct_inventory_snapshot AS
+SELECT
+  b.start_date                             AS snapshot_date,
+  b.store_code,
+  b.inventory_id,
+  b.on_hand_qty,
+  b.unit_price,
+  'begin'::text AS snapshot_type
+FROM stg.begin_inventory b
+WHERE b.start_date IS NOT NULL
+UNION ALL
+SELECT
+  e.end_date   AS snapshot_date,
+  e.store_code,
+  e.inventory_id,
+  e.on_hand_qty,
+  e.unit_price,
+  'end'::text  AS snapshot_type
+FROM stg.end_inventory e
+WHERE e.end_date IS NOT NULL;
+
+CREATE INDEX ON mart.fct_inventory_snapshot (snapshot_date);
+CREATE INDEX ON mart.fct_inventory_snapshot (store_code);
+CREATE INDEX ON mart.fct_inventory_snapshot (inventory_id);
+
+
+
+```
+
+
+3.  referential Sanity
+```{sql}
+-- rows in facts lacking a dimension match (expect 0 ideally)
+SELECT COUNT(*) AS missing_products
+FROM mart.fct_sales f
+LEFT JOIN mart.dim_product d USING (inventory_id)
+WHERE d.inventory_id IS NULL;
+
+SELECT COUNT(*) AS missing_stores
+FROM mart.fct_sales f
+LEFT JOIN mart.dim_store s USING (store_code)
+WHERE s.store_code IS NULL;
+
+SELECT COUNT(*) AS missing_vendors
+FROM mart.fct_purchases f
+LEFT JOIN mart.dim_vendor v USING (vendor_number)
+WHERE v.vendor_number IS NULL;
+
+-- The following results are obtained after running this sanity check
+-- 1 row returned
+-- missing_products
+-- bigint
+-- 1	1141295
+-- 1 row returned
+-- missing_stores
+-- bigint
+-- 1	0
+-- 1 row returned
+-- missing_vendors
+-- bigint
+-- 1	0
+
+
+-- to debug let's see the sample of orphaned product
+SELECT f.inventory_id, COUNT(*) AS orphan_sales
+FROM mart.fct_sales f
+LEFT JOIN mart.dim_product d USING (inventory_id)
+WHERE d.inventory_id IS NULL
+GROUP BY f.inventory_id
+ORDER BY orphan_sales DESC
+LIMIT 20;
+-- to rectify this instead of  just begin_inventory, i unioned across all sources where product info appears in 1.3 this means I changed 1.3 from
+        DROP TABLE IF EXISTS mart.dim_store;
+        CREATE TABLE mart.dim_store AS
+        SELECT DISTINCT
+        store_code,
+        store_city
+        FROM stg.begin_inventory
+        UNION
+        SELECT DISTINCT
+        store_code,
+        store_city
+        FROM stg.end_inventory;
+        ALTER TABLE mart.dim_store ADD PRIMARY KEY (store_code);
+
+-- to what 1.3 is now, While doing that I also ran into the issue of duplicate keys (same inventory_id had multiple description). To deduplicate this I unioned all sources, cleaned the keys, and applied an aggregation rule of MIN
+
+```
+
+
+
+4. Quick "business views " for having handy analysis and dashboards
+    4.1 Daily sales by store/product
+```{sql}
+CREATE OR REPLACE VIEW mart.v_sales_daily AS
+SELECT
+  f.date_key,
+  d.year, d.month, d.year_month,
+  f.store_code,
+  f.inventory_id,
+  p.brand, p.description, p.size,
+  SUM(f.qty)     AS qty,
+  SUM(f.dollars) AS dollars
+FROM mart.fct_sales f
+JOIN mart.dim_date d    ON d.date_key = f.date_key
+JOIN mart.dim_product p ON p.inventory_id = f.inventory_id
+GROUP BY 1,2,3,4,5,6,7,8, p.size;
+
+
+select * from mart.v_sales_daily limit 20;
+```
+
+    4.2 Vendor Performance (costs and invoices)
+
+```{sql}
+CREATE OR REPLACE VIEW mart.v_vendor_costs AS
+SELECT
+  COALESCE(p.vendor_number, vi.vendor_number) AS vendor_number,
+  v.vendor_name,
+  d.year_month,
+  SUM(p.qty)            AS purchased_qty,
+  SUM(p.dollars)        AS purchase_dollars,
+  SUM(vi.dollars)       AS invoiced_dollars,
+  SUM(vi.freight)       AS freight_dollars,
+  SUM(vi.dollars) - SUM(p.dollars) AS invoice_minus_po
+FROM mart.fct_purchases p
+FULL OUTER JOIN stg.vendor_invoice vi
+  ON p.po_number = vi.po_number
+     AND COALESCE(p.vendor_number, vi.vendor_number) = vi.vendor_number
+JOIN mart.dim_vendor v
+  ON v.vendor_number = COALESCE(p.vendor_number, vi.vendor_number)
+LEFT JOIN mart.dim_date d
+  ON d.date_key = COALESCE(p.date_key, vi.invoice_date)
+GROUP BY 1,2,3;
+
+
+select * from mart.v_vendor_costs limit 20;
+```
+

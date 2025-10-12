@@ -1,0 +1,257 @@
+Building ingestion pipelines where raw CSVs were automatically loaded into Postgres using Python and COPY. The Schemas are structured for raw and mart layers, Used environment variables for connection config, and ensured piepleines were idempotent. This setup makes the project reproducible, efficient, and production-friendly.
+
+
+```{python}
+import os, csv, psycopg2
+from slugify import slugify
+from pathlib import Path
+import logging
+import time
+
+# I am also enabling logging for us to see how the script is behaving and identify potential errors in script
+logging.basicConfig(
+    filename="../logs/ingestion_db.log",
+    level=logging.DEBUG,
+    format="%(asctime)s-%(levelname)s-%(message)s",
+    filemode='a'
+)
+
+#--- This simple parser will read .env config, This parser also strips inline comments as the previous parser was not able to do that and I was running into issues becuase of inline comments in my .env file.
+
+def read_env():
+    env={}
+    if Path(".env").exists():
+        for raw in Path(".env").read_text().splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            v = v.strip()
+            # if quoted, keep as-is inside quotes
+            if (v.startswith('"') and v.endswith('"')) or (v.startswith("'") and v.endswith("'")):
+                v = v[1:-1]
+            else:
+                # strip inline comments
+                if "#" in v:
+                    v = v.split("#", 1)[0].rstrip()
+            env[k.strip()] = v
+    return env
+env= read_env()
+PGHOST = env.get("PGHOST","host.docker.internal")
+PGPORT = int(env.get("PGPORT","8765"))
+PGUSER = env["PGUSER"]
+PGPASSWORD = env["PGPASSWORD"]
+PGDATABASE = env.get("PGDATABASE","vendor_perf")
+DATA_DIR = env.get("DATA_DIR","data")
+SCHEMA = env.get("TARGET_SCHEMA","raw")
+
+#This is a database connection string. With this DSN String We can standardize database connection parameters; it is going to ensure scripts are portable and configurable through environment variables rather than hard coding a particular url.
+DSN = f"postgresql://{PGUSER}:{PGPASSWORD}@{PGHOST}:{PGPORT}/{PGDATABASE}"
+
+#File names and CSV headers can have spaces, symbols, mixed cases but Postgres table/column name should be simple.
+#This converts "Purchase price ($)"-> "purchase_price" so that postgres can accept it
+#We are basically cleaning the names and headers into safe SQL identifiers so that we don't run into issues with special characters or case sensitivity in SQL queries.
+def safe_ident(name): return slugify(name, separator="_").lower()
+
+
+def main():
+    data_path = Path('../vendor_performance/data')
+    if not data_path.exists():
+        raise SystemExit(f"Data directory not found: {data_path.resolve()}")
+#So we are first opening a connection, and then creating a cursor (Like a session to run queries)
+# Use of auto commit is because by default postgres transactions need commit- Autocommit means each statement is final. This is useful for DDL (Create/Drop)
+#Schema is like a folder in our DB (Raw, Mart, Staging). This is to keep the raw data separate from cleaned/ analytics tables
+# Here I am basically organizing data pipelines by Schema: Raw for raw ingested CSVs, MART for cleaned/typed tables, etc. This separation supports reproducibility and avoids polluting production tables.
+    conn = psycopg2.connect(DSN)
+    conn.autocommit = True
+    cur = conn.cursor()
+    cur.execute(f'CREATE SCHEMA IF NOT EXISTS "{SCHEMA}";')
+
+#I am automating ingestion here because we don't want to manually ingest (define) each table.
+# csv_file.stem= gives file name without extension (Purchases.csv-> purchases ) This way each CSV becomes a table in postgres automatically.
+#in short I am automating ingestion so that any new file dropped into the folder becomes a new table; this is going to reduce manual steps and make the pipeline more maintainable.
+
+
+    start_time=time.time()
+    for csv_file in sorted(data_path.glob("*.csv")):
+        table = safe_ident(csv_file.stem)   # purchases.csv -> purchases
+
+        # I am ingesting raw data as text-first, because parsing types at the raw stage can cause failures. Then I  build typed models in a downstream schema. This is going to keep ingestion robust. Later we are going to build Typed tables (qty:: int, price::numeric)"
+        #Using DROP TABLE, I also am making ingestion idempotent- This means that re-running the script wont' break the pipeline.
+        # --- Read and clean headers robustly ---
+        with csv_file.open("r", encoding="utf-8-sig", newline="") as f:
+            raw_header = next(csv.reader(f))  # read first row (header)
+
+        clean_header = []
+        seen = set()
+        for i, h in enumerate(raw_header):
+            base = h.strip()
+            name = safe_ident(base) if base else f"col_{i+1}"   # fill blanks
+            if not name:
+                name = f"col_{i+1}"
+            # ensure uniqueness
+            original = name
+            k = 1
+            while name in seen:
+                name = f"{original}_{k}"
+                k += 1
+            seen.add(name)
+            clean_header.append(name)
+
+        # --- Create table with cleaned header ---
+        cols_sql = ", ".join([f'"{c}" TEXT' for c in clean_header])
+        cur.execute(f'DROP TABLE IF EXISTS "{SCHEMA}"."{table}";')
+        cur.execute(f'CREATE TABLE "{SCHEMA}"."{table}" ({cols_sql});')
+
+        # Optional debug/logging
+        logging.info(f"{csv_file.name} header -> {clean_header}")
+        print(f"Loaded header for {csv_file.name}: {clean_header}")
+
+
+        # COPY FROM STDIN (works even if files are not on DB server)
+        # I am using Postgre's copy here instead of INSERT because row-by-row insert is slow whereas Postgres' COPY command is efficient for bulk ingestion. This is for performance optimization in ETL. (performance aware loading)
+        with csv_file.open("r", encoding="utf-8", newline="") as f:
+            cur.copy_expert(f'COPY "{SCHEMA}"."{table}" FROM STDIN WITH CSV HEADER', f)
+
+        logging.info(f"Ingesting {csv_file.name} in connected postgres db")
+        print(f"Loaded {csv_file.name} -> {SCHEMA}.{table}")
+    # Ensuring connections and cursors are closed to prevent resource leaks and locking issues.
+    end_time=time.time()
+    total_time=end_time-start_time
+    logging.info(f"Ingestion completed in {total_time} seconds")
+    cur.close(); conn.close()
+
+if __name__ == "__main__":
+    main()
+
+```
+
+SANITY CHECK
+
+```{python}
+
+# ---
+# title: "Sanity Checks — Vendor Performance Ingest"
+# format: html
+# execute:
+#   echo: true
+#   warning: false
+#   message: false
+# # Ensure relative paths are from the project root (so data/ and logs/ resolve)
+# execute-dir: project
+# ---
+
+## Setup
+
+import os, glob, time
+from pathlib import Path
+import pandas as pd
+import sqlalchemy as sa
+
+# --- tiny .env reader (same logic as your ingestion script) ---
+def read_env():
+    env={}
+    p=Path(".env")
+    if p.exists():
+        for raw in p.read_text().splitlines():
+            line=raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k,v=line.split("=",1)
+            v=v.strip()
+            if (v.startswith('"') and v.endswith('"')) or (v.startswith("'") and v.endswith("'")):
+                v=v[1:-1]
+            else:
+                if "#" in v:
+                    v=v.split("#",1)[0].rstrip()
+            env[k.strip()]=v
+    return env
+
+env = read_env()
+
+PGHOST = env.get("PGHOST","host.docker.internal")
+PGPORT = int(env.get("PGPORT","8765"))
+PGUSER = env["PGUSER"]
+PGPASSWORD = env["PGPASSWORD"]
+PGDATABASE = env.get("PGDATABASE","vendor_perf")
+
+RAW_SCHEMA = env.get("TARGET_SCHEMA","raw")   # default 'raw'
+DATA_DIR   = env.get("DATA_DIR","data")       # project-root/data
+
+DSN = f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@{PGHOST}:{PGPORT}/{PGDATABASE}"
+engine = sa.create_engine(DSN, future=True)
+
+def q(sql, **params):
+    "Run SQL and return a DataFrame."
+    with engine.begin() as con:
+        return pd.read_sql(sa.text(sql), con, params=params)
+
+
+
+
+
+```
+
+```{python}
+
+
+# List raw tables
+tables = q("""
+    select table_name
+    from information_schema.tables
+    where table_schema = :sch
+    order by table_name
+""", sch=RAW_SCHEMA)
+
+# Row counts per table
+rows = []
+with engine.begin() as con:
+    for t in tables.table_name:
+        cnt = con.execute(sa.text(f'select count(*) from "{RAW_SCHEMA}"."{t}"')).scalar_one()
+        rows.append((t, cnt))
+row_counts = pd.DataFrame(rows, columns=["table", "row_count"]).sort_values("table").reset_index(drop=True)
+row_counts
+
+
+
+```
+
+checking if the no of values after new ingestion script in raw and stg match. 
+
+```{python}
+
+
+# --- Compare RAW vs STG counts ---
+STG_SCHEMA = env.get("STG_SCHEMA", env.get("STAGING_SCHEMA", "stg"))
+
+# Get table/view names in each schema
+raw_tbls = q("""
+  select table_name
+  from information_schema.tables
+  where table_schema = :s
+""", s=RAW_SCHEMA)["table_name"].tolist()
+
+stg_tbls = q("""
+  select table_name
+  from information_schema.tables
+  where table_schema = :s
+""", s=STG_SCHEMA)["table_name"].tolist()
+
+# Intersect on matching names (only compare tables that exist in both)
+common = sorted(set(raw_tbls) & set(stg_tbls))
+
+rows = []
+with engine.begin() as con:
+    for t in common:
+        raw_cnt = con.execute(sa.text(f'select count(*) from "{RAW_SCHEMA}"."{t}"')).scalar_one()
+        stg_cnt = con.execute(sa.text(f'select count(*) from "{STG_SCHEMA}"."{t}"')).scalar_one()
+        rows.append({"table": t, "raw_count": raw_cnt, "stg_count": stg_cnt, "diff": raw_cnt - stg_cnt})
+
+counts_compare = pd.DataFrame(rows).sort_values(["diff","table"], ascending=[False, True]).reset_index(drop=True)
+counts_compare
+
+
+
+
+
+```

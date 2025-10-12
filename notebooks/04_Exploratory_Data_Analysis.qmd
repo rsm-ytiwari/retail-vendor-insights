@@ -1,0 +1,647 @@
+---
+title: "Exploratory Data Analysis — Vendor Performance"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: show
+    df-print: paged        # pretty, paginated HTML tables
+execute:
+  echo: false              # hide code by default (show selectively)
+  warning: false
+  message: false
+---
+
+###Exploratory Data Analysis
+This is going to be my first ever EDA, In EDA, we explore how the data in the database looks like and if there is a need of creating some derivative data that will help with our objective functions, In this case these objective functions are.
+    1. Vendor selection for profitability
+    2. Product Pricing Optimization.
+
+```{python}
+import os
+import pandas as pd
+from sqlalchemy import create_engine, text
+from dotenv import load_dotenv
+
+load_dotenv()
+
+user = os.getenv("PGUSER")
+pwd  = os.getenv("PGPASSWORD")
+host = os.getenv("PGHOST")
+port = os.getenv("PGPORT")
+db   = os.getenv("PGDATABASE")
+
+
+
+engine = create_engine(f"postgresql+psycopg2://{user}:{pwd}@{host}:{port}/{db}")
+
+# checking by pulling mart table
+with engine.begin() as con:
+    sales= pd.read_sql_query("Select * from mart.fct_sales limit 20;", con)
+    display(sales)
+
+
+```
+
+```{python}
+# Checking the tables present in the database
+
+tables = pd.read_sql_query("""
+   select schemaname as schema, tablename as name
+   from pg_catalog.pg_tables
+   where schemaname in ('raw','stg','mart')
+   order by 1, 2;
+""", engine)
+
+tables
+raw_tables= pd.read_sql_query("""
+   select tablename as name
+   from pg_catalog.pg_tables
+   where schemaname = 'raw'
+""", engine)
+raw_tables
+```
+
+```{python}
+for table in raw_tables['name']:
+    print('-'*50, f'{table}', '-'*50)
+    a=pd.read_sql_query(f"select count(*) as count from raw.{table}", engine)
+    print("Count of records", pd.read_sql_query(f"select count(*) as count from raw.{table}", engine)['count'].values[0])
+    display(pd.read_sql_query(f"select * from raw.{table} limit 5", engine))
+
+
+```
+
+
+let's explore the nature of each table, to do this we are giong to choose one vendor and explore what are the tables like
+
+```{python}
+purchases= pd.read_sql_query("select * from stg.purchases where vendor_number=4466", engine)
+purchases
+
+```
+
+```{python}
+purchase_prices= pd.read_sql_query("select * from stg.purchase_prices where vendor_number=4466", engine)
+purchase_prices
+
+
+```
+
+```{python}
+vendor_invoice= pd.read_sql_query("select * from stg.vendor_invoice where vendor_number::int=4466", engine)
+vendor_invoice
+
+
+```
+
+```{python}
+purchases.groupby(['brand','purchase_price'])[['quantity', 'dollars']].sum()
+
+
+```
+
+```{python}
+purchase_prices
+
+
+```
+
+```{python}
+vendor_invoice['po_number'].nunique()
+vendor_invoice.shape[0]
+vendor_invoice.columns
+
+
+```
+
+```{python}
+sales= pd.read_sql_query("select * from stg.sales where vendor_number=4466", engine)
+sales
+
+```
+
+```{python}
+sales.groupby('brand')[['sales_dollars', 'sales_price', 'sales_quantity']].sum()
+
+
+```
+
+After this eda, we can tell the following things.
+
+1. The purchases table contains actual purchase data, including the date of purchase, products(brands) purchased by vendors, the amount paid (in dollars), and the quantity purchased.
+2. The purchase price column is derived from the purchases_prices table, which provided product-wise actual and purchase prices. The combination of vendor and brand is unique in this table.
+3. The vendor_invoice tables aggregates data from the purchase table, summarizing quanityt and dollar amounts, along with an additional column for freight. This table maintains uniqueness based on vendor and PO number.
+4. The sales table captures actual sales transactions, detailing the brands purchased by vendors, the quantity sold, the selling price, and the revenue earned.
+
+____________________________________________________
+
+As the data that we need for analysis is distributed in various tables, we need to create a summary table containing:
+1. Purchase transactions made by vendors.
+2. Sales transaction data.
+3. Freight costs for each vendor.
+4. actual product prices from vendors.
+```{python}
+vendor_invoice.columns
+
+
+```
+
+```{python}
+freight_summary= pd.read_sql_query("""
+   select vendor_number::int, sum(freight) as freight_cost
+   from stg.vendor_invoice
+   group by vendor_number::int
+   order by vendor_number asc
+""", engine)
+freight_summary
+
+
+```
+
+```{python}
+purchase_prices.columns
+
+
+# pd.read_sql_query("select * from stg.purchases", engine)
+
+```
+```{python}
+
+pd.read_sql_query("""
+   select
+   p.vendor_number,
+   p.vendor_name,
+   p.brand,
+   avg(p.purchase_price),
+   avg(pp.volume) as avg_volume,
+   avg(pp.list_price) as actual_price,
+   sum(p.quantity) as total_purchase_quantity,
+   sum(p.dollars) as total_purchase_dollars
+   from stg.purchases as p
+   inner join stg.purchase_prices as pp
+   on p.brand=pp.brand
+   where p.purchase_price>0
+   group by p.vendor_number, p.vendor_name, p.brand
+   order by total_purchase_dollars
+""", engine)
+
+
+```
+
+sales table
+```{python}
+sales.columns
+
+
+```
+
+```{python}
+
+pd.read_sql_query("""
+   select vendor_number,
+   brand,
+   sum(sales_dollars) as total_sales_dollars,
+   sum(sales_price) as total_sales_price,
+   sum(sales_quantity) as total_sales_quantity,
+   sum(excise_tax) as total_excise_tax
+   from stg.sales
+   group by vendor_number, brand
+   order by total_sales_dollars
+""", engine)
+
+
+```
+
+
+finally joining all the tables.
+
+```{python}
+
+
+
+```
+
+```{python}
+pd.read_sql_query("""
+   select vendor_number,
+   brand,
+   sum(sales_dollars) as total_sales_dollars,
+   sum(sales_price) as total_sales_price,
+   sum(sales_quantity) as total_sales_quantity,
+   sum(excise_tax) as total_excise_tax
+   from stg.sales
+   group by vendor_number, brand
+   order by total_sales_dollars, total_sales_quantity
+""", engine)
+
+
+
+
+```
+
+```{python}
+
+
+purchase_prices.columns
+
+
+
+
+```
+```{python}
+
+# However this is not an optimized sql query since it tries to combine all the tables at once, with sales table being the maximum This takes ~130 seconds
+import time
+start=time.time()
+final_table= pd.read_sql_query("""
+   select
+   pp.vendor_number,
+        pp.brand,
+        pp.list_price,
+        pp.purchase_price,
+        sum(s.sales_quantity) as total_sales_quantity,
+        sum(s.sales_dollars) as total_sales_dollars,
+        sum(s.sales_price) as total_sales_price,
+        sum(s.sales_price) as total_sales_price,
+        sum(s.excise_tax) as total_excise_tax,
+        sum(vi.quantity) as total_purchase_quantity,
+        sum(vi.dollars) as total_purchase_dollars,
+        sum(vi.freight) as total_freight_cost
+   from stg.purchase_prices as pp
+   inner join stg.sales as s
+        on pp.vendor_number::int=s.vendor_number::int
+        and pp.brand=s.brand
+    inner join stg.vendor_invoice as vi
+        on pp.vendor_number::int=vi.vendor_number::int
+    group by
+        pp.vendor_number, pp.brand, pp.list_price, pp.purchase_price
+
+
+""", engine)
+end=time.time()
+display(final_table)
+print(f"time taken to execute: {end-start}")
+
+
+
+
+```
+
+```{python}
+
+
+
+sales.columns
+
+
+
+```
+
+We had such a huge amount of data stored all over the place, out of that we got only 11222 rows and 12 columns on which we are going to perform our analysis on. This is one of the most important work of a data analyst, to figure out the mess and get the smallest meaningful data.
+
+```{python}
+
+
+# This is a much more optimized way to write the above sql query whereas this only takes 1.20 seconds.
+import os
+import pandas as pd
+from sqlalchemy import create_engine, text
+from dotenv import load_dotenv
+import time
+load_dotenv()
+
+user = os.getenv("PGUSER")
+pwd  = os.getenv("PGPASSWORD")
+host = os.getenv("PGHOST")
+port = os.getenv("PGPORT")
+db   = os.getenv("PGDATABASE")
+
+
+
+engine = create_engine(f"postgresql+psycopg2://{user}:{pwd}@{host}:{port}/{db}")
+
+start=time.time()
+# vendor_sales_summary1= pd.read_sql_query("""
+# WITH
+# pp AS (
+#   SELECT
+#   vendor_number::int AS vendor_number,
+#   vendor_name,
+#          brand,
+#    avg(volume::numeric) as avg_volume,
+#          MAX(list_price)     AS list_price,
+#          MAX(purchase_price) AS purchase_price
+#   FROM stg.purchase_prices
+#   GROUP BY 1,2,3
+# ),
+# s AS (
+#   SELECT vendor_number::int AS vendor_number,
+#          brand,
+#          SUM(sales_quantity) AS total_sales_quantity,
+#          SUM(sales_dollars)  AS total_sales_dollars,
+#          SUM(sales_price)    AS total_sales_price,
+#          SUM(excise_tax)     AS total_excise_tax
+#   FROM stg.sales
+#   GROUP BY 1,2
+# ),
+# vi AS (
+#   SELECT vendor_number::int AS vendor_number,
+#          SUM(quantity) AS total_purchase_quantity,
+#          SUM(dollars)  AS total_purchase_dollars,
+#          SUM(freight)  AS total_freight_cost
+#   FROM stg.vendor_invoice
+#   GROUP BY 1
+# )
+# SELECT
+#   s.vendor_number,
+#   s.brand as brand,
+#   pp.vendor_name,
+#   pp.avg_volume,
+#   pp.list_price,
+#   pp.purchase_price,
+#   s.total_sales_quantity,
+#   s.total_sales_dollars,
+#   s.total_sales_price,
+#   s.total_excise_tax,
+#   vi.total_purchase_quantity,
+#   vi.total_purchase_dollars,
+#   vi.total_freight_cost
+# FROM s
+# LEFT JOIN pp USING (vendor_number, brand)
+# LEFT JOIN vi USING (vendor_number)
+# ORDER BY s.vendor_number, s.brand;
+
+# """, engine)
+
+
+vendor_sales_summary=pd.read_sql_query("""
+   with freight_summary as (
+    select
+      vendor_number,
+      sum(freight) as freight_cost
+    from stg.vendor_invoice
+    group by vendor_number),
+    purchase_summary as (
+      select
+        p.vendor_number::text as vendor_number,
+        p.vendor_name,
+        p.brand,
+        p.description,
+        p.purchase_price,
+        pp.list_price as Actual_price,
+        pp.volume,
+        sum(p.quantity) as total_purchase_quantity,
+        sum(p.dollars) as total_purchase_dollars
+      from stg.purchases as p
+      inner join stg.purchase_prices as pp
+        on p.brand=pp.brand
+      where p.purchase_price>0
+      group by p.vendor_number, p.vendor_name, p.brand, p.description, p.purchase_price, pp.list_price, pp.volume
+    ),
+    sales_summary as (
+      select
+        vendor_number::text as vendor_number,
+        brand,
+        sum(sales_quantity) as total_sales_quantity,
+        sum(sales_dollars) as total_sales_dollars,
+        sum(sales_price) as total_sales_price,
+        sum(excise_tax) as total_excise_tax
+      from stg.sales
+      group by vendor_number, brand
+    )
+    select
+      ps.vendor_number,
+      ps.vendor_name,
+      ps.brand,
+      ps.description,
+      ps.purchase_price,
+      ps.actual_price,
+      ps.volume as ,
+      ps.total_purchase_quantity,
+      ps.total_purchase_dollars,
+      ss.total_sales_quantity,
+      ss.total_sales_dollars,
+      ss.total_sales_price,
+      ss.total_excise_tax,
+      fs.freight_cost
+    from purchase_summary as ps
+    left join sales_summary as ss
+      on ps.vendor_number= ss.vendor_number
+      and ps.brand=ss.brand
+    left join freight_summary as fs
+      on ps.vendor_number=fs.vendor_number
+    order by ps.total_purchase_dollars Desc
+""", engine)
+
+end=time.time()
+display(vendor_sales_summary)
+print(f"time taken to execute: {end-start}")
+
+```
+
+This query generated a vendor-Wise sales and purchase summary, which is valuable for:
+### Performance_Optimization
+- The query involves heavy joins and aggregations on large datasets like sales and purchases.
+- Storing the pre-aggregated results avoids repeated expensive computations.
+- Helps in analyzing sales, purchases, and pricing for different vendors and brands.
+- Future benefits of storing this data for faster dashboarding and reporting.
+-Instead of running expensive queries each time, dashboards can fetch data quickly from vendor_sales_summary
+
+
+checking the datatype
+```{python}
+
+
+vendor_sales_summary.dtypes
+
+
+
+```
+
+checking missing values
+
+```{python}
+
+
+vendor_sales_summary.isnull().sum()
+
+
+
+
+```
+
+checking unique vendor names
+
+```{python}
+#These names were cleaned in raw-> stg, all the whitespaces were trimmed.
+vendor_sales_summary.dtypes
+
+
+
+
+
+
+```
+
+creating new features like gross profits.
+
+```{python}
+
+
+vendor_sales_summary['gross_profit']=vendor_sales_summary['total_sales_dollars']-vendor_sales_summary['total_purchase_dollars']
+
+vendor_sales_summary
+
+
+```
+
+which one is in the most loss?
+
+```{python}
+
+
+vendor_sales_summary['gross_profit'].min()
+
+
+
+
+```
+
+profit margin.
+
+grossprofit/totalsalesdollars*100
+
+```{python}
+
+vendor_sales_summary['profit_margin']= (vendor_sales_summary)['gross_profit']*100/vendor_sales_summary['total_sales_dollars']
+
+
+
+vendor_sales_summary['profit_margin'].max()
+
+```
+
+calculating stock turnover
+
+```{python}
+
+
+vendor_sales_summary['stock_turnover']=(vendor_sales_summary['total_sales_quantity'])/(vendor_sales_summary)['total_purchase_quantity']
+
+
+
+
+```
+
+```{python}
+
+vendor_sales_summary['sales_to_purchase_ratio']=vendor_sales_summary['total_sales_dollars']/vendor_sales_summary['total_purchase_dollars']
+
+
+
+
+
+```
+
+```{python}
+
+
+vendor_sales_summary.dtypes
+
+
+
+
+```
+
+now we are going to save this new table to the mart.
+
+```{python}
+
+query= ("""
+DROP table if exists mart.vendor_sales_summary;
+CREATE TABLE IF NOT EXISTS mart.vendor_sales_summary (
+    vendor_number            BIGINT,
+    vendor_name              TEXT,
+    brand                    TEXT,
+    description              TEXT, --added later
+    purchase_price           DOUBLE PRECISION,
+    actual_price               DOUBLE PRECISION,
+    volume               DOUBLE PRECISION,
+    total_purchase_quantity  DOUBLE PRECISION,
+    total_purchase_dollars   DOUBLE PRECISION,
+    total_sales_quantity     BIGINT,
+    total_sales_dollars      DOUBLE PRECISION,
+    total_sales_price        DOUBLE PRECISION,
+    total_excise_tax         DOUBLE PRECISION,
+    freight_cost       DOUBLE PRECISION,
+    gross_profit             DOUBLE PRECISION,
+    profit_margin            DOUBLE PRECISION,
+    stock_turnover           DOUBLE PRECISION,
+    sales_to_purchase_ratio  DOUBLE PRECISION,
+    PRIMARY KEY (vendor_number, brand)
+);
+
+
+""")
+
+with engine.begin() as conn:
+   conn.execute(text(query))
+
+
+
+
+```
+
+checking whether or not the table was created>
+
+```{python}
+
+
+pd.read_sql_query("select * from mart.vendor_sales_summary", engine)
+
+
+
+
+```
+
+
+inserting the data into the table.
+```{python}
+
+
+vendor_sales_summary
+
+
+
+
+```
+```{python}
+
+vendor_sales_summary.to_sql(
+    name='vendor_sales_summary',
+    con=engine,
+    schema='mart',
+    if_exists='append',   # appends new rows to existing table
+    index=False,          # don't write the DataFrame index as a column
+    method='multi'        # sends batches of rows for efficiency
+)
+
+
+
+
+
+```
+
+
+checking whether or not the values were inserted?
+
+```{python}
+
+
+pd.read_sql_query("select * from mart.vendor_sales_summary", engine)
+
+
+
+
+```

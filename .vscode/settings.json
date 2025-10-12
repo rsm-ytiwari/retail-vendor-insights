@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 8765,
+            "driver": "PostgreSQL",
+            "name": "jovyan",
+            "database": "vendor_perf",
+            "username": "jovyan"
+        }
+    ]
+}

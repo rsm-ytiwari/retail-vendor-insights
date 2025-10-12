@@ -1,0 +1,131 @@
+```{python}
+
+
+import os, csv, psycopg2
+from slugify import slugify
+from pathlib import Path
+import pandas as pd
+import logging
+import time
+from sqlalchemy import create_engine, text
+from importing_script.qmd import main
+# I am also enabling logging for us to see how the script is behaving and identify potential errors in script
+logging.basicConfig(
+    filename="./logs/cleaning_inserting_db.log",
+    level=logging.DEBUG,
+    format="%(asctime)s-%(levelname)s-%(message)s",
+    filemode='a'
+)
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+user = os.getenv("PGUSER")
+pwd  = os.getenv("PGPASSWORD")
+host = os.getenv("PGHOST")
+port = os.getenv("PGPORT")
+db   = os.getenv("PGDATABASE")
+
+
+
+engine = create_engine(f"postgresql+psycopg2://{user}:{pwd}@{host}:{port}/{db}")
+
+
+def create_vendor_summary(engine):
+    '''This function will merge the different tables to get the overall vendor summary and adding new columns to the resultant data.'''
+
+    vendor_sales_summary=pd.read_sql_query("""
+    with freight_summary as (
+        select
+        vendor_number,
+        sum(freight) as freight_cost
+        from stg.vendor_invoice
+        group by vendor_number),
+        purchase_summary as (
+        select
+            p.vendor_number::text as vendor_number,
+            p.vendor_name,
+            p.brand,
+            p.description,
+            p.purchase_price,
+            pp.list_price as Actual_price,
+            pp.volume,
+            sum(p.quantity) as total_purchase_quantity,
+            sum(p.dollars) as total_purchase_dollars
+        from stg.purchases as p
+        inner join stg.purchase_prices as pp
+            on p.brand=pp.brand
+        where p.purchase_price>0
+        group by p.vendor_number, p.vendor_name, p.brand, p.description, p.purchase_price, pp.list_price, pp.volume
+        ),
+        sales_summary as (
+        select
+            vendor_number::text as vendor_number,
+            brand,
+            sum(sales_quantity) as total_sales_quantity,
+            sum(sales_dollars) as total_sales_dollars,
+            sum(sales_price) as total_sales_price,
+            sum(excise_tax) as total_excise_tax
+        from stg.sales
+        group by vendor_number, brand
+        )
+        select
+        ps.vendor_number,
+        ps.vendor_name,
+        ps.brand,
+        ps.description,
+        ps.purchase_price,
+        ps.actual_price,
+        ps.volume as ,
+        ps.total_purchase_quantity,
+        ps.total_purchase_dollars,
+        ss.total_sales_quantity,
+        ss.total_sales_dollars,
+        ss.total_sales_price,
+        ss.total_excise_tax,
+        fs.freight_cost
+        from purchase_summary as ps
+        left join sales_summary as ss
+        on ps.vendor_number= ss.vendor_number
+        and ps.brand=ss.brand
+        left join freight_summary as fs
+        on ps.vendor_number=fs.vendor_number
+        order by ps.total_purchase_dollars Desc
+    """, engine)
+    end=time.time()
+    print(f"time taken to execute: {end-start}")
+    return vendor_sales_summary
+
+
+def clean_data(df):
+    '''THis function is going to create the extra columns.'''
+
+
+    vendor_sales_summary['gross_profit']=vendor_sales_summary['total_sales_dollars']-vendor_sales_summary['total_purchase_dollars']
+
+    vendor_sales_summary['gross_profit'].min()
+    vendor_sales_summary['profit_margin']= (vendor_sales_summary)['gross_profit']*100/vendor_sales_summary['total_sales_dollars']
+    vendor_sales_summary['stock_turnover']=(vendor_sales_summary['total_sales_quantity'])/(vendor_sales_summary)['total_purchase_quantity']
+    vendor_sales_summary['sales_to_purchase_ratio']=vendor_sales_summary['total_sales_dollars']/vendor_sales_summary['total_purchase_dollars']
+
+
+    return df
+
+if __name__ == "__main__":
+    main()
+    logging.info('creating vendor_sales_summary Table....')
+    summary_df=create_vendor_summary(engine)
+    logging.info(summary_df.head())
+
+    logging.info('cleaning data and appending data...')
+    clean_df=clean_data(summary_df)
+    logging.info(clean_df.head())
+
+    logging.info('ingesting data....')
+
+    main(clean_df, 'vendor_sales_summary',engine)
+    logging.info('completed')
+
+
+```
