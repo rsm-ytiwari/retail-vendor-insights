@@ -9,6 +9,7 @@
 > - Compare **profit margins statistically** between top and low performers (p < 0.001).
 >
 > 💡 *Actionable insights for optimizing pricing, vendor strategy, and profit growth.*
+> 
 > 🔗 **Html Report Link :** https://rsm-ytiwari.github.io/retail-vendor-insights/notebooks/06_retail-vendor-performance-Analysis.html 
 
 ### ✨ Skills Demonstrated
