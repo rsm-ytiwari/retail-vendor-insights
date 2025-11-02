@@ -16,7 +16,7 @@
 >
 > The result? A data story that links vendor performance to business leverage.
 >
-> 🔗 **Live HTML Report:** [Retail Vendor Performance Analysis →](https://rsm-ytiwari.github.io/retail-vendor-insights/notebooks/06_retail-vendor-performance-Analysis.html)
+> 🔗 **Live HTML Report:** [Retail Vendor Performance Analysis →](https://rsm-ytiwari.github.io/retail-vendor-insights/)
 
 ---
 
