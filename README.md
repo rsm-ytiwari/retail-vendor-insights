@@ -1,142 +1,152 @@
-# 🏬 Retail-vendor-insights
-> 📊 **Data-driven retail-vendor-insights and Analysis**
-> Analyze sales, profitability, and inventory efficiency across vendors using **Python, SQL, and statistical modeling**.
+
+# Retail Vendor Insights
+
+> **A report that shows goes deep into analyzing vendor performance in retail sector.**
 >
-> 🚀 Highlights:
-> - Identify **high-margin, low-sales** brands for targeted promotions.
-> - Quantify **procurement dependency** (top 10 vendors = 65% of total purchases).
-> - Assess **inventory efficiency** and **capital locked in unsold stock**.
-> - Compare **profit margins statistically** between top and low performers (p < 0.001).
+> I wanted to see which vendors drive growth, who quietly protect margins, and where money just... sits.
+> Using **Python, SQL, and a bit of statistical firepower**, I turned millions of transactions into a model that answers a simple question:
+> **“Who gives us the most control over growth, pricing, and cash flow?”**
 >
-> 💡 *Actionable insights for optimizing pricing, vendor strategy, and profit growth.*
-> 
-> 🔗 **Html Report Link :** https://rsm-ytiwari.github.io/retail-vendor-insights/notebooks/06_retail-vendor-performance-Analysis.html 
-
-### ✨ Skills Demonstrated
-
-- **Data Engineering (PostgreSQL + SQLAlchemy):** Designed a multi-layer data pipeline (raw → staging → mart), performed schema validation, deduplication, and optimized joins across 15M+ rows for analytical modeling.
-- **Data Analysis (Python | Pandas | NumPy | SciPy):** Conducted in-depth exploratory analysis, derived profitability and efficiency KPIs, and executed statistical tests (confidence intervals, t-tests) to validate hypotheses.
-- **Data Visualization (Matplotlib | Seaborn):** Built visual dashboards for sales trends, vendor performance distribution, and inventory turnover; used clear, publication-ready visuals to communicate insights.
-- **Business Analytics:** Segmented vendors by profitability and sales efficiency, quantified procurement dependency, and modeled inventory turnover to identify high-margin opportunities and supply risks.
-- **Automated Reporting (Quarto):** Developed reproducible, publication-grade reports integrating SQL queries, Python analysis, and visual storytelling for decision-ready insights.
-
-
-### 📊 Overview
-This project analyzes retail- vendor performance data to uncover insights about **sales efficiency, pricing strategies, profit margins, and inventory management**.
-It combines **data engineering, exploratory analysis, and statistical inference** to support business decisions on vendor optimization.
-
-### 🧮 Data Overview
-
-The dataset integrates transactional records from multiple retail systems, totaling over **15 million rows** across 6 tables.
-Each table captures a distinct aspect of vendor operations:
-
-| Table | Description | Key Columns |
-|:--|:--|:--|
-| `sales` | Individual sales transactions | `vendor_number`, `brand`, `quantity_sold`, `sales_amount` |
-| `purchases` | Purchase orders and receipts | `vendor_number`, `brand`, `quantity_purchased`, `unit_cost` |
-| `purchase_prices` | Vendor pricing by SKU | `vendor_number`, `brand`, `effective_date`, `unit_price` |
-| `begin_inventory` / `end_inventory` | Inventory balances at start/end of period | `brand`, `quantity`, `inventory_value` |
-| `vendor_invoice` | Payment and invoice details | `vendor_number`, `invoice_id`, `amount_due` |
-
-A lightweight subset of sample data (`data/sample_*.csv`) is provided for demonstration and reproducibility.
-Full raw data is excluded due to size constraints.
-
-### 🧱 Data Pipeline
-
-The project integrated data from **6 source tables** (`begin_inventory`, `end_inventory`, `purchase_prices`, `purchases`, `sales`, and `vendor_invoice`), totaling over **15 million rows**.
-Using PostgreSQL, data was modeled into three layers — **raw**, **staging**, and **mart** — to create a consolidated analytical dataset:
-
-- **Raw Layer:** Original transactional data from multiple sources.
-- **Staging Layer:** Cleaned and joined intermediate tables for consistency.
-- **Mart Layer:** Final analytical table (`mart.vendor_sales_summary`) with ~10K vendor-brand records used for performance evaluation.
-
-This modular approach ensured data accuracy, consistency, and scalability for analysis and visualization.
-
+> 🚀 Along the way, I:
+>
+> * Found **high-margin, low-sales** brands hiding in plain sight.
+> * Measured **vendor dependency** — top 10 suppliers = 65% of total spend.
+> * Quantified **inventory drag** and **$2.7M in capital stuck on shelves.**
+> * Proved, statistically, that **small vendors earn higher margins** than the big guys (p < 0.001).
+>
+> The result? A data story that links vendor performance to business leverage.
+>
+> 🔗 **Live HTML Report:** [Retail Vendor Performance Analysis →](https://rsm-ytiwari.github.io/retail-vendor-insights/notebooks/06_retail-vendor-performance-Analysis.html)
 
 ---
 
-```markdown
+### ✨ What I Worked On
+
+* **Data Engineering (PostgreSQL + SQLAlchemy):** Built a pipeline from six messy operational tables — cleaned, joined, and modeled **15M+** rows into a usable analytics mart.
+* **Data Analysis (Python | Pandas | NumPy | SciPy):** Explored margins, pricing, and turnover; validated patterns with t-tests and confidence intervals.
+* **Visualization (Matplotlib | Seaborn):** Created visuals that explain, not decorate — vendor concentration, inventory flow, and profitability trends.
+* **Business Analytics:** Turned raw transactions into vendor segments and actionable KPIs for negotiation, marketing, and procurement.
+* **Automated Reporting (Quarto):** Built a reproducible pipeline that combines SQL, Python, and visuals into one seamless narrative.
+
+---
+
+###  Overview
+
+This project digs into retail vendor performance — understanding **sales efficiency, pricing power, and inventory balance**.
+It’s a full-stack analysis: **data engineering + statistics + storytelling**, designed to answer how vendor behavior shapes profitability.
+
+---
+
+### Data Overview
+
+I worked with a relational dataset of **15M+ records** pulled from six core retail systems:
+
+| Table                               | Description                   | Key Columns                                                 |
+| :---------------------------------- | :---------------------------- | :---------------------------------------------------------- |
+| `sales`                             | Individual sales transactions | `vendor_number`, `brand`, `sales_amount`                    |
+| `purchases`                         | Purchase orders               | `vendor_number`, `brand`, `quantity_purchased`, `unit_cost` |
+| `purchase_prices`                   | SKU-level vendor pricing      | `vendor_number`, `brand`, `unit_price`                      |
+| `begin_inventory` / `end_inventory` | Periodic stock levels         | `brand`, `quantity`, `inventory_value`                      |
+| `vendor_invoice`                    | Payment and billing records   | `vendor_number`, `invoice_id`, `amount_due`                 |
+
+A lightweight demo dataset (`data/sample_*.csv`) is included for reproducibility.
+
+---
+
+### Data Pipeline
+
+I modeled the pipeline in three layers — **Raw → Staging → Mart** — to keep it clean, scalable, and explainable.
+
+```
 RAW
- ├─ begin_inventory (206,529)
- ├─ end_inventory (224,489)
- ├─ purchase_prices (12,261)
- ├─ purchases (2,372,474)
- ├─ sales (12,825,363)
- └─ vendor_invoice (5,543)
+ ├─ begin_inventory (206K)
+ ├─ end_inventory (224K)
+ ├─ purchase_prices (12K)
+ ├─ purchases (2.37M)
+ ├─ sales (12.8M)
+ └─ vendor_invoice (5.5K)
       │
       ▼
-STAGING  — normalize types, dedupe, validate joins, align inventory periods
+STAGING — normalize, dedupe, validate joins
       │
       ▼
-MART — mart.vendor_sales_summary (~10,692 rows)
+MART — mart.vendor_sales_summary (~10.7K rows)
       │
-      └─→ EDA, Top Vendors/Brands, Pareto, Bulk Efficiency,
-          Inventory Turnover & Unsold Capital, CI & T-tests
+      └─→ EDA → Pareto → Bulk Efficiency → Inventory → Profitability
+```
+
+The mart layer became the analytical foundation — a single table where every vendor’s **sales, margins, and inventory turnover** live in one place.
 
 ---
 
-### 🎯 Objectives
-- Identify **high-margin, low-sales brands** suitable for promotional campaigns.
-- Measure **vendor concentration** and procurement dependency.
-- Evaluate **inventory turnover** and **unsold capital**.
-- Compare **profitability differences** between top- and low-performing vendors using statistical testing.
-- Assess the **impact of bulk purchasing** on unit costs.
+###  Objectives
+
+* Spot **high-margin, low-sales** brands — the hidden promotion candidates.
+* Measure **vendor concentration** and purchasing dependency.
+* Quantify **inventory turnover** and capital trapped in unsold stock.
+* Compare **profitability** between top and low-performing vendors with statistical rigor.
+* Test whether **bulk purchasing** actually reduces unit cost (spoiler: it does, by ~72%).
 
 ---
 
-### ⚙️ Tech Stack
-- **Language:** Python (Pandas, NumPy, SciPy, Seaborn, Matplotlib)
-- **Database:** PostgreSQL (via SQLAlchemy)
-- **Notebook Framework:** Quarto (.qmd)
-- **Statistical Methods:** Confidence Intervals, T-tests
-- **Visualization Tools:** Matplotlib, Seaborn
+###  Tech Stack
+
+* **Language:** Python (Pandas, NumPy, SciPy, Seaborn, Matplotlib)
+* **Database:** PostgreSQL via SQLAlchemy
+* **Framework:** Quarto for integrated analytics and storytelling
+* **Statistical Methods:** Confidence Intervals, T-tests
+* **Visualization:** Matplotlib, Seaborn
 
 ---
 
-### 🧾 Key Insights
-| Insight | Description |
-|:--|:--|
-| **Vendor Concentration** | Top 10 vendors account for ~66% of total purchases. |
-| **High-Margin Brands** | Several low-volume brands have profit margins >70%. |
-| **Bulk Purchase Savings** | Large orders reduce unit costs by ~72%. |
-| **Inventory Value** | ~$2.71M locked in unsold stock. |
-| **Profit Margin Gap** | Low-performing vendors have significantly higher margins (95% CI confirmed, p < 0.001). |
+###  Key Insights
+
+| Insight                  | Description                                                            |
+| :----------------------- | :--------------------------------------------------------------------- |
+| **Vendor Concentration** | Top 10 vendors control ~66% of total purchases — efficiency with risk. |
+| **High-Margin Brands**   | Several low-volume brands earn >70% margins.                           |
+| **Bulk Savings**         | Large orders cut unit cost by ~72%.                                    |
+| **Inventory Drag**       | ~$2.71M of stock still waiting to sell.                                |
+| **Profit Gap**           | Small vendors outperform big ones on margin (p < 0.001).               |
 
 ---
 
-### 💡 Business Recommendations
-- Promote **high-margin, low-sales** products through pricing or marketing adjustments.
-- Negotiate **bulk discounts** with top suppliers to leverage economies of scale.
-- Reduce **inventory holding costs** by clearing slow-moving stock.
-- Support **small vendors** with expansion strategies while optimizing **large vendors’ margins**.
+###  Business Takeaways
+
+* **Promote** low-sales, high-margin products to unlock hidden profit.
+* **Negotiate** bulk terms with dominant suppliers to leverage scale.
+* **Clear** or realign slow inventory to free working capital.
+* **Support** small vendors with reach; help large vendors optimize margin.
 
 ---
 
-### 📁 Repository Structure
-vendor-performance-analysis/
+### 📁 Repo Structure
+
+```
+retail-vendor-insights/
 │
 ├── notebooks/
-│ └── 06_vendor_performance_analysis.qmd # Main Quarto analysis
+│   └── 06_vendor_performance_analysis.qmd
 ├── data/
-│ └── vendor_sales_summary.csv # (or SQL-based source)
+│   └── sample_vendor_data.csv
 ├── outputs/
-│ └── charts, tables, figures
-├── README.md # You are here
-└── requirements.txt # (Optional: libraries list)
-
-
----
-
-### 🧩 Results Summary
-The study reveals a **dual vendor ecosystem**:
-- Large vendors dominate sales but operate at lower margins.
-- Smaller vendors maintain higher profitability through niche pricing.
-
-Optimizing both through **strategic pricing, procurement efficiency, and vendor diversification** can enhance long-term profitability and resilience.
+│   └── charts, tables, figures
+├── README.md
+└── requirements.txt
+```
 
 ---
 
-### 👋 Author
+### Results Summary
+
+The data tells a simple story:
+**Big vendors move the volume; small vendors move the profit.**
+
+The smart play is balance — optimize cost where scale pays off, protect margins where they hide, and let data make the call.
+
+---
+
+## 👋 Author
 
 **Yash Tiwari**
 *Data | Product | Strategy | Design*
@@ -147,5 +157,5 @@ Optimizing both through **strategic pricing, procurement efficiency, and vendor 
 
 ---
 
-> I build data stories that drive product, strategy, and design decisions.
-> Passionate about blending analytical rigor with creative problem-solving.
+> *I build data stories that bridge analysis and business strategy.*
+> *Curious about the “why” behind every number — and how to make it move.*

@@ -1,75 +1,33 @@
-##  Project Overview
-
-This report analyzes **retail-vendor performance** by examining sales, pricing, and purchasing patterns across multiple brands and suppliers.
-The goal is to identify key insights that can inform better **vendor management** and **pricing strategies**.
 
 
+## Project Overview
 
+Every retail dataset has its heroes and villains — vendors that drive growth, and others that quietly trap cash.
+I built a vendor performance model using **SQL, Python, and statistical analysis** to uncover who’s driving sales, who’s protecting margins, and where money gets stuck.
 
-## 🧾 Executive Summary and Key Recommendations
-
-### 🎯 Project Overview
-This project analyzed vendor performance data to identify **sales efficiency, profit margins, and inventory utilization** across multiple suppliers.
-Using SQL, Python, and statistical methods, the analysis provided insights into **pricing strategies, vendor concentration, and profitability trends**.
-
----
+What started as raw transactions turned into a clear story of **leverage, pricing behavior, and capital flow** — revealing exactly where the business gains power, and where it leaks it.
 
 
 
-### 💡 Key Findings
+#### Key Insights
 
-- **Vendor Concentration:**
-  The top 10 vendors contribute **~66% of total purchases**, indicating high procurement dependency on a few large suppliers.
-
-- **High-Margin, Low-Sales Brands:**
-  Several brands have **strong profit margins but weak sales** — ideal candidates for **targeted promotions or pricing adjustments**.
-
-- **Bulk Purchasing Efficiency:**
-  Larger orders benefit from **~72% lower unit costs**, confirming economies of scale in purchasing.
-
-- **Inventory Concerns:**
-  About **$2.71M** is tied up in unsold inventory, with a few vendors holding the majority of slow-moving stock.
-
-- **Profit Margin Disparity:**
-  Low-performing vendors maintain **higher average profit margins (~41%)**, while high-performing vendors operate at **lower margins (~31%)**, a difference confirmed by t-tests (p < 0.001).
-
----
+* **Vendor Concentration:** Two-thirds of all purchases come from just ten vendors — efficient, but risky.
+* **Margin–Sales Gap:** Some brands show great margins but weak sales — unrealized potential.
+* **Economies of Scale:** Bulk orders cut unit costs by ~72%, confirming scale efficiency.
+* **Inventory Drag:** About **$2.7M** is locked in unsold stock, mostly from top vendors.
+* **Profit Paradox:** Smaller vendors average **41% margins**, while top vendors run leaner at **~31%** (p < 0.001).
 
 
 
-### 🚀 Strategic Recommendations
+#### Takeaway
 
-1. **Promote High-Margin, Low-Sales Brands:**
-   Introduce targeted marketing, bundling, or shelf placement incentives to boost sales volume.
-
-2. **Negotiate with Key Vendors:**
-   Use concentration data to secure **bulk discounts** and **improved contract terms** with top suppliers.
-
-3. **Optimize Inventory Management:**
-   Identify slow-moving SKUs and consider **clearance strategies** or **stock realignment** to release tied-up capital.
-
-4. **Enhance Vendor Profitability:**
-   - For top vendors: focus on **cost optimization** and **pricing efficiency**.
-   - For smaller vendors: support with **distribution expansion** and **competitive pricing models**.
-
-5. **Implement Performance Dashboards:**
-   Develop an automated vendor KPI dashboard (sales, margin, turnover) to track performance trends over time.
-
----
+The analysis revealed a **two-speed ecosystem**: large vendors drive revenue, niche ones drive profit.
+The opportunity lies in managing both — **scaling where it compounds, protecting where it pays**, and using data as the steering wheel.
 
 
+##### Environment Setup
 
-### 📈 Final Takeaway
-The analysis reveals a **dual market structure** — a small set of large-volume vendors driving sales and numerous niche vendors sustaining profitability.
-Balancing both through **data-driven pricing, procurement, and promotion strategies** can enhance overall vendor ecosystem performance and improve profit growth.
-
-
-
-
-
-## ⚙️ Environment Setup
-
-We begin by importing the required Python libraries for data manipulation, statistical analysis, and visualization.
+Every analysis starts with the right toolkit. I built the environment in Python using pandas, NumPy, Matplotlib, Seaborn, SQLAlchemy, and SciPy, a reliable stack, enough for both data engineering and statistical inference.
 
 ```{python}
 
@@ -85,35 +43,6 @@ from scipy.stats import ttest_ind
 import scipy.stats as stats
 import os
 warnings.filterwarnings('ignore')
-
-
-
-```
-
-**Explanation:**
-- `pandas` and `numpy` handle data wrangling and numerical operations.
-- `matplotlib` and `seaborn` create professional data visualizations.
-- `sqlalchemy` manages database connections.
-- `scipy.stats` supports statistical testing.
-- Warnings are suppressed for cleaner outputs.
-
-
-
-
-
-## 🗄️ Database Connection and Data Loading
-
-The dataset is stored in a PostgreSQL database.
-We use environment variables to securely manage credentials and establish a connection.
-
-**Explanation:**
-- `.env` variables keep credentials secure and prevent hardcoding sensitive information.
-- The connection string uses `sqlalchemy` and `psycopg2` to create a PostgreSQL engine.
-- Data is extracted from the table `mart.vendor_sales_summary`, which contains vendor-level sales details.
-
-### 🔍 Preview of the Dataset
-```{python}
-
 
 # creating database connection
 
@@ -135,79 +64,70 @@ df=pd.read_sql_query("select * from mart.vendor_sales_summary", engine)
 df.head()
 
 
+
 ```
 
-**Initial Observation:**
-The dataset provides detailed information about vendors, brands, product descriptions, and corresponding purchase and selling prices.
-This structure forms a strong foundation for evaluating **pricing efficiency**, **vendor competitiveness**, and **sales volume performance** across brands.
+I suppressed routine warnings to keep the workflow focused on insights rather than console clutter.
+
+
+##### Database Connection and Data Loading
+
+The vendor data was stored in a PostgreSQL warehouse. I connected using **SQLAlchemy** with credentials managed through environment variables, keeping security and reproducibility in check.
+
+
+From the table `mart.vendor_sales_summary`, I extracted vendor-level records including brand, product details, purchase costs, and selling prices. Each row represented a small financial transaction, but together they mapped the full vendor ecosystem — who sells what, at what cost, and how efficiently.
+
+The dataset’s structure was well-suited for this analysis: clean relationships between sales, pricing, and inventory allowed for a direct evaluation of **pricing efficiency**, **vendor competitiveness**, and **sales performance** across brands.
+
+##### Initial Observation
+
+The dataset includes vendor, brand, product, and pricing details. It provides a solid base for analyzing **pricing efficiency**, **vendor competitiveness**, and **sales performance** across brands.
+
+## Data Pipeline Overview
+
+To build the analytical dataset, I extracted and merged multiple source tables from PostgreSQL. Each layer of the pipeline served a specific purpose:
+
+#### **Source Tables**
 
 
 
+| Table Name      |  Row Count |
+| :-------------- | ---------: |
+| begin_inventory |    206,529 |
+| end_inventory   |    224,489 |
+| purchase_prices |     12,261 |
+| purchases       |  2,372,474 |
+| sales           | 12,825,363 |
+| vendor_invoice  |      5,543 |
+
+##### Data Modeling
+
+1. **Raw Layer:** Direct extracts from operational systems.
+2. **Staging Layer:** Standardized formats, validated joins, and removed incomplete vendor records.
+3. **Mart Layer:** Aggregated vendor and brand-level metrics into `mart.vendor_sales_summary` (~10K records).
+
+**Result:** A unified, analysis-ready dataset combining sales, purchasing, inventory, and vendor-level information — enabling precise profitability and performance analysis.
+
+## Exploratory Data Analysis (EDA)
+
+The first step was to understand the structure and reliability of `mart.vendor_sales_summary`. I profiled each variable to check distributions, missing values, and potential outliers before moving to deeper analysis.
+
+### Key Observations
+
+* **Scale:** 10,692 records across 128 vendors and over 10,600 brands — most brands tied to a single vendor.
+* **Price Extremes:** Purchase and selling prices show upper outliers, likely premium or imported products.
+* **Profitability:** Mean `profit_margin` of -15.89 with high variance, reflecting loss-leading or inconsistent pricing.
+* **Gross Profit Range:** From -52K to 1.29M — a mix of profitable and loss-making transactions.
+* **Efficiency Gap:** `sales_to_purchase_ratio` varies widely (mean 2.55, max 352.9), revealing large performance disparities.
+* **Inventory Turnover:** Median `stock_turnover` around 0.98 indicates slow-moving inventory for most vendors.
+* **Scale Variance:** Wide spread in total sales and purchase dollars — large vendors dominate, smaller ones occupy niche spaces.
+
+### Data Quality
+
+* Slightly incomplete metrics (`sales_quantity`, `gross_profit`, `profit_margin`) point to limited missing data.
+* High standard deviations and skewed distributions suggest the need for **transformation and outlier treatment** in later stages.
 
 
-## 🗂️ Data Pipeline Overview
-
-Before performing the analysis, multiple source tables were extracted from the PostgreSQL database and transformed into a unified analytical dataset.
-
-### Source Tables and Record Counts
-
-| Table Name | Row Count |
-|:--|--:|
-| begin_inventory | 206,529 |
-| end_inventory | 224,489 |
-| purchase_prices | 12,261 |
-| purchases | 2,372,474 |
-| sales | 12,825,363 |
-| vendor_invoice | 5,543 |
-
----
-
-### Data Modeling Approach
-
-1. **Raw Layer:**
-   Original transactional data loaded from multiple operational tables.
-
-2. **Staging Layer (stg):**
-   Standardized column formats, validated joins between purchases and sales, and removed incomplete vendor records.
-
-3. **Mart Layer:**
-   Created the **`mart.vendor_sales_summary`** table containing ~10K aggregated records by vendor and brand.
-   This dataset served as the foundation for subsequent **exploratory, statistical, and profitability analyses**.
-
----
-
-**Outcome:**
-A clean, analysis-ready dataset combining sales, purchase, inventory, and vendor-level information — enabling precise performance and margin evaluations.
-
-
-
-
-## 🔍 Exploratory Data Analysis (EDA)
-
-Before proceeding with advanced modeling or statistical testing, it’s essential to explore the dataset to understand its structure, detect anomalies, and identify patterns.
-
-Previously, we examined multiple tables in the database to determine which key variables should be included in our final dataset.
-In this phase, we analyze the resultant table — `mart.vendor_sales_summary` — to assess data quality and distribution across all features.
-
-
-### 📊 Summary Statistics
-
-The table below summarizes key descriptive statistics for all numeric and categorical variables in the dataset.
-This helps identify missing values, detect potential outliers, and understand central tendencies and variability.
-
-**Key Insights from Summary Statistics:**
-- The dataset contains **10,692 records**, representing multiple vendors and brands across a wide range of products.
-- `vendor_name` has **128 unique vendors**, while `brand` shows **over 10,600 unique entries**, suggesting that most brands are tied to specific vendors.
-- `purchase_price` (mean ≈ 24.38, max ≈ 5681.81) and `actual_price` (mean ≈ 35.64, max ≈ 7499.99) show **extreme upper outliers**, possibly reflecting premium or imported items.
-- `profit_margin` has a **mean of -15.89** with a very large standard deviation (≈ 447), indicating that several products were sold below cost or with inconsistent pricing.
-- `gross_profit` ranges widely (from -52,002 to 1,290,667), confirming the presence of both profitable and loss-making transactions.
-- The `sales_to_purchase_ratio` varies dramatically (mean ≈ 2.55, max ≈ 352.9), showing substantial disparities in how efficiently vendors convert purchases into sales.
-- `stock_turnover` values are generally low (median ≈ 0.98), suggesting **slow-moving inventory** for many vendors, with a few outliers that exhibit rapid turnover.
-- Columns like `total_sales_dollars` and `total_purchase_dollars` have high variance, reflecting **significant differences in vendor scale** — some vendors dominate sales volume, while others operate in niche segments.
-
-**Data Quality Observations:**
-- A few metrics (e.g., `total_sales_quantity`, `gross_profit`, `profit_margin`) have slightly fewer observations than total rows, indicating **missing data** in certain vendor entries.
-- Large standard deviations across most numeric columns highlight potential **skewness and heavy-tailed distributions**, which will require transformation or outlier handling.
 
 ```{python}
 
@@ -222,20 +142,35 @@ df.describe().T
 
 ```
 
----
 
-### 📈 Distribution of Numerical Variables
+**Key Insights from Summary Statistics**
 
-The histograms below visualize the distribution of all numeric columns in the dataset.
-These plots reveal important characteristics of the data such as skewness, outliers, and concentration ranges.
+**Negative & Zero Values**
+
+* **Gross Profit:** Minimum value of **–52,002.78** indicates certain products were sold at a loss, possibly due to high costs or discount-driven sales.
+* **Profit Margin:** Approaches **–∞** in some cases, suggesting transactions with zero or negative revenue.
+* **Sales Quantity and Sales Dollars:** Contain zeros, reflecting items purchased but never sold — likely slow-moving or obsolete stock.
+
+**High Variance and Outliers**
+
+* **Purchase and Actual Prices:** Maximum values (**5,681.81** and **7,499.99**) far exceed the mean, reflecting premium or imported products.
+* **Freight Cost:** Ranges from **0.09** to **257,032.07**, indicating large shipment discrepancies or inefficient logistics.
+* **Stock Turnover:** Spans from **0** to **274.5**; ratios above **1** imply that previous stock fulfilled new sales, highlighting uneven inventory cycles.
+
+
+### Distribution of Numerical Variables
+
+To understand how each metric behaves, I visualized the distributions for all numeric columns. My objective was simple, spot skewness, outliers, and patterns that hint at where value and inefficiency concentrate.
 
 **Observations:**
-- Most numerical variables are **right-skewed**, indicating a small number of vendors with extremely high values.
-- Metrics like `total_sales_dollars` and `gross_profit` show heavy tails, consistent with a few dominant vendors driving the majority of sales.
-- The `profit_margin` distribution contains negative values, suggesting some transactions may have been made at a loss or under promotional discounts.
-- Continuous variables such as `freight_cost` and `stock_turnover` show more varied patterns, warranting further analysis in subsequent sections.
 
----
+* Most variables are **right-skewed**, showing that a few vendors dominate while the rest cluster at lower values.
+* `total_sales_dollars` and `gross_profit` have **heavy tails**, confirming that a small group drives most of the revenue and profit.
+* `profit_margin` includes **negative values**, pointing to loss-making or heavily discounted transactions.
+* `freight_cost` and `stock_turnover` behave differently — their wider spread suggests operational variability worth investigating later.
+
+In short, the data behaves like many real-world markets: a handful of players account for most of the movement, and the long tail holds the inefficiencies waiting to be optimized.
+
 ```{python}
 
 
@@ -253,8 +188,13 @@ plt.show()
 
 ```
 
+*(Figure: Visualizing Distribution of all Numeric Variables.)*
 
-to see what are the outliers we are going to use box plots.
+
+#### Outlier Detection
+
+To identify irregularities, I used box plots across all numerical variables. These visualizations make it easier to see where extreme values deviate from typical ranges.
+
 
 ```{python}
 
@@ -272,43 +212,22 @@ plt.show
 
 ```
 
-
-
-### **Summary Statistics Insights**
-
-#### **Negative & Zero Values**
-- **Gross Profit:** Minimum value is **-52,002.78**, indicating losses. Some products or transactions may be selling at a loss due to high costs or selling at discounts lower than the purchase price.
-- **Profit Margin:** Has a minimum of approximately **-∞**, which suggests cases where revenue is zero or even lower than costs.
-- **Total Sales Quantity & Sales Dollars:** Minimum values are **0**, meaning some products were purchased but never sold. These could be slow-moving or obsolete stock.
-
-#### **Outliers Indicated by High Standard Deviations**
-- **Purchase & Actual Prices:** The max values (**5,681.81** & **7,499.99**) are significantly higher than the mean (**24.39** & **35.64**), indicating potential premium products.
-- **Freight Cost:** Huge variation, from **0.09** to **257,032.07**, suggests logistics inefficiencies or bulk shipments.
-- **Stock Turnover:** Ranges from **0** to **274.5**, implying some products sell extremely fast while others remain in stock indefinitely.
-  - A value **greater than 1** indicates that sold quantity for that product is higher than purchased quantity, possibly due to older stock being used to fulfill sales.
-
-## 🧹 Data Cleaning and Preparation
-
-After the initial exploration, it was evident that several records contained **negative or zero values** for key financial metrics such as `gross_profit`, `profit_margin`, and `total_sales_quantity`.
-Such inconsistencies likely stem from data entry errors, returns, or transactions not representing valid sales.
-To ensure analytical accuracy, these records were filtered out before proceeding with further analysis.
+*(Figure: Box plots showing distribution and outliers for all numerical variables.)*
 
 
 
+### Data Filtering Criteria
 
----
+To ensure analytical accuracy, I applied a set of logical filters to remove invalid or incomplete records. The focus was on retaining only transactions that reflected genuine sales and profitability.
 
-### ⚙️ Data Filtering Criteria
+**Filtering Conditions:**
 
-We retained only those records that met the following conditions:
-- `gross_profit` > 0 — ensures that only profitable or valid transactions are included.
-- `profit_margin` > 0 — removes loss-making or invalid entries.
-- `total_sales_quantity` > 0 — excludes records without actual sales activity.
+* `gross_profit` > 0 — retained only profitable transactions.
+* `profit_margin` > 0 — excluded loss-making or zero-margin entries.
+* `total_sales_quantity` > 0 — ensured only records with actual sales activity remained.
 
-After applying these filters, the dataset reduced from **10,692 to 8,564 records**, removing approximately **20% of invalid or incomplete entries**.
-
----
-
+After applying these conditions, the dataset reduced from **10,692** to **8,564** records — eliminating roughly **20%** of inconsistent or non-representative entries.
+This refined dataset now provides a cleaner foundation for modeling vendor performance and profitability.
 
 ```{python}
 
@@ -327,25 +246,20 @@ df
 
 ```
 
+*(Table: Sample of filtered dataset showing valid vendor, brand, and financial metrics.)*
 
 
+### Distribution After Cleaning
 
-### 📊 Distribution After Cleaning
-
-The histograms below display the distributions of numerical variables after cleaning.
-Compared to the earlier plots, the cleaned dataset shows **reduced skewness and fewer extreme outliers**, particularly for profitability and price-related columns.
+After filtering out invalid records, I re-examined the numerical distributions to confirm the impact of data cleaning. The updated histograms show noticeably **reduced skewness** and **fewer extreme outliers**, especially in profitability and pricing variables.
 
 **Key Observations:**
-- The `profit_margin` distribution now centers around **25%–40%**, reflecting a more realistic profitability range.
-- `gross_profit` and `total_sales_price` remain right-skewed, indicating that a few large vendors still dominate total earnings — a normal characteristic of vendor sales data.
-- The overall spread of cost-related variables such as `freight_cost` has narrowed, confirming that most invalid or anomalous cost records were successfully removed.
-- Metrics such as `stock_turnover` and `sales_to_purchase_ratio` continue to exhibit long tails, showing operational variability among vendors that will be explored further.
 
----
+* **Profit Margin:** Now stabilizes between **25%–40%**, representing a realistic range for healthy vendor profitability.
+* **Gross Profit & Total Sales Price:** Still right-skewed, as a few major vendors continue to drive most of the revenue — typical for retail ecosystems.
+* **Freight Cost:** Distribution tightened significantly, confirming that most anomalous shipping values were successfully filtered.
+* **Stock Turnover & Sales-to-Purchase Ratio:** Retain long tails, highlighting variability in vendor efficiency and inventory flow — a point for deeper analysis later.
 
-**Conclusion:**
-This cleaning step ensures that subsequent analyses focus on **valid, profit-generating vendor transactions**, reducing bias from incorrect or incomplete data.
-The resulting dataset is now consistent, reliable, and ready for **comparative performance analysis** across vendors and brands.
 
 
 ```{python}
@@ -367,22 +281,20 @@ plt.show()
 
 ```
 
+*(Figure: Distributions of numerical variables after cleaning, showing reduced skewness and improved data consistency.)*
+
+**Conclusion:**
+Post-cleaning, the dataset reflects **valid and profit-generating vendor activity**, ensuring that all subsequent analyses rest on consistent and reliable data. This forms a clean foundation for **comparative performance analysis** across vendors and brands.
 
 
+### **Categorical Feature Analysis**
 
+I examined the key categorical variables — **vendor names** and **product descriptions** — to understand how sales records are distributed across suppliers and brands.
 
-## 🏷️ Categorical Feature Analysis
+##### Top Vendors and Products
 
-Next, we explore the key categorical variables — **vendors** and **product descriptions** — to identify the most frequent entities in the dataset.
+The plots below show the **top 10 vendors** and **top 10 products** based on record frequency.
 
----
-
-
-
-
-### 📊 Top Vendors and Products
-
-The charts below display the **top 10 vendors** and **top 10 products** based on record frequency.
 
 
 ```{python}
@@ -404,20 +316,22 @@ plt.show()
 
 ```
 
-**Insights:**
-- **MARTIGNETTI COMPANIES** dominates the dataset, followed by **M S Walker Inc** and **Ultra Beverage Company LLP**.
-- Major players like **Perfecta Wines**, **E & J Gallo Winery**, and **Diageo North America Inc** also have strong representation.
-- Among products, **Southern Comfort**, **Bacardi Superior Rum**, and **Jägermeister Liqueur** appear most frequently.
-- Repeated entries such as *Southern Comfort* and *Southern Comfort 100 Proof* suggest SKU-level tracking.
+*(Figure: Top 10 vendors and products by frequency, showing market concentration among key players.)*
 
----
+**Insights:**
+
+* **MARTIGNETTI COMPANIES** appears most frequently, followed by **M S Walker Inc** and **Ultra Beverage Company LLP**, highlighting their central role in the dataset.
+* Prominent vendors such as **Perfecta Wines**, **E & J Gallo Winery**, and **Diageo North America Inc** also maintain substantial representation.
+* On the product side, **Southern Comfort**, **Bacardi Superior Rum**, and **Jägermeister Liqueur** lead the list.
+* Repeated listings like *Southern Comfort* and *Southern Comfort 100 Proof* indicate SKU-level granularity within product tracking.
 
 **Summary:**
-The dataset is concentrated among a few large vendors and well-known brands, indicating that future comparisons should adjust for vendor scale to ensure balanced performance insights.
+The dataset remains concentrated among a few large vendors and high-volume brands. Future analyses should account for vendor size to avoid bias when comparing profitability or performance metrics.
 
-## 🔗 Correlation Analysis
+### **Correlation Analysis**
 
-To examine how numerical variables relate to one another, we computed the **correlation matrix** and visualized it using a heatmap.
+To understand how different numerical variables interact, I computed a correlation matrix and visualized it as a heatmap. This provides a quick view of which metrics move together and which operate independently.
+
 
 ```{python}
 
@@ -434,32 +348,39 @@ plt.show()
 
 ```
 
+*(Figure: Correlation heatmap showing relationships among pricing, sales, and profitability variables.)*
 
+### Insights from the Heatmap
 
-
-### 📈 Insights from the Heatmap
-
-- **Pricing Link:** `purchase_price` and `actual_price` show an almost perfect correlation (**r = 0.99**), confirming a cost-plus pricing strategy.
-- **Sales–Purchase Sync:** Strong correlation between `total_purchase_dollars` and `total_sales_dollars` (**r = 0.96**) indicates that higher procurement typically leads to higher sales.
-- **Profit Follows Sales:** `gross_profit` correlates strongly with sales metrics (**r ≈ 0.96**), suggesting top-selling items contribute most to profit.
-- **Tax Consistency:** `total_excise_tax` aligns closely with total sales (**r = 0.98**), reflecting accurate taxation.
-- **Profit Margin Variability:** Weak correlations between `profit_margin` and other metrics imply inconsistent profitability across products.
-- **Inventory Efficiency:** Moderate correlation between `stock_turnover` and `profit_margin` (**r = 0.42**) shows faster-selling products tend to be more profitable.
-- **Vendor Neutrality:** `vendor_number` has negligible correlation with performance variables, confirming no vendor ID bias.
-
----
+* **Pricing Relationship:** `purchase_price` and `actual_price` are almost perfectly correlated (**r = 0.99**), reinforcing the presence of a cost-plus pricing structure.
+* **Sales and Procurement Link:** A strong correlation between `total_purchase_dollars` and `total_sales_dollars` (**r = 0.96**) shows that higher procurement volumes consistently translate to higher sales.
+* **Profit Scales with Sales:** `gross_profit` aligns closely with sales measures (**r ≈ 0.96**), confirming that top-selling products are also the main profit drivers.
+* **Tax Alignment:** `total_excise_tax` strongly tracks `total_sales_dollars` (**r = 0.98**), indicating consistent tax application relative to sales.
+* **Profit Margin Independence:** Weak correlation between `profit_margin` and other financial variables suggests margin variability across products — likely due to differing pricing or discount strategies.
+* **Inventory Efficiency:** A moderate correlation between `stock_turnover` and `profit_margin` (**r = 0.42**) indicates that faster-moving inventory tends to be more profitable.
+* **Vendor Neutrality:** `vendor_number` shows negligible correlation with performance metrics, confirming that vendor IDs themselves don’t drive performance outcomes.
 
 **Summary:**
-Sales, tax, and profit metrics are tightly linked, but profitability varies significantly across products — signaling opportunities for **pricing optimization** and **inventory efficiency improvements**.
+The heatmap reveals a tightly connected sales–profit–tax structure, but also highlights inconsistency in profit margins across products. These gaps point toward opportunities in **pricing optimization** and **inventory efficiency tuning**.
 
 
-## 🎯 Analysis 1 — High-Margin, Low-Sales Brands (Promo/Pricing Opportunities)
-
-**Business Objective:** Find brands that **sell little** but have **strong profit margins** — prime candidates for targeted promotions or price optimization.
 
 
-### Step 1 — Brand-level aggregation
-*(Runs the first code block: build `brand_performance` with `total_sales_dollars` and mean `profit_margin`.)*
+## Analysis 1 — High-Margin, Low-Sales Brands
+
+**Business Objective:** Find the hidden gems, brands that quietly make great margins but barely move off the shelf. These are the ones that don’t need a miracle, just a nudge.
+
+
+##### Approach
+
+I aggregated performance data at the **brand level**, combining `total_sales_dollars` and average `profit_margin`. From there, percentile thresholds (15th for low sales, 85th for high margin) defined an objective filter for **underperforming but profitable brands**.
+
+
+
+
+##### Step 1 — Roll Up the Data
+
+I grouped everything at the **brand level**, pulling together `total_sales_dollars` and average `profit_margin`. The idea was simple: who’s making the most money *per sale*, and who’s actually selling enough to matter?
 
 
 ```{python}
@@ -475,9 +396,17 @@ brand_performance
 
 ```
 
-### Step 2 — Thresholds
-*(Runs the second code block: compute the 15th-percentile sales and 85th-percentile margin thresholds.)*
-These create objective cutoffs for “low sales” and “high margin.”
+*(Table: Aggregated dataset showing sales and margin by brand.)*
+
+
+
+
+##### Step 2 — Draw the Line
+
+Next, I needed a fair way to define “low sales” and “high margin.” So instead of guessing, I used the **15th percentile for sales** and **85th percentile for profit margin**.
+That split the market neatly: bottom performers on sales, top performers on profitability.
+
+
 
 ```{python}
 
@@ -491,9 +420,12 @@ print(low_sales_threshold, high_margin_threshold)
 
 ```
 
-### Step 3 — Target list
-*(Runs the third code block: filter into `target_brands` and display the table, sorted by sales.)*
-**Interpretation:** Brands listed here are **high-margin underperformers** — strong candidates for **awareness campaigns**, **bundling**, **shelf placement**, or **price testing**.
+*(Figure: Threshold boundaries used to identify target brands.)*
+
+##### Step 3 — Meet the Quiet Overachievers
+
+Filtering by those thresholds revealed a list of brands that make great margins but barely sell.
+Think of them as **A-students in a class no one knows exists** — they’ve done their part, but visibility and volume haven’t caught up.
 
 ```{python}
 # filter brand with low sales but high performance margins.
@@ -508,17 +440,18 @@ display(target_brands.sort_values('total_sales_dollars'))
 
 
 
-
 ```
 
----
 
-### Step 4 — Scatter plot (all brands)
-*(Runs the fourth code block: scatter of `total_sales_dollars` vs. `profit_margin`, with thresholds and highlighted targets.)*
-**Read the chart:**
-- **Upper-left quadrant** = **low sales / high margin** → **focus**.
-- **Lower-right** = high sales / low margin → margin recovery opportunities (outside this analysis’ scope).
+*(Table: Table of identified high-margin, low-sales brands.)*
 
+##### Step 4 — Plot the Landscape
+
+To see what’s really going on, I plotted all brands with sales on the x-axis and margin on the y-axis.
+
+* The **blue dots** are everyone.
+* The **red ones** are the overlooked winners — high margin, low sales.
+  The top-left cluster instantly stood out: profitable, consistent, and invisible.
 
 
 ```{python}
@@ -542,11 +475,14 @@ plt.show()
 
 ```
 
-### Step 5 — Zoomed view (mitigate outliers)
-*(Runs the fifth code block: re-plot after subsetting brands with `total_sales_dollars` < **8,000**.)*
-This makes **low-revenue, high-margin brands** easier to spot visually.
 
----
+*(Figure: Scatter plot showing high-margin, low-sales brands relative to total market.)*
+
+##### Step 5 — Zoom In
+
+Because big vendors can distort the picture, I zoomed in on brands making under **$8,000** in total sales.
+The pattern held — the same cluster of high-margin brands sat neatly above the margin threshold line.
+
 ```{python}
 
 
@@ -570,29 +506,31 @@ plt.show()
 
 ```
 
-### 🧩 Findings
+### Findings
 
-- The red cluster in the **upper-left quadrant** represents brands with **high profit margins but low total sales**.
-  These are strong candidates for **promotional campaigns or price adjustments** to boost volume without hurting margins.
+Here’s what the data actually says:
+* **Profit-rich but volume-poor.** These brands make excellent margins but remain underexposed.
+* The **upper-left cluster** of the scatter plot captures these outliers clearly, separating them from the broader dataset.
+* The **profit margin range (≈65–90%)** shows strong pricing power, while sales volumes remain limited — often due to low visibility or shelf turnover.
+* The **majority of products** sit below the high-margin line, confirming that broad profitability remains moderate.
+* The clean separation between the clusters suggests structural inefficiency rather than random variance — a consistent group of brands is systematically underselling.
 
-- The **majority of brands** fall below the high-margin threshold, showing that overall profitability is **modest** and could benefit from margin optimization.
+**Interpretation:**
+These brands are not problem products — they’re *quiet winners* trapped by low exposure. With already strong margins, even a small lift in volume could drive a significant uptick in overall profit.
 
-- The distinct gap between the red and blue regions indicates that these high-margin brands are **systematically underperforming in sales**, not just random outliers.
+##### Business Takeaway
 
-- Since these brands already yield healthy profit percentages, even a **small increase in sales volume** can have a **large incremental impact** on total profit.
-
-- The scatter confirms a **non-linear sales–margin relationship** — boosting sales does not necessarily erode margins, suggesting room for **controlled promotions or cross-selling**.
-
----
-
-**Business Takeaway:**
-A subset of brands with **high profitability but low visibility** presents an immediate opportunity.
-Strategic actions such as **targeted advertising, bundling, or slight price reductions** could enhance turnover while maintaining strong margins.
+This isn’t a problem — it’s an opportunity hiding in plain sight.
+Brands with **high margins and low sales** are primed for **bundling, cross-selling, or targeted campaigns**. A small marketing push or strategic price adjustment could turn them from quiet performers into profit accelerators.
 
 
-## 💰 Analysis 2 — Top Vendors and Brands by Sales
 
-**Business Objective:** Identify which vendors and brands generate the **highest total sales** to highlight key revenue drivers.
+## Analysis 2 — Top Vendors and Brands by Sales
+
+**Objective:** Identify which vendors and brands drive the majority of total sales to pinpoint key revenue contributors.
+
+I aggregated `total_sales_dollars` at both the **vendor** and **brand** levels to see who’s really moving the market. When ranked and visualized side by side, the pattern became obvious — a few heavyweights dominate both supply and consumer demand.
+
 
 ```{python}
 
@@ -603,22 +541,10 @@ top_vendors
 
 ```
 
----
 
-### 📊 Summary
+**DIAGEO NORTH AMERICA INC** leads the vendor list by a wide margin with **$67.99M** in total sales, followed by **MARTIGNETTI COMPANIES** at **$39.33M** and **PERNOD RICARD USA** at **$32.06M**. Together, the top five vendors control most of the total volume, underscoring a concentrated supplier landscape where a handful of players hold significant leverage.
 
-We aggregated `total_sales_dollars` at both the **vendor** and **brand (description)** levels, selecting the top 10 performers by total sales.
 
-**Top Vendors (by total sales):**
-- **DIAGEO NORTH AMERICA INC** leads with approximately **$67.99M**, far exceeding other distributors.
-- **MARTIGNETTI COMPANIES** and **PERNOD RICARD USA** follow with **$39.33M** and **$32.06M**, respectively.
-- The top five vendors collectively contribute a major share of overall revenue, showing strong concentration in a few market leaders.
-
-**Top Brands (by total sales):**
-- **Jack Daniels No 7 Black** tops the list at **$7.96M**, closely followed by **Tito’s Handmade Vodka** (**$7.40M**) and **Grey Goose Vodka** (**$7.21M**).
-- Well-known premium spirits dominate the top 10 list, emphasizing **brand recognition and consumer loyalty** as key performance drivers.
-
----
 
 ```{python}
 
@@ -632,20 +558,7 @@ def format_dollars(value):
         return str(value)
 
 
-
-
-```
-
-```{python}
-
-
 top_brands.apply(lambda x: format_dollars(x))
-
-
-```
-
-```{python}
-
 
 plt.figure(figsize=(15,5))
 
@@ -675,33 +588,27 @@ plt.tight_layout()
 plt.show()
 
 
+
+
 ```
 
-### 📈 Insights
+*(Figure: Comparative bar charts of top 10 vendors and brands by total sales, highlighting revenue concentration among leading players.)*
 
-- The **vendor landscape is top-heavy**, with a small number of suppliers accounting for most sales — suggesting strong vendor leverage and bargaining power.
-- **Whiskey and vodka brands** dominate revenue, confirming high demand for premium liquor categories.
-- Smaller vendors and emerging brands might need **marketing support** or **product diversification** to compete in this concentrated market.
+At the brand level, the story mirrors the vendor hierarchy. **Jack Daniels No 7 Black** tops the list at **$7.96M**, closely followed by **Tito’s Handmade Vodka** and **Grey Goose Vodka**. Premium spirits dominate across the board — not because of discounts or volume plays, but because brand trust and consistency sell better than price ever could.
 
-**Summary Takeaway:**
+The data confirms a **top-heavy market**. A few established vendors and globally recognized brands command the lion’s share of sales, while smaller vendors occupy the long tail — important, but easily overshadowed. This imbalance signals where negotiation leverage lies and where emerging players need to invest in visibility, differentiation, or category focus to compete.
+
+**Takeaway:**
 The sales distribution underscores a **highly consolidated market** led by major vendors and globally recognized brands.
 These insights can guide partnership prioritization, negotiation strategy, and promotional planning.
 
 
-## 📦 Analysis 3 — Vendor Contribution to Total Purchases
+## Analysis 3 — Vendor Contribution to Total Purchases
 
-**Business Objective:** Identify which vendors contribute the most to total purchase dollars to understand supplier concentration and purchasing dependency.
+**Objective:** Determine which vendors account for the largest share of total purchases to assess supplier concentration and dependency.
 
----
+The dataset was grouped by `vendor_name` to calculate total **purchase dollars**, **sales dollars**, and **gross profit** per vendor. I then derived each vendor’s **purchase contribution percentage** — their share of overall procurement — and plotted the results using a Pareto chart to visualize cumulative concentration.
 
-### 📊 Overview
-
-The dataset was grouped by `vendor_name` to calculate:
-- Total **purchase dollars**, **sales dollars**, and **gross profit** per vendor.
-- Each vendor’s **purchase contribution percentage** (share of total purchases).
-- The **cumulative contribution** to visualize top contributors via a Pareto chart.
-
----
 
 ```{python}
 
@@ -712,23 +619,12 @@ vendor_performance= df.groupby('vendor_name').agg({
     'total_sales_dollars': 'sum'
 }).reset_index()
 
-vendor_performance
-
-```
-
-Here, I am adding a new column for purchase contribution
-
-```{python}
+# display(vendor_performance)
 
 
 vendor_performance['purchase_contribution_percentage']= 100*vendor_performance['total_purchase_dollars']/vendor_performance['total_purchase_dollars'].sum()
 
 vendor_performance=round(vendor_performance.sort_values('purchase_contribution_percentage', ascending=False), 2)
-```
-
-The Top vendors can be seen the the table below.
-
-```{python}
 
 
 top_vendors=vendor_performance.head(10)
@@ -736,21 +632,15 @@ top_vendors['total_sales_dollars']=top_vendors['total_sales_dollars'].apply(form
 top_vendors['total_purchase_dollars']=top_vendors['total_purchase_dollars'].apply(format_dollars)
 top_vendors['gross_profit']=top_vendors['gross_profit'].apply(format_dollars)
 
-top_vendors
-
-
-```
-
-```{python}
-
-
+display(top_vendors)
 top_vendors['cumulative_contribution_percentage']=top_vendors['purchase_contribution_percentage'].cumsum()
 
-
 ```
 
-```{python}
+*(Table: Table showing top vendors and purchase contribution percentage or purchasing share.)*
 
+
+```{python}
 
 # Create the figure and primary axis
 fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -793,43 +683,46 @@ ax2.legend(loc='upper right')
 plt.show()
 
 
+
+
 ```
 
+*(Figure: Pareto chart depicting vendor-wise purchase contribution and cumulative percentage.)*
 
----
+##### Key Findings
 
-### 🔎 Key Findings
+* **DIAGEO NORTH AMERICA INC** leads decisively, contributing **16.3%** of total purchases — nearly twice the volume of its nearest competitors.
+* **MARTIGNETTI COMPANIES**, **PERNOD RICARD USA**, and **JIM BEAM BRANDS COMPANY** follow closely in the **7–8% range**, forming the second tier of dominant suppliers.
+* The **top 10 vendors together represent about 65%** of total procurement, confirming a highly concentrated supplier ecosystem.
+* The Pareto curve’s **steep initial climb** underscores the imbalance — a small set of vendors drives the majority of purchasing activity.
 
-- **DIAGEO NORTH AMERICA INC** dominates with **16.3%** of total purchases — nearly double that of the next vendor.
-- **MARTIGNETTI COMPANIES**, **PERNOD RICARD USA**, and **JIM BEAM BRANDS COMPANY** each contribute around **7–8%**, forming the next major tier.
-- The **top 10 vendors** together account for roughly **65% of total purchases**, confirming a **highly concentrated supplier base**.
-- The cumulative line (red) in the Pareto chart illustrates a **steep initial climb**, showing that a small set of vendors drive the majority of procurement spend.
 
----
+##### Business Insight
 
-### 💡 Business Insight
+This is a textbook **80/20 pattern**: a few vendors control most of the spend.
+That concentration creates both leverage and exposure — strong negotiation opportunities on one side, dependency risk on the other.
 
-- The **80/20 rule** is evident — a few key vendors control most purchasing activity.
-- This suggests opportunities for:
-  - **Negotiating better terms** with top suppliers.
-  - **Diversifying vendors** to reduce dependency risk.
-  - Prioritizing **performance monitoring** for high-volume vendors.
+Strategically, this suggests three clear actions:
 
----
+1. **Negotiate smarter** with top suppliers to capture volume-based cost advantages.
+2. **Diversify the vendor base** to protect against supply disruption.
+3. **Continuously monitor high-volume vendors** to ensure reliability and cost efficiency.
+
+
 
 **Summary:**
-Procurement activity is heavily concentrated among a few suppliers, emphasizing the need for strategic vendor management and risk mitigation.
+Procurement is heavily centralized among a small vendor group. Managing this concentration proactively — through balanced negotiation, diversification, and oversight — can strengthen both **supply stability** and **financial performance**.
 
-## 🧮 Analysis 4 — Vendor Dependency and Bulk Purchase Efficiency
 
-### Question 1 — How much of total procurement depends on top vendors?
 
-The **top 10 vendors** collectively account for **65.69% of total purchases**, as shown below.
-This indicates a strong dependency on a small number of suppliers.
+## Analysis 4 — Vendor Dependency and Bulk Purchase Efficiency
+
+**Objective 1:** Assess how much of total procurement relies on top vendors to evaluate purchasing concentration and supplier risk.
+
+
 
 
 ```{python}
-
 
 total_contribution = round(top_vendors['purchase_contribution_percentage'].sum(), 2)
 print(f"Total Purchase Contribution of top 10 vendors is {total_contribution} %")
@@ -837,19 +730,13 @@ print(f"Total Purchase Contribution of top 10 vendors is {total_contribution} %"
 
 ```
 
-**Key Insights:**
-- Procurement is **highly concentrated**, with **DIAGEO NORTH AMERICA INC** alone contributing over **16%** of total purchases.
-- The **donut chart** clearly shows that nearly **two-thirds** of all purchase dollars flow through these top vendors.
-- Such dependence increases both **bargaining leverage** (for discounts) and **risk exposure** (in case of supply disruption).
 
-**Business Implication:**
-Strategic diversification could reduce procurement risk while maintaining favorable pricing relationships with key suppliers.
+The **top 10 vendors** account for **65.69% of total purchases**, as shown below — a clear sign that procurement is heavily centralized.
 
 
 ```{python}
 
 import matplotlib.colors as mcolors
-
 
 
 # Prepare data
@@ -937,10 +824,32 @@ plt.show()
 
 ```
 
-### Question 2 — Does purchasing in bulk reduce the unit price?
 
-To evaluate the **impact of order size on unit purchase price**, purchases were grouped into **Small**, **Medium**, and **Large** quantile-based categories.
+*(Figure: Donut chart showing top 10 vendors’ purchase contribution and remaining share.)*
 
+---
+
+##### Key Insights
+
+* **DIAGEO NORTH AMERICA INC** alone contributes over **16%** of all purchases — effectively setting the pace for the rest of the supplier network.
+* Combined, the top ten vendors manage **two-thirds of total procurement**, illustrating both **strong leverage** and **potential dependency**.
+* The chart makes the imbalance visible: the top few vendors dominate the spend, while the remaining 34% is scattered across dozens of smaller suppliers.
+* This kind of structure works well for bulk discounts but leaves the business exposed to **supply disruption or pricing shifts** from a handful of partners.
+
+
+
+A balanced strategy would involve:
+
+* **Negotiating multi-year terms** or rebates with the top vendors to secure volume advantages.
+* **Introducing secondary suppliers** for high-value categories to reduce dependency.
+* **Monitoring vendor performance** regularly to ensure reliability and continuity.
+
+In short, procurement efficiency is high — but resilience will depend on how well vendor concentration is managed moving forward.
+
+
+### Question  — Does Purchasing in Bulk Reduce the Unit Price?
+
+I wanted to see if buying more actually paid off — whether bigger orders came with better pricing. To test that, I grouped all purchases into three quantile-based categories: **Small**, **Medium**, and **Large**. Each represents a third of all transactions by volume.
 
 
 
@@ -956,7 +865,8 @@ df[['order_size', 'total_purchase_quantity']]
 
 ```
 
-calculating mean for each category
+*(Table: Distribution of total purchase quantities categorized by order size.)*
+
 
 ```{python}
 
@@ -972,37 +882,27 @@ plt.show()
 
 ```
 
-**Findings:**
-- **Large orders** have the **lowest average unit price (~$10.78 per unit)**, confirming the effect of **economies of scale**.
-- The **price difference** between Small and Large orders is significant — roughly a **72% reduction** in cost per unit.
-- This suggests vendors offering volume-based pricing effectively **incentivize bulk purchasing**, leading to **higher total sales** despite lower per-unit revenue.
+*(Figure: Box plot showing the relationship between order size and average unit purchase price.)*
 
-**Business Takeaway:**
-Bulk purchasing is **cost-efficient** and should be leveraged where feasible.
-However, it must be balanced against **inventory holding costs** and **cash flow constraints** to ensure sustainable profitability.
+When I plotted the average unit purchase price across these groups, the result was obvious — the bigger the order, the cheaper each unit got.
 
-## 📦 Analysis 5 — Inventory Turnover and Capital Locked in Unsold Stock
 
-**Business Objective:** Identify vendors with **low stock turnover** (slow-moving products) and estimate the **capital tied up in unsold inventory**.
+##### Findings
 
----
+* **Large orders** had the **lowest average unit price (~$10.78)** — a clear sign of **economies of scale** in action.
+* The **gap between small and large orders** was striking: roughly a **72% reduction** in unit cost.
+* Vendors are clearly **pricing for volume**, rewarding bigger orders even if it means slimmer per-unit margins.
 
-### 🔄 Low Inventory Turnover
+##### Business Takeaway
 
-The vendors below have an **average stock turnover below 1**, indicating **slow-moving or stagnant inventory**.
-This may signal **over-purchasing**, **weak demand**, or **inefficient stock rotation**.
+Buying in bulk works — it cuts costs and strengthens vendor relationships. But it’s not a free win. I’d only push bulk purchases where **inventory turnover is high** or **storage costs are low**. Otherwise, the savings sit in a warehouse instead of showing up on the balance sheet.
 
-**Lowest Turnover Vendors:**
-- ALISA CARR BEVERAGES — 0.62
-- HIGHLAND WINE MERCHANTS LLC — 0.71
-- PARK STREET IMPORTS LLC — 0.75
-- DUNN WINE BROKERS — 0.77
-- TAMWORTH DISTILLING — 0.80
 
-**Interpretation:**
-A stock turnover below 1 means these vendors sell their entire inventory **less than once per year**, leading to excess holding costs and reduced liquidity.
 
----
+## Analysis 5 — Inventory Turnover & Capital Locked in Unsold Stock
+
+I wanted to see how much money is sitting still — products that aren’t moving, and vendors that might be overstocked. So, I looked at **stock turnover** and calculated the **capital tied up in unsold inventory**.
+
 ```{python}
 
 
@@ -1010,20 +910,25 @@ df[df['stock_turnover']<1].groupby('vendor_name')[['stock_turnover']].mean().sor
 
 ```
 
----
 
-### 💰 Capital Locked in Unsold Inventory
-
-Across all vendors, the **total unsold capital** amounts to approximately **$2.71M**, representing the value of stock purchased but not yet sold.
-
-**Top Vendors by Unsold Capital:**
-- DIAGEO NORTH AMERICA INC — **$722K**
-- JIM BEAM BRANDS COMPANY — **$555K**
-- PERNOD RICARD USA — **$471K**
-- WILLIAM GRANT & SONS INC — **$402K**
-- E & J GALLO WINERY — **$228K**
+*(Table: Vendors with average stock_turnover < 1, sorted ascending.)*
 
 ---
+
+#### Low Inventory Turnover
+
+Some vendors barely turn their inventory once a year — a red flag for over-purchasing or weak demand.
+
+**Lowest turnover vendors:**
+
+* ALISA CARR BEVERAGES — 0.62
+* HIGHLAND WINE MERCHANTS LLC — 0.71
+* PARK STREET IMPORTS LLC — 0.75
+* DUNN WINE BROKERS — 0.77
+* TAMWORTH DISTILLING — 0.80
+
+A turnover below one basically means I’m holding stock longer than I should — it ties up cash, adds storage costs, and eats into liquidity.
+
 
 ```{python}
 
@@ -1033,6 +938,13 @@ print('total_unsold_capital:', format_dollars(df['unsold_inventory_value'].sum()
 
 
 ```
+
+
+
+##### **Capital Locked in Unsold Inventory**
+
+>When I ran the numbers, about **$2.71M** worth of capital was sitting in products that hadn’t sold yet. That’s a lot of cash waiting for customers.
+
 
 
 
@@ -1053,22 +965,40 @@ inventory_value_per_vendor.head(10)
 
 ```
 
-### 📈 Insights
 
-- A significant share of capital is tied up in **inventory from top-performing vendors**, implying potential overstocking.
-- Slow-moving products could benefit from **discounting**, **bundling**, or **targeted promotions** to clear excess inventory.
-- Continuous monitoring of **stock turnover ratio** is crucial to maintain **optimal working capital efficiency**.
+*(Figure: Vendors ranked by unsold_inventory_value (USD).)*
 
----
+**Top vendors by unsold capital:**
 
-**Summary:**
-Approximately **$2.71M** is locked in unsold stock, with several large vendors contributing most of it.
-Improving turnover through **inventory management and demand forecasting** can free up capital and improve cash flow.
+* DIAGEO NORTH AMERICA INC — $722K
+* JIM BEAM BRANDS COMPANY — $555K
+* PERNOD RICARD USA — $471K
+* WILLIAM GRANT & SONS INC — $402K
+* E & J GALLO WINERY — $228K
 
-## 💹 Analysis 6 — Profit Margin Confidence Intervals for Top vs. Low Vendors
+##### What This Means
 
-**Business Objective:**
-Compare profit margins between **top-performing vendors (high sales)** and **low-performing vendors (low sales)** to understand profitability patterns.
+Most of this stuck capital comes from **big, otherwise high-performing vendors**, which suggests the problem isn’t vendor quality — it’s inventory balance. Some SKUs are moving fast while others just sit there.
+
+If I were to act on this, I’d:
+
+* **Clear out slow movers** through short-term discounts, bundles, or limited promotions.
+* **Adjust ordering rules** so purchases actually match product velocity.
+* **Tighten demand forecasts** and review vendor lead times before reordering.
+
+
+##### Takeaway
+
+Roughly **$2.71M** in working capital is locked in shelves instead of generating returns. Freeing it up through smarter stock rotation and demand-based purchasing could have an immediate impact on cash flow and profitability.
+
+
+
+
+
+## Analysis 6 — Profit Margin Confidence Intervals: Top vs. Low Vendors
+
+I wanted to see whether the most successful vendors actually make more money per sale — or if, like most high-volume businesses, they trade margin for scale.
+To check, I split vendors into two groups: **top performers** (top 25% by sales) and **low performers** (bottom 25%). Then I calculated their mean profit margins and 95% confidence intervals.
 
 
 ```{python}
@@ -1077,34 +1007,8 @@ Compare profit margins between **top-performing vendors (high sales)** and **low
 top_threshold= df['total_sales_dollars'].quantile(0.75)
 low_threshold= df['total_sales_dollars'].quantile(0.25)
 
-
-```
-
-```{python}
-
-
 top_vendors = df[df["total_sales_dollars"] >= top_threshold]["profit_margin"].dropna()
 low_vendors = df[df["total_sales_dollars"] <= low_threshold]["profit_margin"].dropna()
-
-
-
-```
-
----
-
-### 🧮 Statistical Summary
-
-| Vendor Group | Mean Profit Margin (%) | 95% Confidence Interval |
-|---------------|-----------------------|--------------------------|
-| Top Vendors   | 31.18                 | (30.74, 31.61)          |
-| Low Vendors   | 41.57                 | (40.50, 42.64)          |
-
----
-
-
-```{python}
-
-
 # to calculate the confidence interval
 def confidence_interval(data, confidence=0.95):
     mean_val=np.mean(data)
@@ -1112,13 +1016,6 @@ def confidence_interval(data, confidence=0.95):
     t_critical=stats.t.ppf((1+confidence)/2, df=len(data)-1)
     margin_of_error= t_critical *std_err
     return mean_val, mean_val-margin_of_error, mean_val+margin_of_error
-
-
-```
-
-```{python}
-
-
 # Compute confidence intervals for top and low vendors
 top_mean, top_lower, top_upper = confidence_interval(top_vendors)
 low_mean, low_lower, low_upper = confidence_interval(low_vendors)
@@ -1152,51 +1049,68 @@ plt.show()
 
 
 
+
 ```
 
-### 📊 Insights from the Distribution
 
-- **Low-performing vendors** exhibit **higher average profit margins (≈41.6%)**, suggesting they rely on **premium pricing** or smaller, high-margin product lines.
-- **Top-performing vendors**, despite higher total sales, maintain **lower margins (≈31.2%)**, likely due to **volume-driven pricing** or **competitive markets**.
-- The **non-overlapping confidence intervals** confirm that the difference is **statistically significant** — low vendors indeed have higher margins.
-- **Distribution Shape:** Both groups show right-skewed distributions, with low vendors having a broader spread due to niche product pricing.
-
----
-
-### 💡 Business Implications
-
-- **High-performing vendors:** Should explore **cost optimization**, **tiered pricing**, or **product bundling** to improve margins without hurting volume.
-- **Low-performing vendors:** Could increase total revenue by **expanding reach**, **improving distribution**, or **competitive pricing**, since they already maintain healthy margins.
-
----
-
-**Summary:**
-Top vendors drive revenue but with tighter margins, while smaller vendors sustain profitability through higher markups.
-Balancing both strategies can optimize **overall portfolio profitability**.
+*(Figure: Histogram overlay comparing profit margin distributions for top and low vendors.)*
 
 
-## 🧾 Analysis 7 — Hypothesis Testing: Profit Margin Differences Between Vendor Groups
 
-**Objective:**
-Test whether the difference in **mean profit margins** between **top-performing** and **low-performing** vendors is statistically significant.
+### What the Numbers Say
 
----
+| Vendor Group | Mean Profit Margin (%) | 95% Confidence Interval |
+| ------------ | ---------------------- | ----------------------- |
+| Top Vendors  | 31.18                  | (30.74, 31.61)          |
+| Low Vendors  | 41.57                  | (40.50, 42.64)          |
 
-### 🧠 Hypotheses
+The two intervals don’t overlap, which means the difference is **statistically real**, not noise.
 
-- **H₀ (Null Hypothesis):** There is **no significant difference** in the mean profit margins of top- and low-performing vendors.
-- **H₁ (Alternative Hypothesis):** There **is a significant difference** in the mean profit margins of top- and low-performing vendors.
+*(Figure: Profit margin distributions with confidence intervals for top vs. low vendors.)*
 
----
+##### What It Means
+
+* **Low-performing vendors** have **higher margins (~41.6%)**, probably because they sell smaller, niche, or premium lines.
+* **Top vendors**, who drive most of the sales volume, run at **lower margins (~31.2%)** — classic bulk-market behavior. They win on scale, not per-unit profit.
+* The **shape of the distributions** tells the same story: both are right-skewed, but low vendors have a wider spread, reflecting mixed strategies — some high-end, some struggling.
 
 
-### ⚙️ Method
+##### My Takeaway
 
-A **two-sample independent t-test (unequal variances)** was conducted using vendor-level profit margins:
-- **Top Vendors:** Sales above the 75th percentile
-- **Low Vendors:** Sales below the 25th percentile
+It’s the classic trade-off: **volume vs. margin**. The top vendors dominate revenue but give up margin to stay competitive. Smaller vendors sell less but make more per sale.
 
----
+If I were optimizing this portfolio, I’d do two things:
+
+* Help **top vendors** recover margin through smarter pricing, cost controls, or tiered bundles.
+* Help **low vendors** scale up by improving distribution or exposure — they’ve already got strong unit profitability.
+
+The balance between the two is where sustainable growth lives.
+
+Got it — here’s the rewritten section in your proper tone: first-person, clean, analytical, and grounded with personality but zero fluff.
+
+
+
+## Analysis 7 — Hypothesis Testing: Profit Margin Differences Between Vendor Groups
+
+I wanted to confirm whether the profit gap I observed between **top vendors** and **low vendors** was just noise — or if it actually held up statistically.
+
+
+
+##### Hypotheses
+
+* **H₀:** No significant difference exists in average profit margins between top- and low-performing vendors.
+* **H₁:** There is a significant difference in mean profit margins between the two groups.
+
+
+##### Method
+
+I ran a **two-sample t-test** assuming unequal variances.
+
+* **Top vendors:** sales above the 75th percentile
+* **Low vendors:** sales below the 25th percentile
+
+This test checks whether their mean profit margins come from the same population.
+
 
 
 ```{python}
@@ -1227,38 +1141,59 @@ else:
 
 ```
 
-### 📊 Results
 
-| Metric | Value |
-|:--|:--|
-| **T-Statistic** | -17.67 |
-| **P-Value** | 0.0000 |
-| **Decision** | Reject H₀ |
 
-**Interpretation:**
-The p-value (< 0.05) confirms a **statistically significant difference** in mean profit margins between the two vendor groups.
-Low-performing vendors maintain **significantly higher profit margins** compared to top-performing vendors.
+##### Results
 
----
+| Metric          | Value     |
+| :-------------- | :-------- |
+| **T-Statistic** | -17.67    |
+| **P-Value**     | 0.0000    |
+| **Decision**    | Reject H₀ |
 
-### 💡 Business Insight
-
-- **Top Vendors:** Operate on **high volume but thinner margins**, consistent with competitive pricing strategies.
-- **Low Vendors:** Maintain **lower sales but higher markups**, reflecting premium positioning or niche markets.
-- The results support a **dual strategy**:
-  - Optimize costs and efficiency for high-volume vendors.
-  - Expand marketing and visibility for high-margin, low-volume vendors to unlock additional revenue potential.
+*(Figure: Output of two-sample t-test comparing profit margins between top and low vendors.)*
 
 ---
 
-**Conclusion:**
-The difference in profit margins between top and low-performing vendors is **statistically significant**, indicating distinct business models driving performance in each group.
+The p-value rounds to zero — meaning the difference isn’t by chance. **Low-performing vendors** genuinely earn higher margins than the top ones.
 
 
 
+##### What This Means
+
+High-performing vendors run a **volume game** — low margins, big throughput, and tight pricing.
+Low-performing vendors sit on the other side — **fewer sales but stronger markups**, likely in premium or niche categories.
+
+This confirms two distinct business models:
+
+1. **Top vendors:** Win on efficiency and scale.
+2. **Low vendors:** Win on exclusivity and price control.
 
 
----
+
+##### Takeaway
+
+The profit gap isn’t just visible — it’s statistically significant. The data backs a **dual vendor strategy**:
+
+* Push cost optimization and scale for top performers.
+* Expand reach for high-margin, low-volume vendors to capture untapped growth.
+
+
+
+##  Final Thoughts
+
+> If you’ve made it all the way down here, I already know two things about you: you love data, and you’ve got the patience of a true analyst.
+
+Thanks for scrolling through this deep dive — if you enjoy turning messy datasets into sharp stories and actionable insights, we’ll probably get along just fine.
+
+Let’s connect and build something insightful together.
+
+
+
+**PS:** If you liked this breakdown, you’ll probably enjoy my deep-dive on a startup I built and ran — where I turned messy operations data into something that actually worked (and occasionally didn’t).
+[Read the Startup Case Study →](traway.live)
+
+
 
 ## 👋 Author
 
@@ -1266,7 +1201,7 @@ The difference in profit margins between top and low-performing vendors is **sta
 *Data | Product | Strategy | Design* <br>
 📊 Data Analyst & Business Analyst — 🏗️ builder @ ❤️ <br><br>
 📧 [yashtiwari.ty@gmail.com](mailto:yashtiwari.ty@gmail.com) <br>
-🌐 [LinkedIn](https://www.linkedin.com/in/yash-tiwari-here/) • [Portfolio](https://leaf-allspice-531.notion.site/Hey-there-I-am-Yash-28a9c4819e1680a48f15c39ad54bd9d6?source=copy_link)
+🌐 [LinkedIn](https://www.linkedin.com/in/yash-tiwari-here/) • [Portfolio](https://leaf-allspice-531.notion.site/Hey-there-I-am-Yash-28a9c4819e1680a48f15c39ad54bd9d6?source=copy_link) • [Github](https://github.com/rsm-ytiwari)
 
 <hr />
 
