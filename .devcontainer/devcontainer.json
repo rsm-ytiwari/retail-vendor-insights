@@ -4,7 +4,7 @@
     "docker-compose-k8s.yml"
   ],
   "service": "rsm-msba",
-  "workspaceFolder": "/home/jovyan/MSBA/02_PROJECTS/vendor_performance",
+  "workspaceFolder": "/home/jovyan/MSBA/02_PROJECTS/SQL_Practice/SQL-exercise-master",
   "remoteUser": "jovyan",
   "overrideCommand": false,
   "shutdownAction": "none",

@@ -1,7 +1,0 @@
-project:
-  type: default
-execute-dir: project
-format:
-  html:
-    toc: true
-    code-copy: true
