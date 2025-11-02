@@ -1,0 +1,3110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Retail Vendor Performance Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-77bbf92e746817b300663f385d7782a6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-c34a0f219ef8b350134b35d0ea5d7869.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-77bbf92e746817b300663f385d7782a6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+  // Instant reader mode initialization - runs immediately, no waiting for DOM
+  (function() {
+    // Set reader mode immediately in localStorage
+    if (window.location.protocol !== "file:" && !window.localStorage.getItem("quarto-reader-mode")) {
+      window.localStorage.setItem("quarto-reader-mode", "true");
+    }
+
+    let localReaderMode = null;
+
+    // Global helper functions
+    const isReaderMode = () => {
+      if (window.location.protocol !== "file:") {
+        return window.localStorage.getItem("quarto-reader-mode") === "true";
+      }
+      return localReaderMode;
+    };
+
+    const setReaderModeValue = (val) => {
+      if (window.location.protocol !== "file:") {
+        window.localStorage.setItem("quarto-reader-mode", val);
+      } else {
+        localReaderMode = val;
+      }
+    };
+
+    const highlightReaderToggle = (readerMode) => {
+      const els = document.querySelectorAll(".quarto-reader-toggle");
+      if (els) {
+        els.forEach((el) => {
+          if (readerMode) {
+            el.classList.add("reader");
+          } else {
+            el.classList.remove("reader");
+          }
+        });
+      }
+    };
+
+    // Toggle function - executed instantly when available
+    window.quartoToggleReader = () => {
+      const readerMode = !isReaderMode();
+      setReaderModeValue(readerMode);
+      
+      // Fast toggle without slow transitions
+      highlightReaderToggle(readerMode);
+      
+      if (typeof hideOverlappedSidebars === 'function') {
+        hideOverlappedSidebars();
+      }
+    };
+
+    // Make functions globally available
+    window.isReaderMode = isReaderMode;
+    window.setReaderModeValue = setReaderModeValue;
+  })();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Retail Vendor Performance Analysis</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#data-pipeline-overview" id="toc-data-pipeline-overview" class="nav-link active" data-scroll-target="#data-pipeline-overview">Data Pipeline Overview</a></li>
+  <li><a href="#exploratory-data-analysis-eda" id="toc-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</a>
+  <ul class="collapse">
+  <li><a href="#key-observations" id="toc-key-observations" class="nav-link" data-scroll-target="#key-observations">Key Observations</a></li>
+  <li><a href="#data-quality" id="toc-data-quality" class="nav-link" data-scroll-target="#data-quality">Data Quality</a></li>
+  <li><a href="#distribution-of-numerical-variables" id="toc-distribution-of-numerical-variables" class="nav-link" data-scroll-target="#distribution-of-numerical-variables">Distribution of Numerical Variables</a></li>
+  <li><a href="#data-filtering-criteria" id="toc-data-filtering-criteria" class="nav-link" data-scroll-target="#data-filtering-criteria">Data Filtering Criteria</a></li>
+  <li><a href="#distribution-after-cleaning" id="toc-distribution-after-cleaning" class="nav-link" data-scroll-target="#distribution-after-cleaning">Distribution After Cleaning</a></li>
+  <li><a href="#categorical-feature-analysis" id="toc-categorical-feature-analysis" class="nav-link" data-scroll-target="#categorical-feature-analysis"><strong>Categorical Feature Analysis</strong></a></li>
+  <li><a href="#correlation-analysis" id="toc-correlation-analysis" class="nav-link" data-scroll-target="#correlation-analysis"><strong>Correlation Analysis</strong></a></li>
+  <li><a href="#insights-from-the-heatmap" id="toc-insights-from-the-heatmap" class="nav-link" data-scroll-target="#insights-from-the-heatmap">Insights from the Heatmap</a></li>
+  </ul></li>
+  <li><a href="#analysis-1-high-margin-low-sales-brands" id="toc-analysis-1-high-margin-low-sales-brands" class="nav-link" data-scroll-target="#analysis-1-high-margin-low-sales-brands">Analysis 1 — High-Margin, Low-Sales Brands</a>
+  <ul class="collapse">
+  <li><a href="#findings" id="toc-findings" class="nav-link" data-scroll-target="#findings">Findings</a></li>
+  </ul></li>
+  <li><a href="#analysis-2-top-vendors-and-brands-by-sales" id="toc-analysis-2-top-vendors-and-brands-by-sales" class="nav-link" data-scroll-target="#analysis-2-top-vendors-and-brands-by-sales">Analysis 2 — Top Vendors and Brands by Sales</a></li>
+  <li><a href="#analysis-3-vendor-contribution-to-total-purchases" id="toc-analysis-3-vendor-contribution-to-total-purchases" class="nav-link" data-scroll-target="#analysis-3-vendor-contribution-to-total-purchases">Analysis 3 — Vendor Contribution to Total Purchases</a></li>
+  <li><a href="#analysis-4-vendor-dependency-and-bulk-purchase-efficiency" id="toc-analysis-4-vendor-dependency-and-bulk-purchase-efficiency" class="nav-link" data-scroll-target="#analysis-4-vendor-dependency-and-bulk-purchase-efficiency">Analysis 4 — Vendor Dependency and Bulk Purchase Efficiency</a>
+  <ul class="collapse">
+  <li><a href="#question-does-purchasing-in-bulk-reduce-the-unit-price" id="toc-question-does-purchasing-in-bulk-reduce-the-unit-price" class="nav-link" data-scroll-target="#question-does-purchasing-in-bulk-reduce-the-unit-price">Question — Does Purchasing in Bulk Reduce the Unit Price?</a></li>
+  </ul></li>
+  <li><a href="#analysis-5-inventory-turnover-capital-locked-in-unsold-stock" id="toc-analysis-5-inventory-turnover-capital-locked-in-unsold-stock" class="nav-link" data-scroll-target="#analysis-5-inventory-turnover-capital-locked-in-unsold-stock">Analysis 5 — Inventory Turnover &amp; Capital Locked in Unsold Stock</a></li>
+  <li><a href="#analysis-6-profit-margin-confidence-intervals-top-vs.-low-vendors" id="toc-analysis-6-profit-margin-confidence-intervals-top-vs.-low-vendors" class="nav-link" data-scroll-target="#analysis-6-profit-margin-confidence-intervals-top-vs.-low-vendors">Analysis 6 — Profit Margin Confidence Intervals: Top vs.&nbsp;Low Vendors</a>
+  <ul class="collapse">
+  <li><a href="#what-the-numbers-say" id="toc-what-the-numbers-say" class="nav-link" data-scroll-target="#what-the-numbers-say">What the Numbers Say</a></li>
+  </ul></li>
+  <li><a href="#analysis-7-hypothesis-testing-profit-margin-differences-between-vendor-groups" id="toc-analysis-7-hypothesis-testing-profit-margin-differences-between-vendor-groups" class="nav-link" data-scroll-target="#analysis-7-hypothesis-testing-profit-margin-differences-between-vendor-groups">Analysis 7 — Hypothesis Testing: Profit Margin Differences Between Vendor Groups</a></li>
+  <li><a href="#final-thoughts" id="toc-final-thoughts" class="nav-link" data-scroll-target="#final-thoughts">Final Thoughts</a></li>
+  <li><a href="#author" id="toc-author" class="nav-link" data-scroll-target="#author">👋 Author</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Project Overview</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Every retail dataset has its heroes and villains — vendors that drive growth, and others that quietly trap cash. I built a vendor performance model using <strong>SQL, Python, and statistical analysis</strong> to uncover who’s driving sales, who’s protecting margins, and where money gets stuck.</p>
+<p>What started as raw transactions turned into a clear story of <strong>leverage, pricing behavior, and capital flow</strong> — revealing exactly where the business gains power, and where it leaks it.</p>
+<section id="key-insights" class="level4">
+<h4 class="anchored" data-anchor-id="key-insights">Key Insights</h4>
+<ul>
+<li><strong>Vendor Concentration:</strong> Two-thirds of all purchases come from just ten vendors — efficient, but risky.</li>
+<li><strong>Margin–Sales Gap:</strong> Some brands show great margins but weak sales — unrealized potential.</li>
+<li><strong>Economies of Scale:</strong> Bulk orders cut unit costs by ~72%, confirming scale efficiency.</li>
+<li><strong>Inventory Drag:</strong> About <strong>$2.7M</strong> is locked in unsold stock, mostly from top vendors.</li>
+<li><strong>Profit Paradox:</strong> Smaller vendors average <strong>41% margins</strong>, while top vendors run leaner at <strong>~31%</strong> (p &lt; 0.001).</li>
+</ul>
+</section>
+<section id="takeaway" class="level4">
+<h4 class="anchored" data-anchor-id="takeaway">Takeaway</h4>
+<p>The analysis revealed a <strong>two-speed ecosystem</strong>: large vendors drive revenue, niche ones drive profit. The opportunity lies in managing both — <strong>scaling where it compounds, protecting where it pays</strong>, and using data as the steering wheel.</p>
+<section id="environment-setup" class="level5">
+<h5 class="anchored" data-anchor-id="environment-setup">Environment Setup</h5>
+<p>Every analysis starts with the right toolkit. I built the environment in Python using pandas, NumPy, Matplotlib, Seaborn, SQLAlchemy, and SciPy, a reliable stack, enough for both data engineering and statistical inference.</p>
+<div id="f0e03110" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sqlalchemy <span class="im">import</span> create_engine, text</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ttest_ind</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># creating database connection</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dotenv <span class="im">import</span> load_dotenv</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>load_dotenv()</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>user <span class="op">=</span> os.getenv(<span class="st">"PGUSER"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>pwd  <span class="op">=</span> os.getenv(<span class="st">"PGPASSWORD"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>host <span class="op">=</span> os.getenv(<span class="st">"PGHOST"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>port <span class="op">=</span> os.getenv(<span class="st">"PGPORT"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>db   <span class="op">=</span> os.getenv(<span class="st">"PGDATABASE"</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>engine <span class="op">=</span> create_engine(<span class="ss">f"postgresql+psycopg2://</span><span class="sc">{</span>user<span class="sc">}</span><span class="ss">:</span><span class="sc">{</span>pwd<span class="sc">}</span><span class="ss">@</span><span class="sc">{</span>host<span class="sc">}</span><span class="ss">:</span><span class="sc">{</span>port<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>db<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.read_sql_query(<span class="st">"select * from mart.vendor_sales_summary"</span>, engine)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">vendor_number</th>
+<th data-quarto-table-cell-role="th">vendor_name</th>
+<th data-quarto-table-cell-role="th">brand</th>
+<th data-quarto-table-cell-role="th">description</th>
+<th data-quarto-table-cell-role="th">purchase_price</th>
+<th data-quarto-table-cell-role="th">actual_price</th>
+<th data-quarto-table-cell-role="th">volume</th>
+<th data-quarto-table-cell-role="th">total_purchase_quantity</th>
+<th data-quarto-table-cell-role="th">total_purchase_dollars</th>
+<th data-quarto-table-cell-role="th">total_sales_quantity</th>
+<th data-quarto-table-cell-role="th">total_sales_dollars</th>
+<th data-quarto-table-cell-role="th">total_sales_price</th>
+<th data-quarto-table-cell-role="th">total_excise_tax</th>
+<th data-quarto-table-cell-role="th">freight_cost</th>
+<th data-quarto-table-cell-role="th">gross_profit</th>
+<th data-quarto-table-cell-role="th">profit_margin</th>
+<th data-quarto-table-cell-role="th">stock_turnover</th>
+<th data-quarto-table-cell-role="th">sales_to_purchase_ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1128</td>
+<td>BROWN-FORMAN CORP</td>
+<td>1233</td>
+<td>Jack Daniels No 7 Black</td>
+<td>26.27</td>
+<td>36.99</td>
+<td>1750.0</td>
+<td>145080.0</td>
+<td>3811251.60</td>
+<td>142049.0</td>
+<td>5101919.51</td>
+<td>672819.31</td>
+<td>260999.20</td>
+<td>68601.68</td>
+<td>1290667.91</td>
+<td>25.297693</td>
+<td>0.979108</td>
+<td>1.338647</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>4425</td>
+<td>MARTIGNETTI COMPANIES</td>
+<td>3405</td>
+<td>Tito's Handmade Vodka</td>
+<td>23.19</td>
+<td>28.99</td>
+<td>1750.0</td>
+<td>164038.0</td>
+<td>3804041.22</td>
+<td>160247.0</td>
+<td>4819073.49</td>
+<td>561512.37</td>
+<td>294438.66</td>
+<td>144929.24</td>
+<td>1015032.27</td>
+<td>21.062810</td>
+<td>0.976890</td>
+<td>1.266830</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>17035</td>
+<td>PERNOD RICARD USA</td>
+<td>8068</td>
+<td>Absolut 80 Proof</td>
+<td>18.24</td>
+<td>24.99</td>
+<td>1750.0</td>
+<td>187407.0</td>
+<td>3418303.68</td>
+<td>187140.0</td>
+<td>4538120.60</td>
+<td>461140.15</td>
+<td>343854.07</td>
+<td>123780.22</td>
+<td>1119816.92</td>
+<td>24.675786</td>
+<td>0.998575</td>
+<td>1.327594</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3960</td>
+<td>DIAGEO NORTH AMERICA INC</td>
+<td>4261</td>
+<td>Capt Morgan Spiced Rum</td>
+<td>16.17</td>
+<td>22.99</td>
+<td>1750.0</td>
+<td>201682.0</td>
+<td>3261197.94</td>
+<td>200412.0</td>
+<td>4475972.88</td>
+<td>420050.01</td>
+<td>368242.80</td>
+<td>257032.07</td>
+<td>1214774.94</td>
+<td>27.139908</td>
+<td>0.993703</td>
+<td>1.372493</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>3960</td>
+<td>DIAGEO NORTH AMERICA INC</td>
+<td>3545</td>
+<td>Ketel One Vodka</td>
+<td>21.89</td>
+<td>29.99</td>
+<td>1750.0</td>
+<td>138109.0</td>
+<td>3023206.01</td>
+<td>135838.0</td>
+<td>4223107.62</td>
+<td>545778.28</td>
+<td>249587.83</td>
+<td>257032.07</td>
+<td>1199901.61</td>
+<td>28.412764</td>
+<td>0.983556</td>
+<td>1.396897</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>I suppressed routine warnings to keep the workflow focused on insights rather than console clutter.</p>
+</section>
+<section id="database-connection-and-data-loading" class="level5">
+<h5 class="anchored" data-anchor-id="database-connection-and-data-loading">Database Connection and Data Loading</h5>
+<p>The vendor data was stored in a PostgreSQL warehouse. I connected using <strong>SQLAlchemy</strong> with credentials managed through environment variables, keeping security and reproducibility in check.</p>
+<p>From the table <code>mart.vendor_sales_summary</code>, I extracted vendor-level records including brand, product details, purchase costs, and selling prices. Each row represented a small financial transaction, but together they mapped the full vendor ecosystem — who sells what, at what cost, and how efficiently.</p>
+<p>The dataset’s structure was well-suited for this analysis: clean relationships between sales, pricing, and inventory allowed for a direct evaluation of <strong>pricing efficiency</strong>, <strong>vendor competitiveness</strong>, and <strong>sales performance</strong> across brands.</p>
+</section>
+<section id="initial-observation" class="level5">
+<h5 class="anchored" data-anchor-id="initial-observation">Initial Observation</h5>
+<p>The dataset includes vendor, brand, product, and pricing details. It provides a solid base for analyzing <strong>pricing efficiency</strong>, <strong>vendor competitiveness</strong>, and <strong>sales performance</strong> across brands.</p>
+</section>
+</section>
+<section id="data-pipeline-overview" class="level2">
+<h2 class="anchored" data-anchor-id="data-pipeline-overview">Data Pipeline Overview</h2>
+<p>To build the analytical dataset, I extracted and merged multiple source tables from PostgreSQL. Each layer of the pipeline served a specific purpose:</p>
+<section id="source-tables" class="level4">
+<h4 class="anchored" data-anchor-id="source-tables"><strong>Source Tables</strong></h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Table Name</th>
+<th style="text-align: right;">Row Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">begin_inventory</td>
+<td style="text-align: right;">206,529</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">end_inventory</td>
+<td style="text-align: right;">224,489</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">purchase_prices</td>
+<td style="text-align: right;">12,261</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">purchases</td>
+<td style="text-align: right;">2,372,474</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sales</td>
+<td style="text-align: right;">12,825,363</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vendor_invoice</td>
+<td style="text-align: right;">5,543</td>
+</tr>
+</tbody>
+</table>
+<section id="data-modeling" class="level5">
+<h5 class="anchored" data-anchor-id="data-modeling">Data Modeling</h5>
+<ol type="1">
+<li><strong>Raw Layer:</strong> Direct extracts from operational systems.</li>
+<li><strong>Staging Layer:</strong> Standardized formats, validated joins, and removed incomplete vendor records.</li>
+<li><strong>Mart Layer:</strong> Aggregated vendor and brand-level metrics into <code>mart.vendor_sales_summary</code> (~10K records).</li>
+</ol>
+<p><strong>Result:</strong> A unified, analysis-ready dataset combining sales, purchasing, inventory, and vendor-level information — enabling precise profitability and performance analysis.</p>
+</section>
+</section>
+</section>
+<section id="exploratory-data-analysis-eda" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</h2>
+<p>The first step was to understand the structure and reliability of <code>mart.vendor_sales_summary</code>. I profiled each variable to check distributions, missing values, and potential outliers before moving to deeper analysis.</p>
+<section id="key-observations" class="level3">
+<h3 class="anchored" data-anchor-id="key-observations">Key Observations</h3>
+<ul>
+<li><strong>Scale:</strong> 10,692 records across 128 vendors and over 10,600 brands — most brands tied to a single vendor.</li>
+<li><strong>Price Extremes:</strong> Purchase and selling prices show upper outliers, likely premium or imported products.</li>
+<li><strong>Profitability:</strong> Mean <code>profit_margin</code> of -15.89 with high variance, reflecting loss-leading or inconsistent pricing.</li>
+<li><strong>Gross Profit Range:</strong> From -52K to 1.29M — a mix of profitable and loss-making transactions.</li>
+<li><strong>Efficiency Gap:</strong> <code>sales_to_purchase_ratio</code> varies widely (mean 2.55, max 352.9), revealing large performance disparities.</li>
+<li><strong>Inventory Turnover:</strong> Median <code>stock_turnover</code> around 0.98 indicates slow-moving inventory for most vendors.</li>
+<li><strong>Scale Variance:</strong> Wide spread in total sales and purchase dollars — large vendors dominate, smaller ones occupy niche spaces.</li>
+</ul>
+</section>
+<section id="data-quality" class="level3">
+<h3 class="anchored" data-anchor-id="data-quality">Data Quality</h3>
+<ul>
+<li>Slightly incomplete metrics (<code>sales_quantity</code>, <code>gross_profit</code>, <code>profit_margin</code>) point to limited missing data.</li>
+<li>High standard deviations and skewed distributions suggest the need for <strong>transformation and outlier treatment</strong> in later stages.</li>
+</ul>
+<div id="c371a673" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pd.read_sql_query(<span class="st">"select * from mart.vendor_sales_summary"</span>, engine)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary statistics.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df.describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="54">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">std</th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">25%</th>
+<th data-quarto-table-cell-role="th">50%</th>
+<th data-quarto-table-cell-role="th">75%</th>
+<th data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">vendor_number</td>
+<td>10692.0</td>
+<td>10650.649458</td>
+<td>18753.519148</td>
+<td>2.000000</td>
+<td>3951.000000</td>
+<td>7153.000000</td>
+<td>9552.000000</td>
+<td>2.013590e+05</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">purchase_price</td>
+<td>10692.0</td>
+<td>24.385303</td>
+<td>109.269375</td>
+<td>0.360000</td>
+<td>6.840000</td>
+<td>10.455000</td>
+<td>19.482500</td>
+<td>5.681810e+03</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">actual_price</td>
+<td>10692.0</td>
+<td>35.643671</td>
+<td>148.246016</td>
+<td>0.490000</td>
+<td>10.990000</td>
+<td>15.990000</td>
+<td>28.990000</td>
+<td>7.499990e+03</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">volume</td>
+<td>10692.0</td>
+<td>847.360550</td>
+<td>664.309212</td>
+<td>50.000000</td>
+<td>750.000000</td>
+<td>750.000000</td>
+<td>750.000000</td>
+<td>2.000000e+04</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">total_purchase_quantity</td>
+<td>10692.0</td>
+<td>3140.886831</td>
+<td>11095.086769</td>
+<td>1.000000</td>
+<td>36.000000</td>
+<td>262.000000</td>
+<td>1975.750000</td>
+<td>3.376600e+05</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">total_purchase_dollars</td>
+<td>10692.0</td>
+<td>30106.693372</td>
+<td>123067.799627</td>
+<td>0.710000</td>
+<td>453.457500</td>
+<td>3655.465000</td>
+<td>20738.245000</td>
+<td>3.811252e+06</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">total_sales_quantity</td>
+<td>10514.0</td>
+<td>3129.583317</td>
+<td>11037.801407</td>
+<td>1.000000</td>
+<td>36.000000</td>
+<td>280.000000</td>
+<td>1985.000000</td>
+<td>3.349390e+05</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">total_sales_dollars</td>
+<td>10514.0</td>
+<td>42954.173834</td>
+<td>168977.755843</td>
+<td>1.980000</td>
+<td>809.820000</td>
+<td>5599.700000</td>
+<td>29524.250000</td>
+<td>5.101920e+06</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">total_sales_price</td>
+<td>10514.0</td>
+<td>19111.958773</td>
+<td>45264.605387</td>
+<td>0.990000</td>
+<td>334.890000</td>
+<td>3020.085000</td>
+<td>16442.477500</td>
+<td>6.728193e+05</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">total_excise_tax</td>
+<td>10514.0</td>
+<td>1804.263569</td>
+<td>11065.659557</td>
+<td>0.060000</td>
+<td>5.382500</td>
+<td>50.425000</td>
+<td>436.730000</td>
+<td>3.682428e+05</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">freight_cost</td>
+<td>10692.0</td>
+<td>61433.763214</td>
+<td>60938.458032</td>
+<td>0.090000</td>
+<td>14069.870000</td>
+<td>50293.620000</td>
+<td>79528.990000</td>
+<td>2.570321e+05</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">gross_profit</td>
+<td>10514.0</td>
+<td>12364.618776</td>
+<td>46576.616345</td>
+<td>-52002.780000</td>
+<td>66.975000</td>
+<td>1496.490000</td>
+<td>8970.040000</td>
+<td>1.290668e+06</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">profit_margin</td>
+<td>10514.0</td>
+<td>-15.885227</td>
+<td>447.289882</td>
+<td>-23730.638953</td>
+<td>15.353839</td>
+<td>30.778375</td>
+<td>40.210967</td>
+<td>9.971666e+01</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">stock_turnover</td>
+<td>10514.0</td>
+<td>1.735689</td>
+<td>6.067081</td>
+<td>0.002817</td>
+<td>0.829761</td>
+<td>0.983431</td>
+<td>1.042183</td>
+<td>2.745000e+02</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sales_to_purchase_ratio</td>
+<td>10514.0</td>
+<td>2.546789</td>
+<td>8.524047</td>
+<td>0.004196</td>
+<td>1.181388</td>
+<td>1.444635</td>
+<td>1.672548</td>
+<td>3.529286e+02</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong>Key Insights from Summary Statistics</strong></p>
+<p><strong>Negative &amp; Zero Values</strong></p>
+<ul>
+<li><strong>Gross Profit:</strong> Minimum value of <strong>–52,002.78</strong> indicates certain products were sold at a loss, possibly due to high costs or discount-driven sales.</li>
+<li><strong>Profit Margin:</strong> Approaches <strong>–∞</strong> in some cases, suggesting transactions with zero or negative revenue.</li>
+<li><strong>Sales Quantity and Sales Dollars:</strong> Contain zeros, reflecting items purchased but never sold — likely slow-moving or obsolete stock.</li>
+</ul>
+<p><strong>High Variance and Outliers</strong></p>
+<ul>
+<li><strong>Purchase and Actual Prices:</strong> Maximum values (<strong>5,681.81</strong> and <strong>7,499.99</strong>) far exceed the mean, reflecting premium or imported products.</li>
+<li><strong>Freight Cost:</strong> Ranges from <strong>0.09</strong> to <strong>257,032.07</strong>, indicating large shipment discrepancies or inefficient logistics.</li>
+<li><strong>Stock Turnover:</strong> Spans from <strong>0</strong> to <strong>274.5</strong>; ratios above <strong>1</strong> imply that previous stock fulfilled new sales, highlighting uneven inventory cycles.</li>
+</ul>
+</section>
+<section id="distribution-of-numerical-variables" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-numerical-variables">Distribution of Numerical Variables</h3>
+<p>To understand how each metric behaves, I visualized the distributions for all numeric columns. My objective was simple, spot skewness, outliers, and patterns that hint at where value and inefficiency concentrate.</p>
+<p><strong>Observations:</strong></p>
+<ul>
+<li>Most variables are <strong>right-skewed</strong>, showing that a few vendors dominate while the rest cluster at lower values.</li>
+<li><code>total_sales_dollars</code> and <code>gross_profit</code> have <strong>heavy tails</strong>, confirming that a small group drives most of the revenue and profit.</li>
+<li><code>profit_margin</code> includes <strong>negative values</strong>, pointing to loss-making or heavily discounted transactions.</li>
+<li><code>freight_cost</code> and <code>stock_turnover</code> behave differently — their wider spread suggests operational variability worth investigating later.</li>
+</ul>
+<p>In short, the data behaves like many real-world markets: a handful of players account for most of the movement, and the long tail holds the inefficiencies waiting to be optimized.</p>
+<div id="07f27440" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>numerical_cols<span class="op">=</span>df.select_dtypes(include<span class="op">=</span>np.number).columns</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">10</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(numerical_cols):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">4</span>,<span class="dv">4</span>,i<span class="op">+</span><span class="dv">1</span>) <span class="co">#Adjust grid layout as needed</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    sns.histplot(df[col],kde<span class="op">=</span><span class="va">True</span>, bins<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    plt.title(col)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-4-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="index_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Visualizing Distribution of all Numeric Variables.)</em></p>
+<section id="outlier-detection" class="level4">
+<h4 class="anchored" data-anchor-id="outlier-detection">Outlier Detection</h4>
+<p>To identify irregularities, I used box plots across all numerical variables. These visualizations make it easier to see where extreme values deviate from typical ranges.</p>
+<div id="45269bcc" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">10</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(numerical_cols):</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">4</span>,<span class="dv">4</span>,i<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    sns.boxplot(y<span class="op">=</span>df[col])</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    plt.title(col)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>plt.show</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="index_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Box plots showing distribution and outliers for all numerical variables.)</em></p>
+</section>
+</section>
+<section id="data-filtering-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="data-filtering-criteria">Data Filtering Criteria</h3>
+<p>To ensure analytical accuracy, I applied a set of logical filters to remove invalid or incomplete records. The focus was on retaining only transactions that reflected genuine sales and profitability.</p>
+<p><strong>Filtering Conditions:</strong></p>
+<ul>
+<li><code>gross_profit</code> &gt; 0 — retained only profitable transactions.</li>
+<li><code>profit_margin</code> &gt; 0 — excluded loss-making or zero-margin entries.</li>
+<li><code>total_sales_quantity</code> &gt; 0 — ensured only records with actual sales activity remained.</li>
+</ul>
+<p>After applying these conditions, the dataset reduced from <strong>10,692</strong> to <strong>8,564</strong> records — eliminating roughly <strong>20%</strong> of inconsistent or non-representative entries. This refined dataset now provides a cleaner foundation for modeling vendor performance and profitability.</p>
+<div id="cd2a5818" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#filtering out the data by removing inconsistencies.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span> pd.read_sql_query(<span class="st">"""</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">   select *</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">   from mart.vendor_sales_summary</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">   where gross_profit&gt;0</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">   and profit_margin&gt;0</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">   and total_sales_quantity&gt;0</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>, engine)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">vendor_number</th>
+<th data-quarto-table-cell-role="th">vendor_name</th>
+<th data-quarto-table-cell-role="th">brand</th>
+<th data-quarto-table-cell-role="th">description</th>
+<th data-quarto-table-cell-role="th">purchase_price</th>
+<th data-quarto-table-cell-role="th">actual_price</th>
+<th data-quarto-table-cell-role="th">volume</th>
+<th data-quarto-table-cell-role="th">total_purchase_quantity</th>
+<th data-quarto-table-cell-role="th">total_purchase_dollars</th>
+<th data-quarto-table-cell-role="th">total_sales_quantity</th>
+<th data-quarto-table-cell-role="th">total_sales_dollars</th>
+<th data-quarto-table-cell-role="th">total_sales_price</th>
+<th data-quarto-table-cell-role="th">total_excise_tax</th>
+<th data-quarto-table-cell-role="th">freight_cost</th>
+<th data-quarto-table-cell-role="th">gross_profit</th>
+<th data-quarto-table-cell-role="th">profit_margin</th>
+<th data-quarto-table-cell-role="th">stock_turnover</th>
+<th data-quarto-table-cell-role="th">sales_to_purchase_ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1128</td>
+<td>BROWN-FORMAN CORP</td>
+<td>1233</td>
+<td>Jack Daniels No 7 Black</td>
+<td>26.27</td>
+<td>36.99</td>
+<td>1750.0</td>
+<td>145080.0</td>
+<td>3811251.60</td>
+<td>142049</td>
+<td>5101919.51</td>
+<td>672819.31</td>
+<td>260999.20</td>
+<td>68601.68</td>
+<td>1290667.91</td>
+<td>25.297693</td>
+<td>0.979108</td>
+<td>1.338647</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>4425</td>
+<td>MARTIGNETTI COMPANIES</td>
+<td>3405</td>
+<td>Tito's Handmade Vodka</td>
+<td>23.19</td>
+<td>28.99</td>
+<td>1750.0</td>
+<td>164038.0</td>
+<td>3804041.22</td>
+<td>160247</td>
+<td>4819073.49</td>
+<td>561512.37</td>
+<td>294438.66</td>
+<td>144929.24</td>
+<td>1015032.27</td>
+<td>21.062810</td>
+<td>0.976890</td>
+<td>1.266830</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>17035</td>
+<td>PERNOD RICARD USA</td>
+<td>8068</td>
+<td>Absolut 80 Proof</td>
+<td>18.24</td>
+<td>24.99</td>
+<td>1750.0</td>
+<td>187407.0</td>
+<td>3418303.68</td>
+<td>187140</td>
+<td>4538120.60</td>
+<td>461140.15</td>
+<td>343854.07</td>
+<td>123780.22</td>
+<td>1119816.92</td>
+<td>24.675786</td>
+<td>0.998575</td>
+<td>1.327594</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3960</td>
+<td>DIAGEO NORTH AMERICA INC</td>
+<td>4261</td>
+<td>Capt Morgan Spiced Rum</td>
+<td>16.17</td>
+<td>22.99</td>
+<td>1750.0</td>
+<td>201682.0</td>
+<td>3261197.94</td>
+<td>200412</td>
+<td>4475972.88</td>
+<td>420050.01</td>
+<td>368242.80</td>
+<td>257032.07</td>
+<td>1214774.94</td>
+<td>27.139908</td>
+<td>0.993703</td>
+<td>1.372493</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>3960</td>
+<td>DIAGEO NORTH AMERICA INC</td>
+<td>3545</td>
+<td>Ketel One Vodka</td>
+<td>21.89</td>
+<td>29.99</td>
+<td>1750.0</td>
+<td>138109.0</td>
+<td>3023206.01</td>
+<td>135838</td>
+<td>4223107.62</td>
+<td>545778.28</td>
+<td>249587.83</td>
+<td>257032.07</td>
+<td>1199901.61</td>
+<td>28.412764</td>
+<td>0.983556</td>
+<td>1.396897</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8559</td>
+<td>9815</td>
+<td>WINE GROUP INC</td>
+<td>8527</td>
+<td>Concannon Glen Ellen Wh Zin</td>
+<td>1.32</td>
+<td>4.99</td>
+<td>750.0</td>
+<td>2.0</td>
+<td>2.64</td>
+<td>5</td>
+<td>15.95</td>
+<td>10.96</td>
+<td>0.55</td>
+<td>27100.41</td>
+<td>13.31</td>
+<td>83.448276</td>
+<td>2.500000</td>
+<td>6.041667</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8560</td>
+<td>8004</td>
+<td>SAZERAC CO INC</td>
+<td>5683</td>
+<td>Dr McGillicuddy's Apple Pie</td>
+<td>0.39</td>
+<td>0.49</td>
+<td>50.0</td>
+<td>6.0</td>
+<td>2.34</td>
+<td>134</td>
+<td>65.66</td>
+<td>1.47</td>
+<td>7.04</td>
+<td>50293.62</td>
+<td>63.32</td>
+<td>96.436186</td>
+<td>22.333333</td>
+<td>28.059829</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8561</td>
+<td>3924</td>
+<td>HEAVEN HILL DISTILLERIES</td>
+<td>9123</td>
+<td>Deep Eddy Vodka</td>
+<td>0.74</td>
+<td>0.99</td>
+<td>50.0</td>
+<td>2.0</td>
+<td>1.48</td>
+<td>2</td>
+<td>1.98</td>
+<td>0.99</td>
+<td>0.10</td>
+<td>14069.87</td>
+<td>0.50</td>
+<td>25.252525</td>
+<td>1.000000</td>
+<td>1.337838</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8562</td>
+<td>3960</td>
+<td>DIAGEO NORTH AMERICA INC</td>
+<td>6127</td>
+<td>The Club Strawbry Margarita</td>
+<td>1.47</td>
+<td>1.99</td>
+<td>200.0</td>
+<td>1.0</td>
+<td>1.47</td>
+<td>72</td>
+<td>143.28</td>
+<td>77.61</td>
+<td>15.12</td>
+<td>257032.07</td>
+<td>141.81</td>
+<td>98.974037</td>
+<td>72.000000</td>
+<td>97.469388</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8563</td>
+<td>7245</td>
+<td>PROXIMO SPIRITS INC.</td>
+<td>3065</td>
+<td>Three Olives Grape Vodka</td>
+<td>0.71</td>
+<td>0.99</td>
+<td>50.0</td>
+<td>1.0</td>
+<td>0.71</td>
+<td>86</td>
+<td>85.14</td>
+<td>33.66</td>
+<td>4.46</td>
+<td>38994.78</td>
+<td>84.43</td>
+<td>99.166079</td>
+<td>86.000000</td>
+<td>119.915493</td>
+</tr>
+</tbody>
+</table>
+
+<p>8564 rows × 18 columns</p>
+</div>
+</div>
+</div>
+<p><em>(Table: Sample of filtered dataset showing valid vendor, brand, and financial metrics.)</em></p>
+</section>
+<section id="distribution-after-cleaning" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-after-cleaning">Distribution After Cleaning</h3>
+<p>After filtering out invalid records, I re-examined the numerical distributions to confirm the impact of data cleaning. The updated histograms show noticeably <strong>reduced skewness</strong> and <strong>fewer extreme outliers</strong>, especially in profitability and pricing variables.</p>
+<p><strong>Key Observations:</strong></p>
+<ul>
+<li><strong>Profit Margin:</strong> Now stabilizes between <strong>25%–40%</strong>, representing a realistic range for healthy vendor profitability.</li>
+<li><strong>Gross Profit &amp; Total Sales Price:</strong> Still right-skewed, as a few major vendors continue to drive most of the revenue — typical for retail ecosystems.</li>
+<li><strong>Freight Cost:</strong> Distribution tightened significantly, confirming that most anomalous shipping values were successfully filtered.</li>
+<li><strong>Stock Turnover &amp; Sales-to-Purchase Ratio:</strong> Retain long tails, highlighting variability in vendor efficiency and inventory flow — a point for deeper analysis later.</li>
+</ul>
+<div id="98d4c8e6" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">10</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(numerical_cols):</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">4</span>,<span class="dv">4</span>,i<span class="op">+</span><span class="dv">1</span>) <span class="co">#Adjust grid layout as needed</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    sns.histplot(df[col],kde<span class="op">=</span><span class="va">True</span>, bins<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    plt.title(col)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-7-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Distributions of numerical variables after cleaning, showing reduced skewness and improved data consistency.)</em></p>
+<p><strong>Conclusion:</strong> Post-cleaning, the dataset reflects <strong>valid and profit-generating vendor activity</strong>, ensuring that all subsequent analyses rest on consistent and reliable data. This forms a clean foundation for <strong>comparative performance analysis</strong> across vendors and brands.</p>
+</section>
+<section id="categorical-feature-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="categorical-feature-analysis"><strong>Categorical Feature Analysis</strong></h3>
+<p>I examined the key categorical variables — <strong>vendor names</strong> and <strong>product descriptions</strong> — to understand how sales records are distributed across suppliers and brands.</p>
+<section id="top-vendors-and-products" class="level5">
+<h5 class="anchored" data-anchor-id="top-vendors-and-products">Top Vendors and Products</h5>
+<p>The plots below show the <strong>top 10 vendors</strong> and <strong>top 10 products</strong> based on record frequency.</p>
+<div id="3fdf72b0" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>categorical_cols<span class="op">=</span> [<span class="st">'vendor_name'</span>, <span class="st">'description'</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(categorical_cols):</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,i<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    sns.countplot(y<span class="op">=</span>df[col], order <span class="op">=</span>df[col].value_counts().index[:<span class="dv">10</span>]) <span class="co">#top 10 categories</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"count plot of </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-8-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="index_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Top 10 vendors and products by frequency, showing market concentration among key players.)</em></p>
+<p><strong>Insights:</strong></p>
+<ul>
+<li><strong>MARTIGNETTI COMPANIES</strong> appears most frequently, followed by <strong>M S Walker Inc</strong> and <strong>Ultra Beverage Company LLP</strong>, highlighting their central role in the dataset.</li>
+<li>Prominent vendors such as <strong>Perfecta Wines</strong>, <strong>E &amp; J Gallo Winery</strong>, and <strong>Diageo North America Inc</strong> also maintain substantial representation.</li>
+<li>On the product side, <strong>Southern Comfort</strong>, <strong>Bacardi Superior Rum</strong>, and <strong>Jägermeister Liqueur</strong> lead the list.</li>
+<li>Repeated listings like <em>Southern Comfort</em> and <em>Southern Comfort 100 Proof</em> indicate SKU-level granularity within product tracking.</li>
+</ul>
+<p><strong>Summary:</strong> The dataset remains concentrated among a few large vendors and high-volume brands. Future analyses should account for vendor size to avoid bias when comparing profitability or performance metrics.</p>
+</section>
+</section>
+<section id="correlation-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="correlation-analysis"><strong>Correlation Analysis</strong></h3>
+<p>To understand how different numerical variables interact, I computed a correlation matrix and visualized it as a heatmap. This provides a quick view of which metrics move together and which operate independently.</p>
+<div id="8e33356a" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#correlational heatmap</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>correlation_matrix<span class="op">=</span>df[numerical_cols].corr()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>sns.heatmap(correlation_matrix, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>, cmap<span class="op">=</span><span class="st">"coolwarm"</span>, linewidths<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"correlation heatmap"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-9-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="index_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Correlation heatmap showing relationships among pricing, sales, and profitability variables.)</em></p>
+</section>
+<section id="insights-from-the-heatmap" class="level3">
+<h3 class="anchored" data-anchor-id="insights-from-the-heatmap">Insights from the Heatmap</h3>
+<ul>
+<li><strong>Pricing Relationship:</strong> <code>purchase_price</code> and <code>actual_price</code> are almost perfectly correlated (<strong>r = 0.99</strong>), reinforcing the presence of a cost-plus pricing structure.</li>
+<li><strong>Sales and Procurement Link:</strong> A strong correlation between <code>total_purchase_dollars</code> and <code>total_sales_dollars</code> (<strong>r = 0.96</strong>) shows that higher procurement volumes consistently translate to higher sales.</li>
+<li><strong>Profit Scales with Sales:</strong> <code>gross_profit</code> aligns closely with sales measures (<strong>r ≈ 0.96</strong>), confirming that top-selling products are also the main profit drivers.</li>
+<li><strong>Tax Alignment:</strong> <code>total_excise_tax</code> strongly tracks <code>total_sales_dollars</code> (<strong>r = 0.98</strong>), indicating consistent tax application relative to sales.</li>
+<li><strong>Profit Margin Independence:</strong> Weak correlation between <code>profit_margin</code> and other financial variables suggests margin variability across products — likely due to differing pricing or discount strategies.</li>
+<li><strong>Inventory Efficiency:</strong> A moderate correlation between <code>stock_turnover</code> and <code>profit_margin</code> (<strong>r = 0.42</strong>) indicates that faster-moving inventory tends to be more profitable.</li>
+<li><strong>Vendor Neutrality:</strong> <code>vendor_number</code> shows negligible correlation with performance metrics, confirming that vendor IDs themselves don’t drive performance outcomes.</li>
+</ul>
+<p><strong>Summary:</strong> The heatmap reveals a tightly connected sales–profit–tax structure, but also highlights inconsistency in profit margins across products. These gaps point toward opportunities in <strong>pricing optimization</strong> and <strong>inventory efficiency tuning</strong>.</p>
+</section>
+</section>
+<section id="analysis-1-high-margin-low-sales-brands" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-1-high-margin-low-sales-brands">Analysis 1 — High-Margin, Low-Sales Brands</h2>
+<p><strong>Business Objective:</strong> Find the hidden gems, brands that quietly make great margins but barely move off the shelf. These are the ones that don’t need a miracle, just a nudge.</p>
+<section id="approach" class="level5">
+<h5 class="anchored" data-anchor-id="approach">Approach</h5>
+<p>I aggregated performance data at the <strong>brand level</strong>, combining <code>total_sales_dollars</code> and average <code>profit_margin</code>. From there, percentile thresholds (15th for low sales, 85th for high margin) defined an objective filter for <strong>underperforming but profitable brands</strong>.</p>
+</section>
+<section id="step-1-roll-up-the-data" class="level5">
+<h5 class="anchored" data-anchor-id="step-1-roll-up-the-data">Step 1 — Roll Up the Data</h5>
+<p>I grouped everything at the <strong>brand level</strong>, pulling together <code>total_sales_dollars</code> and average <code>profit_margin</code>. The idea was simple: who’s making the most money <em>per sale</em>, and who’s actually selling enough to matter?</p>
+<div id="ff8614b8" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>brand_performance<span class="op">=</span>df.groupby(<span class="st">'description'</span>).agg({</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'total_sales_dollars'</span>:<span class="st">'sum'</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'profit_margin'</span>: <span class="st">'mean'</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}).reset_index()</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>brand_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="61">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+<th data-quarto-table-cell-role="th">total_sales_dollars</th>
+<th data-quarto-table-cell-role="th">profit_margin</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>(RI) 1</td>
+<td>21519.09</td>
+<td>18.060661</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>.nparalleled Svgn Blanc</td>
+<td>1094.63</td>
+<td>29.978166</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>10 Span Cab Svgn CC</td>
+<td>2703.89</td>
+<td>20.937612</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>10 Span Chard CC</td>
+<td>3325.56</td>
+<td>27.806445</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>10 Span Pnt Gris Monterey Cy</td>
+<td>2082.22</td>
+<td>32.226182</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7702</td>
+<td>Zorvino Vyds Sangiovese</td>
+<td>10579.03</td>
+<td>29.525675</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7703</td>
+<td>Zuccardi Q Malbec</td>
+<td>1639.18</td>
+<td>23.981503</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7704</td>
+<td>Zum Rsl</td>
+<td>10857.34</td>
+<td>32.675038</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7705</td>
+<td>Zwack Liqueur</td>
+<td>227.88</td>
+<td>16.653502</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7706</td>
+<td>von Buhl Jazz Rsl</td>
+<td>1359.11</td>
+<td>90.773374</td>
+</tr>
+</tbody>
+</table>
+
+<p>7707 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<p><em>(Table: Aggregated dataset showing sales and margin by brand.)</em></p>
+</section>
+<section id="step-2-draw-the-line" class="level5">
+<h5 class="anchored" data-anchor-id="step-2-draw-the-line">Step 2 — Draw the Line</h5>
+<p>Next, I needed a fair way to define “low sales” and “high margin.” So instead of guessing, I used the <strong>15th percentile for sales</strong> and <strong>85th percentile for profit margin</strong>. That split the market neatly: bottom performers on sales, top performers on profitability.</p>
+<div id="7a4996fa" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>low_sales_threshold<span class="op">=</span>brand_performance[<span class="st">'total_sales_dollars'</span>].quantile(<span class="fl">0.15</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>high_margin_threshold<span class="op">=</span>brand_performance[<span class="st">'profit_margin'</span>].quantile(<span class="fl">0.85</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(low_sales_threshold, high_margin_threshold)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>560.299 64.97017552750113</code></pre>
+</div>
+</div>
+<p><em>(Figure: Threshold boundaries used to identify target brands.)</em></p>
+</section>
+<section id="step-3-meet-the-quiet-overachievers" class="level5">
+<h5 class="anchored" data-anchor-id="step-3-meet-the-quiet-overachievers">Step 3 — Meet the Quiet Overachievers</h5>
+<p>Filtering by those thresholds revealed a list of brands that make great margins but barely sell. Think of them as <strong>A-students in a class no one knows exists</strong> — they’ve done their part, but visibility and volume haven’t caught up.</p>
+<div id="11984196" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filter brand with low sales but high performance margins.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>target_brands<span class="op">=</span> brand_performance[</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    (brand_performance[<span class="st">'total_sales_dollars'</span>]<span class="op">&lt;=</span>low_sales_threshold) <span class="op">&amp;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    (brand_performance[<span class="st">'profit_margin'</span>]<span class="op">&gt;=</span>high_margin_threshold)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"brands with low sales but high profit margins:"</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>display(target_brands.sort_values(<span class="st">'total_sales_dollars'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>brands with low sales but high profit margins:</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+<th data-quarto-table-cell-role="th">total_sales_dollars</th>
+<th data-quarto-table-cell-role="th">profit_margin</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6199</td>
+<td>Santa Rita Organic Svgn Bl</td>
+<td>9.99</td>
+<td>66.466466</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2369</td>
+<td>Debauchery Pnt Nr</td>
+<td>11.58</td>
+<td>65.975820</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2070</td>
+<td>Concannon Glen Ellen Wh Zin</td>
+<td>15.95</td>
+<td>83.448276</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2188</td>
+<td>Crown Royal Apple</td>
+<td>27.86</td>
+<td>89.806174</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6237</td>
+<td>Sauza Sprklg Wild Berry Marg</td>
+<td>27.96</td>
+<td>82.153076</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5074</td>
+<td>Nanbu Bijin Southern Beauty</td>
+<td>535.68</td>
+<td>76.747312</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2271</td>
+<td>Dad's Hat Rye Whiskey</td>
+<td>538.89</td>
+<td>81.851584</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">57</td>
+<td>A Bichot Clos Marechaudes</td>
+<td>539.94</td>
+<td>67.740860</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6245</td>
+<td>Sbragia Home Ranch Merlot</td>
+<td>549.75</td>
+<td>66.444748</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3326</td>
+<td>Goulee Cos d'Estournel 10</td>
+<td>558.87</td>
+<td>69.434752</td>
+</tr>
+</tbody>
+</table>
+
+<p>198 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<p><em>(Table: Table of identified high-margin, low-sales brands.)</em></p>
+</section>
+<section id="step-4-plot-the-landscape" class="level5">
+<h5 class="anchored" data-anchor-id="step-4-plot-the-landscape">Step 4 — Plot the Landscape</h5>
+<p>To see what’s really going on, I plotted all brands with sales on the x-axis and margin on the y-axis.</p>
+<ul>
+<li>The <strong>blue dots</strong> are everyone.</li>
+<li>The <strong>red ones</strong> are the overlooked winners — high margin, low sales. The top-left cluster instantly stood out: profitable, consistent, and invisible.</li>
+</ul>
+<div id="b00667a0" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(data<span class="op">=</span>brand_performance, x<span class="op">=</span><span class="st">'total_sales_dollars'</span>, y<span class="op">=</span><span class="st">'profit_margin'</span>, color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'All brands'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(data<span class="op">=</span>target_brands, x<span class="op">=</span><span class="st">'total_sales_dollars'</span>, y<span class="op">=</span><span class="st">'profit_margin'</span>, color<span class="op">=</span><span class="st">'red'</span>, label<span class="op">=</span><span class="st">'Target brands'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>plt.axhline(high_margin_threshold, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">"High Margin Threshold"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>plt.axvline(low_sales_threshold, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">"Los sales Threshold"</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"total sales ($)"</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"profit margin (%)"</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"brands for promotional or pricing adjustments"</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-13-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="index_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Scatter plot showing high-margin, low-sales brands relative to total market.)</em></p>
+</section>
+<section id="step-5-zoom-in" class="level5">
+<h5 class="anchored" data-anchor-id="step-5-zoom-in">Step 5 — Zoom In</h5>
+<p>Because big vendors can distort the picture, I zoomed in on brands making under <strong>$8,000</strong> in total sales. The pattern held — the same cluster of high-margin brands sat neatly above the margin threshold line.</p>
+<div id="b1203195" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>brand_performance_segment<span class="op">=</span> brand_performance[brand_performance[<span class="st">'total_sales_dollars'</span>]<span class="op">&lt;</span><span class="dv">8000</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(data<span class="op">=</span>brand_performance_segment, x<span class="op">=</span><span class="st">'total_sales_dollars'</span>, y<span class="op">=</span><span class="st">'profit_margin'</span>, color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'All brands'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(data<span class="op">=</span>target_brands, x<span class="op">=</span><span class="st">'total_sales_dollars'</span>, y<span class="op">=</span><span class="st">'profit_margin'</span>, color<span class="op">=</span><span class="st">'red'</span>, label<span class="op">=</span><span class="st">'Target brands'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>plt.axhline(high_margin_threshold, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">"High Margin Threshold"</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>plt.axvline(low_sales_threshold, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">"Los sales Threshold"</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"total sales ($)"</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"profit margin (%)"</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"brands for promotional or pricing adjustments"</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-14-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="index_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="findings" class="level3">
+<h3 class="anchored" data-anchor-id="findings">Findings</h3>
+<p>Here’s what the data actually says: * <strong>Profit-rich but volume-poor.</strong> These brands make excellent margins but remain underexposed. * The <strong>upper-left cluster</strong> of the scatter plot captures these outliers clearly, separating them from the broader dataset. * The <strong>profit margin range (≈65–90%)</strong> shows strong pricing power, while sales volumes remain limited — often due to low visibility or shelf turnover. * The <strong>majority of products</strong> sit below the high-margin line, confirming that broad profitability remains moderate. * The clean separation between the clusters suggests structural inefficiency rather than random variance — a consistent group of brands is systematically underselling.</p>
+<p><strong>Interpretation:</strong> These brands are not problem products — they’re <em>quiet winners</em> trapped by low exposure. With already strong margins, even a small lift in volume could drive a significant uptick in overall profit.</p>
+<section id="business-takeaway" class="level5">
+<h5 class="anchored" data-anchor-id="business-takeaway">Business Takeaway</h5>
+<p>This isn’t a problem — it’s an opportunity hiding in plain sight. Brands with <strong>high margins and low sales</strong> are primed for <strong>bundling, cross-selling, or targeted campaigns</strong>. A small marketing push or strategic price adjustment could turn them from quiet performers into profit accelerators.</p>
+</section>
+</section>
+</section>
+<section id="analysis-2-top-vendors-and-brands-by-sales" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-2-top-vendors-and-brands-by-sales">Analysis 2 — Top Vendors and Brands by Sales</h2>
+<p><strong>Objective:</strong> Identify which vendors and brands drive the majority of total sales to pinpoint key revenue contributors.</p>
+<p>I aggregated <code>total_sales_dollars</code> at both the <strong>vendor</strong> and <strong>brand</strong> levels to see who’s really moving the market. When ranked and visualized side by side, the pattern became obvious — a few heavyweights dominate both supply and consumer demand.</p>
+<div id="9c1ace37" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>top_vendors<span class="op">=</span> df.groupby(<span class="st">"vendor_name"</span>)[<span class="st">"total_sales_dollars"</span>].<span class="bu">sum</span>().nlargest(<span class="dv">10</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>top_brands<span class="op">=</span> df.groupby(<span class="st">"description"</span>)[<span class="st">"total_sales_dollars"</span>].<span class="bu">sum</span>().nlargest(<span class="dv">10</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>top_vendors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="66">
+<pre><code>vendor_name
+DIAGEO NORTH AMERICA INC      67990099.42
+MARTIGNETTI COMPANIES         39330359.36
+PERNOD RICARD USA             32063196.19
+JIM BEAM BRANDS COMPANY       31423020.46
+BACARDI USA INC               24854817.14
+CONSTELLATION BRANDS INC      24218745.65
+E &amp; J GALLO WINERY            18399899.46
+BROWN-FORMAN CORP             18247230.65
+ULTRA BEVERAGE COMPANY LLP    16502544.31
+M S WALKER INC                14706458.51
+Name: total_sales_dollars, dtype: float64</code></pre>
+</div>
+</div>
+<p><strong>DIAGEO NORTH AMERICA INC</strong> leads the vendor list by a wide margin with <strong>$67.99M</strong> in total sales, followed by <strong>MARTIGNETTI COMPANIES</strong> at <strong>$39.33M</strong> and <strong>PERNOD RICARD USA</strong> at <strong>$32.06M</strong>. Together, the top five vendors control most of the total volume, underscoring a concentrated supplier landscape where a handful of players hold significant leverage.</p>
+<div id="cf9649de" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> format_dollars(value):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> value <span class="op">&gt;=</span> <span class="dv">1_000_000</span>:</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>value<span class="op">/</span><span class="dv">1_000_000</span><span class="sc">:.2f}</span><span class="ss">M"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> value <span class="op">&gt;=</span> <span class="dv">1_000</span>:</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>value<span class="op">/</span><span class="dv">1_000</span><span class="sc">:.2f}</span><span class="ss">k"</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">str</span>(value)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>top_brands.<span class="bu">apply</span>(<span class="kw">lambda</span> x: format_dollars(x))</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">5</span>))</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#plot for top vendors</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>ax1<span class="op">=</span>sns.barplot(y<span class="op">=</span>top_vendors.index, x<span class="op">=</span>top_vendors.values, palette<span class="op">=</span><span class="st">"Blues_r"</span>)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"top 10 vendors by sales"</span>)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> bar <span class="kw">in</span> ax1.patches:</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    ax1.text(bar.get_width()<span class="op">+</span> (bar.get_width()<span class="op">*</span><span class="fl">0.02</span>),</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>             bar.get_y()<span class="op">+</span> bar.get_height()<span class="op">/</span><span class="dv">2</span>,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>             format_dollars(bar.get_width()),</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>             ha<span class="op">=</span><span class="st">'left'</span>, va<span class="op">=</span><span class="st">'center'</span>, fontsize<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="co"># plot for top brands</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>ax2<span class="op">=</span>sns.barplot(y<span class="op">=</span>top_brands.index.astype(<span class="bu">str</span>), x<span class="op">=</span>top_brands.values, palette<span class="op">=</span><span class="st">"Reds_r"</span>)</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Top 10 brands by sales"</span>)</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> bar <span class="kw">in</span> ax2.patches:</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    ax2.text(bar.get_width()<span class="op">+</span> (bar.get_width()<span class="op">*</span><span class="fl">0.02</span>),</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>             bar.get_y()<span class="op">+</span>bar.get_height()<span class="op">/</span><span class="dv">2</span>,</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>             format_dollars(bar.get_width()),</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>             ha<span class="op">=</span><span class="st">'left'</span>, va<span class="op">=</span><span class="st">'center'</span>, fontsize<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-16-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="index_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Comparative bar charts of top 10 vendors and brands by total sales, highlighting revenue concentration among leading players.)</em></p>
+<p>At the brand level, the story mirrors the vendor hierarchy. <strong>Jack Daniels No 7 Black</strong> tops the list at <strong>$7.96M</strong>, closely followed by <strong>Tito’s Handmade Vodka</strong> and <strong>Grey Goose Vodka</strong>. Premium spirits dominate across the board — not because of discounts or volume plays, but because brand trust and consistency sell better than price ever could.</p>
+<p>The data confirms a <strong>top-heavy market</strong>. A few established vendors and globally recognized brands command the lion’s share of sales, while smaller vendors occupy the long tail — important, but easily overshadowed. This imbalance signals where negotiation leverage lies and where emerging players need to invest in visibility, differentiation, or category focus to compete.</p>
+<p><strong>Takeaway:</strong> The sales distribution underscores a <strong>highly consolidated market</strong> led by major vendors and globally recognized brands. These insights can guide partnership prioritization, negotiation strategy, and promotional planning.</p>
+</section>
+<section id="analysis-3-vendor-contribution-to-total-purchases" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-3-vendor-contribution-to-total-purchases">Analysis 3 — Vendor Contribution to Total Purchases</h2>
+<p><strong>Objective:</strong> Determine which vendors account for the largest share of total purchases to assess supplier concentration and dependency.</p>
+<p>The dataset was grouped by <code>vendor_name</code> to calculate total <strong>purchase dollars</strong>, <strong>sales dollars</strong>, and <strong>gross profit</strong> per vendor. I then derived each vendor’s <strong>purchase contribution percentage</strong> — their share of overall procurement — and plotted the results using a Pareto chart to visualize cumulative concentration.</p>
+<div id="af8cb552" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>vendor_performance<span class="op">=</span> df.groupby(<span class="st">'vendor_name'</span>).agg({</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'total_purchase_dollars'</span>: <span class="st">'sum'</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'gross_profit'</span>: <span class="st">'sum'</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'total_sales_dollars'</span>: <span class="st">'sum'</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>}).reset_index()</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># display(vendor_performance)</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>vendor_performance[<span class="st">'purchase_contribution_percentage'</span>]<span class="op">=</span> <span class="dv">100</span><span class="op">*</span>vendor_performance[<span class="st">'total_purchase_dollars'</span>]<span class="op">/</span>vendor_performance[<span class="st">'total_purchase_dollars'</span>].<span class="bu">sum</span>()</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>vendor_performance<span class="op">=</span><span class="bu">round</span>(vendor_performance.sort_values(<span class="st">'purchase_contribution_percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>), <span class="dv">2</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>top_vendors<span class="op">=</span>vendor_performance.head(<span class="dv">10</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>top_vendors[<span class="st">'total_sales_dollars'</span>]<span class="op">=</span>top_vendors[<span class="st">'total_sales_dollars'</span>].<span class="bu">apply</span>(format_dollars)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>top_vendors[<span class="st">'total_purchase_dollars'</span>]<span class="op">=</span>top_vendors[<span class="st">'total_purchase_dollars'</span>].<span class="bu">apply</span>(format_dollars)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>top_vendors[<span class="st">'gross_profit'</span>]<span class="op">=</span>top_vendors[<span class="st">'gross_profit'</span>].<span class="bu">apply</span>(format_dollars)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>display(top_vendors)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>top_vendors[<span class="st">'cumulative_contribution_percentage'</span>]<span class="op">=</span>top_vendors[<span class="st">'purchase_contribution_percentage'</span>].cumsum()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">vendor_name</th>
+<th data-quarto-table-cell-role="th">total_purchase_dollars</th>
+<th data-quarto-table-cell-role="th">gross_profit</th>
+<th data-quarto-table-cell-role="th">total_sales_dollars</th>
+<th data-quarto-table-cell-role="th">purchase_contribution_percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25</td>
+<td>DIAGEO NORTH AMERICA INC</td>
+<td>50.10M</td>
+<td>17.89M</td>
+<td>67.99M</td>
+<td>16.30</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">57</td>
+<td>MARTIGNETTI COMPANIES</td>
+<td>25.50M</td>
+<td>13.83M</td>
+<td>39.33M</td>
+<td>8.30</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">68</td>
+<td>PERNOD RICARD USA</td>
+<td>23.85M</td>
+<td>8.21M</td>
+<td>32.06M</td>
+<td>7.76</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">46</td>
+<td>JIM BEAM BRANDS COMPANY</td>
+<td>23.49M</td>
+<td>7.93M</td>
+<td>31.42M</td>
+<td>7.64</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>BACARDI USA INC</td>
+<td>17.43M</td>
+<td>7.42M</td>
+<td>24.85M</td>
+<td>5.67</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">20</td>
+<td>CONSTELLATION BRANDS INC</td>
+<td>15.27M</td>
+<td>8.95M</td>
+<td>24.22M</td>
+<td>4.97</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11</td>
+<td>BROWN-FORMAN CORP</td>
+<td>13.24M</td>
+<td>5.01M</td>
+<td>18.25M</td>
+<td>4.31</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">30</td>
+<td>E &amp; J GALLO WINERY</td>
+<td>12.07M</td>
+<td>6.33M</td>
+<td>18.40M</td>
+<td>3.93</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">106</td>
+<td>ULTRA BEVERAGE COMPANY LLP</td>
+<td>11.17M</td>
+<td>5.34M</td>
+<td>16.50M</td>
+<td>3.63</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">53</td>
+<td>M S WALKER INC</td>
+<td>9.76M</td>
+<td>4.94M</td>
+<td>14.71M</td>
+<td>3.18</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><em>(Table: Table showing top vendors and purchase contribution percentage or purchasing share.)</em></p>
+<div id="8e1dd3e4" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the figure and primary axis</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fig, ax1 <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Bar plot for Purchase Contribution % ---</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>sns.barplot(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>top_vendors[<span class="st">'vendor_name'</span>],</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>top_vendors[<span class="st">'purchase_contribution_percentage'</span>],</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span><span class="st">"mako"</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax1</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Add value labels on bars</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, value <span class="kw">in</span> <span class="bu">enumerate</span>(top_vendors[<span class="st">'purchase_contribution_percentage'</span>]):</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    ax1.text(i, value <span class="op">-</span> <span class="dv">1</span>, <span class="ss">f"</span><span class="sc">{</span>value<span class="sc">}</span><span class="ss">%"</span>, ha<span class="op">=</span><span class="st">'center'</span>, fontsize<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Line plot for Cumulative Contribution % ---</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>ax2 <span class="op">=</span> ax1.twinx()</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>ax2.plot(</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    top_vendors[<span class="st">'vendor_name'</span>],</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    top_vendors[<span class="st">'cumulative_contribution_percentage'</span>],</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">'red'</span>,</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">'o'</span>,</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    linestyle<span class="op">=</span><span class="st">'dashed'</span>,</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">'cumulative contribution percentage'</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Axis labels and formatting ---</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>ax1.set_xticklabels(top_vendors[<span class="st">'vendor_name'</span>], rotation<span class="op">=</span><span class="dv">90</span>)</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>ax1.set_ylabel(<span class="st">'Purchase Contribution %'</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">'Cumulative Contribution %'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">'Vendors'</span>)</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'Pareto Chart: Vendor Contribution to Total Purchases'</span>)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizontal reference line</span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>ax2.axhline(y<span class="op">=</span><span class="dv">100</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'dashed'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Legend and display</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>ax2.legend(loc<span class="op">=</span><span class="st">'upper right'</span>)</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-18-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="index_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Pareto chart depicting vendor-wise purchase contribution and cumulative percentage.)</em></p>
+<section id="key-findings" class="level5">
+<h5 class="anchored" data-anchor-id="key-findings">Key Findings</h5>
+<ul>
+<li><strong>DIAGEO NORTH AMERICA INC</strong> leads decisively, contributing <strong>16.3%</strong> of total purchases — nearly twice the volume of its nearest competitors.</li>
+<li><strong>MARTIGNETTI COMPANIES</strong>, <strong>PERNOD RICARD USA</strong>, and <strong>JIM BEAM BRANDS COMPANY</strong> follow closely in the <strong>7–8% range</strong>, forming the second tier of dominant suppliers.</li>
+<li>The <strong>top 10 vendors together represent about 65%</strong> of total procurement, confirming a highly concentrated supplier ecosystem.</li>
+<li>The Pareto curve’s <strong>steep initial climb</strong> underscores the imbalance — a small set of vendors drives the majority of purchasing activity.</li>
+</ul>
+</section>
+<section id="business-insight" class="level5">
+<h5 class="anchored" data-anchor-id="business-insight">Business Insight</h5>
+<p>This is a textbook <strong>80/20 pattern</strong>: a few vendors control most of the spend. That concentration creates both leverage and exposure — strong negotiation opportunities on one side, dependency risk on the other.</p>
+<p>Strategically, this suggests three clear actions:</p>
+<ol type="1">
+<li><strong>Negotiate smarter</strong> with top suppliers to capture volume-based cost advantages.</li>
+<li><strong>Diversify the vendor base</strong> to protect against supply disruption.</li>
+<li><strong>Continuously monitor high-volume vendors</strong> to ensure reliability and cost efficiency.</li>
+</ol>
+<p><strong>Summary:</strong> Procurement is heavily centralized among a small vendor group. Managing this concentration proactively — through balanced negotiation, diversification, and oversight — can strengthen both <strong>supply stability</strong> and <strong>financial performance</strong>.</p>
+</section>
+</section>
+<section id="analysis-4-vendor-dependency-and-bulk-purchase-efficiency" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-4-vendor-dependency-and-bulk-purchase-efficiency">Analysis 4 — Vendor Dependency and Bulk Purchase Efficiency</h2>
+<p><strong>Objective 1:</strong> Assess how much of total procurement relies on top vendors to evaluate purchasing concentration and supplier risk.</p>
+<div id="86376e72" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>total_contribution <span class="op">=</span> <span class="bu">round</span>(top_vendors[<span class="st">'purchase_contribution_percentage'</span>].<span class="bu">sum</span>(), <span class="dv">2</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total Purchase Contribution of top 10 vendors is </span><span class="sc">{</span>total_contribution<span class="sc">}</span><span class="ss"> %"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Total Purchase Contribution of top 10 vendors is 65.69 %</code></pre>
+</div>
+</div>
+<p>The <strong>top 10 vendors</strong> account for <strong>65.69% of total purchases</strong>, as shown below — a clear sign that procurement is heavily centralized.</p>
+<div id="1276df42" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.colors <span class="im">as</span> mcolors</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>vendors <span class="op">=</span> <span class="bu">list</span>(top_vendors[<span class="st">'vendor_name'</span>].values)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>purchase_contributions <span class="op">=</span> <span class="bu">list</span>(top_vendors[<span class="st">'purchase_contribution_percentage'</span>].values)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate remaining contribution</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>remaining_contribution <span class="op">=</span> <span class="dv">100</span> <span class="op">-</span> total_contribution</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Append "Other Vendors" category</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>vendors.append(<span class="st">"Other Vendors"</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>purchase_contributions.append(remaining_contribution)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Donut Chart ---</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">7</span>))  <span class="co"># a bit wider for legend</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _autopct_with_contrast(pct, all_vals):</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Determine index of this wedge</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="bu">sum</span>(all_vals)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> pct <span class="op">*</span> total <span class="op">/</span> <span class="dv">100</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>pct<span class="sc">:.1f}</span><span class="ss">%"</span> <span class="cf">if</span> pct <span class="op">&gt;=</span> <span class="dv">3</span> <span class="cf">else</span> <span class="st">""</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_contrast_color(hex_color):</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    r, g, b <span class="op">=</span> mcolors.to_rgb(hex_color)</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>    brightness <span class="op">=</span> (r<span class="op">*</span><span class="fl">0.299</span> <span class="op">+</span> g<span class="op">*</span><span class="fl">0.587</span> <span class="op">+</span> b<span class="op">*</span><span class="fl">0.114</span>)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"#FFFFFF"</span> <span class="cf">if</span> brightness <span class="op">&lt;</span> <span class="fl">0.55</span> <span class="cf">else</span> <span class="st">"#000000"</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Show % labels only for slices above a threshold</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _autopct(pct):</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>pct<span class="sc">:.1f}</span><span class="ss">%"</span> <span class="cf">if</span> pct <span class="op">&gt;=</span> <span class="dv">3</span> <span class="cf">else</span> <span class="st">""</span></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [<span class="st">"#003366"</span>, <span class="st">"#005b96"</span>, <span class="st">"#6497b1"</span>, <span class="st">"#b3cde0"</span>, <span class="st">"#f0f0f0"</span>,</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>          <span class="st">"#ffcc00"</span>, <span class="st">"#ff9966"</span>, <span class="st">"#cc6666"</span>, <span class="st">"#9999cc"</span>, <span class="st">"#66cccc"</span>, <span class="st">"#e0e0e0"</span>]</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Use wedgeprops to make a donut directly (no separate white circle)</span></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>wedges, texts, autotexts <span class="op">=</span> ax.pie(</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>    purchase_contributions,</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span><span class="va">None</span>,                        <span class="co"># move labels to legend (less clutter)</span></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>    autopct<span class="op">=</span><span class="kw">lambda</span> pct: _autopct_with_contrast(pct, purchase_contributions),</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>    startangle<span class="op">=</span><span class="dv">90</span>,                      <span class="co"># standard for pies, reads better</span></span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>    pctdistance<span class="op">=</span><span class="fl">0.75</span>,                   <span class="co"># bring % inwards a touch</span></span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>    wedgeprops<span class="op">=</span>{<span class="st">"width"</span>: <span class="fl">0.35</span>, <span class="st">"edgecolor"</span>: <span class="st">"white"</span>},  <span class="co"># crisp separation</span></span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>    textprops<span class="op">=</span>{<span class="st">"fontsize"</span>: <span class="dv">10</span>},</span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>    colors<span class="op">=</span> colors</span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, autotext <span class="kw">in</span> <span class="bu">enumerate</span>(autotexts):</span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>    autotext.set_color(get_contrast_color(colors[i]))</span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>    autotext.set_fontsize(<span class="dv">10</span>)</span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>    autotext.set_fontweight(<span class="st">"bold"</span>)</span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure circle aspect</span></span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">"equal"</span>)</span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Center text (total)</span></span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>ax.text(</span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"Top 10 Total:</span><span class="ch">\n</span><span class="sc">{</span>total_contribution<span class="sc">:.2f}</span><span class="ss">%"</span>,</span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a>    ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>,</span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>    fontsize<span class="op">=</span><span class="dv">15</span>, fontweight<span class="op">=</span><span class="st">"bold"</span></span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a clean legend on the right with vendor name + % value</span></span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a><span class="co"># (Keeps plot uncluttered and ensures long names don't overlap)</span></span>
+<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a>legend_labels <span class="op">=</span> [<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss"> — </span><span class="sc">{</span>pc<span class="sc">:.1f}</span><span class="ss">%"</span> <span class="cf">for</span> v, pc <span class="kw">in</span> <span class="bu">zip</span>(vendors, purchase_contributions)]</span>
+<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a>ax.legend(</span>
+<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a>    wedges,</span>
+<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a>    legend_labels,</span>
+<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Vendors"</span>,</span>
+<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a>    loc<span class="op">=</span><span class="st">"center left"</span>,</span>
+<span id="cb23-72"><a href="#cb23-72" aria-hidden="true" tabindex="-1"></a>    bbox_to_anchor<span class="op">=</span>(<span class="fl">1.02</span>, <span class="fl">0.5</span>),</span>
+<span id="cb23-73"><a href="#cb23-73" aria-hidden="true" tabindex="-1"></a>    frameon<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb23-74"><a href="#cb23-74" aria-hidden="true" tabindex="-1"></a>    fontsize<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb23-75"><a href="#cb23-75" aria-hidden="true" tabindex="-1"></a>    title_fontsize<span class="op">=</span><span class="dv">11</span></span>
+<span id="cb23-76"><a href="#cb23-76" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-77"><a href="#cb23-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-78"><a href="#cb23-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Title + subtle subtitle</span></span>
+<span id="cb23-79"><a href="#cb23-79" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Top 10 Vendors' Purchase Contribution (%)"</span>, pad<span class="op">=</span><span class="dv">16</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb23-80"><a href="#cb23-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-81"><a href="#cb23-81" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb23-82"><a href="#cb23-82" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-20-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="index_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Donut chart showing top 10 vendors’ purchase contribution and remaining share.)</em></p>
+<hr>
+<section id="key-insights-1" class="level5">
+<h5 class="anchored" data-anchor-id="key-insights-1">Key Insights</h5>
+<ul>
+<li><strong>DIAGEO NORTH AMERICA INC</strong> alone contributes over <strong>16%</strong> of all purchases — effectively setting the pace for the rest of the supplier network.</li>
+<li>Combined, the top ten vendors manage <strong>two-thirds of total procurement</strong>, illustrating both <strong>strong leverage</strong> and <strong>potential dependency</strong>.</li>
+<li>The chart makes the imbalance visible: the top few vendors dominate the spend, while the remaining 34% is scattered across dozens of smaller suppliers.</li>
+<li>This kind of structure works well for bulk discounts but leaves the business exposed to <strong>supply disruption or pricing shifts</strong> from a handful of partners.</li>
+</ul>
+<p>A balanced strategy would involve:</p>
+<ul>
+<li><strong>Negotiating multi-year terms</strong> or rebates with the top vendors to secure volume advantages.</li>
+<li><strong>Introducing secondary suppliers</strong> for high-value categories to reduce dependency.</li>
+<li><strong>Monitoring vendor performance</strong> regularly to ensure reliability and continuity.</li>
+</ul>
+<p>In short, procurement efficiency is high — but resilience will depend on how well vendor concentration is managed moving forward.</p>
+</section>
+<section id="question-does-purchasing-in-bulk-reduce-the-unit-price" class="level3">
+<h3 class="anchored" data-anchor-id="question-does-purchasing-in-bulk-reduce-the-unit-price">Question — Does Purchasing in Bulk Reduce the Unit Price?</h3>
+<p>I wanted to see if buying more actually paid off — whether bigger orders came with better pricing. To test that, I grouped all purchases into three quantile-based categories: <strong>Small</strong>, <strong>Medium</strong>, and <strong>Large</strong>. Each represents a third of all transactions by volume.</p>
+<div id="245f60d5" class="cell" data-execution_count="20">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'unit_purchase_price'</span>]<span class="op">=</span>df[<span class="st">'total_purchase_dollars'</span>]<span class="op">/</span>df[<span class="st">'total_purchase_quantity'</span>]</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#creating 3 equal quantile buckets.</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'order_size'</span>]<span class="op">=</span> pd.qcut(df[<span class="st">'total_purchase_quantity'</span>], q<span class="op">=</span><span class="dv">3</span>, labels<span class="op">=</span>[<span class="st">"Small"</span>, <span class="st">"Medium"</span>, <span class="st">"Large"</span>])</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">'order_size'</span>, <span class="st">'total_purchase_quantity'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="72">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">order_size</th>
+<th data-quarto-table-cell-role="th">total_purchase_quantity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Large</td>
+<td>145080.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Large</td>
+<td>164038.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Large</td>
+<td>187407.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Large</td>
+<td>201682.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Large</td>
+<td>138109.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8559</td>
+<td>Small</td>
+<td>2.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8560</td>
+<td>Small</td>
+<td>6.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8561</td>
+<td>Small</td>
+<td>2.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8562</td>
+<td>Small</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8563</td>
+<td>Small</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>8564 rows × 2 columns</p>
+</div>
+</div>
+</div>
+<p><em>(Table: Distribution of total purchase quantities categorized by order size.)</em></p>
+<div id="9329ca15" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'order_size'</span>)[[<span class="st">'unit_purchase_price'</span>]].mean()</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>sns.boxplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"order_size"</span>, y<span class="op">=</span><span class="st">"unit_purchase_price"</span>, palette<span class="op">=</span><span class="st">"Set2"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Impact of Bulk Purchasing on Unit Price"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Order size"</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"average unit purchase price"</span>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-22-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="index_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Box plot showing the relationship between order size and average unit purchase price.)</em></p>
+<p>When I plotted the average unit purchase price across these groups, the result was obvious — the bigger the order, the cheaper each unit got.</p>
+<section id="findings-1" class="level5">
+<h5 class="anchored" data-anchor-id="findings-1">Findings</h5>
+<ul>
+<li><strong>Large orders</strong> had the <strong>lowest average unit price (~$10.78)</strong> — a clear sign of <strong>economies of scale</strong> in action.</li>
+<li>The <strong>gap between small and large orders</strong> was striking: roughly a <strong>72% reduction</strong> in unit cost.</li>
+<li>Vendors are clearly <strong>pricing for volume</strong>, rewarding bigger orders even if it means slimmer per-unit margins.</li>
+</ul>
+</section>
+<section id="business-takeaway-1" class="level5">
+<h5 class="anchored" data-anchor-id="business-takeaway-1">Business Takeaway</h5>
+<p>Buying in bulk works — it cuts costs and strengthens vendor relationships. But it’s not a free win. I’d only push bulk purchases where <strong>inventory turnover is high</strong> or <strong>storage costs are low</strong>. Otherwise, the savings sit in a warehouse instead of showing up on the balance sheet.</p>
+</section>
+</section>
+</section>
+<section id="analysis-5-inventory-turnover-capital-locked-in-unsold-stock" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-5-inventory-turnover-capital-locked-in-unsold-stock">Analysis 5 — Inventory Turnover &amp; Capital Locked in Unsold Stock</h2>
+<p>I wanted to see how much money is sitting still — products that aren’t moving, and vendors that might be overstocked. So, I looked at <strong>stock turnover</strong> and calculated the <strong>capital tied up in unsold inventory</strong>.</p>
+<div id="4531af97" class="cell" data-execution_count="22">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df[df[<span class="st">'stock_turnover'</span>]<span class="op">&lt;</span><span class="dv">1</span>].groupby(<span class="st">'vendor_name'</span>)[[<span class="st">'stock_turnover'</span>]].mean().sort_values(<span class="st">'stock_turnover'</span>, ascending<span class="op">=</span><span class="va">True</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="74">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">stock_turnover</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">vendor_name</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">ALISA CARR BEVERAGES</td>
+<td>0.615385</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">HIGHLAND WINE MERCHANTS LLC</td>
+<td>0.708333</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">PARK STREET IMPORTS LLC</td>
+<td>0.751306</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Circa Wines</td>
+<td>0.755676</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Dunn Wine Brokers</td>
+<td>0.766022</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">CENTEUR IMPORTS LLC</td>
+<td>0.773953</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">SMOKY QUARTZ DISTILLERY LLC</td>
+<td>0.783835</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">TAMWORTH DISTILLING</td>
+<td>0.797078</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">THE IMPORTED GRAPE LLC</td>
+<td>0.807569</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">WALPOLE MTN VIEW WINERY</td>
+<td>0.820548</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><em>(Table: Vendors with average stock_turnover &lt; 1, sorted ascending.)</em></p>
+<hr>
+<section id="low-inventory-turnover" class="level4">
+<h4 class="anchored" data-anchor-id="low-inventory-turnover">Low Inventory Turnover</h4>
+<p>Some vendors barely turn their inventory once a year — a red flag for over-purchasing or weak demand.</p>
+<p><strong>Lowest turnover vendors:</strong></p>
+<ul>
+<li>ALISA CARR BEVERAGES — 0.62</li>
+<li>HIGHLAND WINE MERCHANTS LLC — 0.71</li>
+<li>PARK STREET IMPORTS LLC — 0.75</li>
+<li>DUNN WINE BROKERS — 0.77</li>
+<li>TAMWORTH DISTILLING — 0.80</li>
+</ul>
+<p>A turnover below one basically means I’m holding stock longer than I should — it ties up cash, adds storage costs, and eats into liquidity.</p>
+<div id="960671c6" class="cell" data-execution_count="23">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'unsold_inventory_value'</span>]<span class="op">=</span>(df[<span class="st">'total_purchase_quantity'</span>]<span class="op">-</span>df[<span class="st">'total_sales_quantity'</span>])<span class="op">*</span> df[<span class="st">'purchase_price'</span>]</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'total_unsold_capital:'</span>, format_dollars(df[<span class="st">'unsold_inventory_value'</span>].<span class="bu">sum</span>()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>total_unsold_capital: 2.71M</code></pre>
+</div>
+</div>
+<section id="capital-locked-in-unsold-inventory" class="level5">
+<h5 class="anchored" data-anchor-id="capital-locked-in-unsold-inventory"><strong>Capital Locked in Unsold Inventory</strong></h5>
+<blockquote class="blockquote">
+<p>When I ran the numbers, about <strong>$2.71M</strong> worth of capital was sitting in products that hadn’t sold yet. That’s a lot of cash waiting for customers.</p>
+</blockquote>
+<div id="b6c21dc2" class="cell" data-execution_count="24">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate Capital Locked per Vendor</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>inventory_value_per_vendor <span class="op">=</span> df.groupby(<span class="st">"vendor_name"</span>)[<span class="st">"unsold_inventory_value"</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort Vendors with the Highest Locked Capital</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>inventory_value_per_vendor <span class="op">=</span> inventory_value_per_vendor.sort_values(by<span class="op">=</span><span class="st">"unsold_inventory_value"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>inventory_value_per_vendor[<span class="st">'unsold_inventory_value'</span>] <span class="op">=</span> inventory_value_per_vendor[<span class="st">'unsold_inventory_value'</span>].<span class="bu">apply</span>(format_dollars)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>inventory_value_per_vendor.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="76">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">vendor_name</th>
+<th data-quarto-table-cell-role="th">unsold_inventory_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25</td>
+<td>DIAGEO NORTH AMERICA INC</td>
+<td>722.21k</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">46</td>
+<td>JIM BEAM BRANDS COMPANY</td>
+<td>554.67k</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">68</td>
+<td>PERNOD RICARD USA</td>
+<td>470.63k</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">116</td>
+<td>WILLIAM GRANT &amp; SONS INC</td>
+<td>401.96k</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">30</td>
+<td>E &amp; J GALLO WINERY</td>
+<td>228.28k</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">79</td>
+<td>SAZERAC CO INC</td>
+<td>198.44k</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11</td>
+<td>BROWN-FORMAN CORP</td>
+<td>177.73k</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">20</td>
+<td>CONSTELLATION BRANDS INC</td>
+<td>133.62k</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">61</td>
+<td>MOET HENNESSY USA INC</td>
+<td>126.48k</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">77</td>
+<td>REMY COINTREAU USA INC</td>
+<td>118.60k</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><em>(Figure: Vendors ranked by unsold_inventory_value (USD).)</em></p>
+<p><strong>Top vendors by unsold capital:</strong></p>
+<ul>
+<li>DIAGEO NORTH AMERICA INC — $722K</li>
+<li>JIM BEAM BRANDS COMPANY — $555K</li>
+<li>PERNOD RICARD USA — $471K</li>
+<li>WILLIAM GRANT &amp; SONS INC — $402K</li>
+<li>E &amp; J GALLO WINERY — $228K</li>
+</ul>
+</section>
+<section id="what-this-means" class="level5">
+<h5 class="anchored" data-anchor-id="what-this-means">What This Means</h5>
+<p>Most of this stuck capital comes from <strong>big, otherwise high-performing vendors</strong>, which suggests the problem isn’t vendor quality — it’s inventory balance. Some SKUs are moving fast while others just sit there.</p>
+<p>If I were to act on this, I’d:</p>
+<ul>
+<li><strong>Clear out slow movers</strong> through short-term discounts, bundles, or limited promotions.</li>
+<li><strong>Adjust ordering rules</strong> so purchases actually match product velocity.</li>
+<li><strong>Tighten demand forecasts</strong> and review vendor lead times before reordering.</li>
+</ul>
+</section>
+<section id="takeaway-1" class="level5">
+<h5 class="anchored" data-anchor-id="takeaway-1">Takeaway</h5>
+<p>Roughly <strong>$2.71M</strong> in working capital is locked in shelves instead of generating returns. Freeing it up through smarter stock rotation and demand-based purchasing could have an immediate impact on cash flow and profitability.</p>
+</section>
+</section>
+</section>
+<section id="analysis-6-profit-margin-confidence-intervals-top-vs.-low-vendors" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-6-profit-margin-confidence-intervals-top-vs.-low-vendors">Analysis 6 — Profit Margin Confidence Intervals: Top vs.&nbsp;Low Vendors</h2>
+<p>I wanted to see whether the most successful vendors actually make more money per sale — or if, like most high-volume businesses, they trade margin for scale. To check, I split vendors into two groups: <strong>top performers</strong> (top 25% by sales) and <strong>low performers</strong> (bottom 25%). Then I calculated their mean profit margins and 95% confidence intervals.</p>
+<div id="d9629a3e" class="cell" data-execution_count="25">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>top_threshold<span class="op">=</span> df[<span class="st">'total_sales_dollars'</span>].quantile(<span class="fl">0.75</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>low_threshold<span class="op">=</span> df[<span class="st">'total_sales_dollars'</span>].quantile(<span class="fl">0.25</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>top_vendors <span class="op">=</span> df[df[<span class="st">"total_sales_dollars"</span>] <span class="op">&gt;=</span> top_threshold][<span class="st">"profit_margin"</span>].dropna()</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>low_vendors <span class="op">=</span> df[df[<span class="st">"total_sales_dollars"</span>] <span class="op">&lt;=</span> low_threshold][<span class="st">"profit_margin"</span>].dropna()</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># to calculate the confidence interval</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> confidence_interval(data, confidence<span class="op">=</span><span class="fl">0.95</span>):</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    mean_val<span class="op">=</span>np.mean(data)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    std_err<span class="op">=</span>np.std(data,ddof<span class="op">=</span><span class="dv">1</span>)<span class="op">/</span>np.sqrt(<span class="bu">len</span>(data)) <span class="co">#standard error</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    t_critical<span class="op">=</span>stats.t.ppf((<span class="dv">1</span><span class="op">+</span>confidence)<span class="op">/</span><span class="dv">2</span>, df<span class="op">=</span><span class="bu">len</span>(data)<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    margin_of_error<span class="op">=</span> t_critical <span class="op">*</span>std_err</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mean_val, mean_val<span class="op">-</span>margin_of_error, mean_val<span class="op">+</span>margin_of_error</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute confidence intervals for top and low vendors</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>top_mean, top_lower, top_upper <span class="op">=</span> confidence_interval(top_vendors)</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>low_mean, low_lower, low_upper <span class="op">=</span> confidence_interval(low_vendors)</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Top Vendors 95% CI: (</span><span class="sc">{</span>top_lower<span class="sc">:.2f}</span><span class="ss">, </span><span class="sc">{</span>top_upper<span class="sc">:.2f}</span><span class="ss">), Mean: </span><span class="sc">{</span>top_mean<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Low Vendors 95% CI: (</span><span class="sc">{</span>low_lower<span class="sc">:.2f}</span><span class="ss">, </span><span class="sc">{</span>low_upper<span class="sc">:.2f}</span><span class="ss">), Mean: </span><span class="sc">{</span>low_mean<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot comparison</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Top Vendors Plot ---</span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>sns.histplot(top_vendors, kde<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">"blue"</span>, bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Top Vendors"</span>)</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>plt.axvline(top_lower, color<span class="op">=</span><span class="st">"blue"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="ss">f"Top Lower: </span><span class="sc">{</span>top_lower<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>plt.axvline(top_upper, color<span class="op">=</span><span class="st">"blue"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="ss">f"Top Upper: </span><span class="sc">{</span>top_upper<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>plt.axvline(top_mean, color<span class="op">=</span><span class="st">"blue"</span>, linestyle<span class="op">=</span><span class="st">"-"</span>, label<span class="op">=</span><span class="ss">f"Top Mean: </span><span class="sc">{</span>top_mean<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Low Vendors Plot ---</span></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>sns.histplot(low_vendors, kde<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">"red"</span>, bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Low Vendors"</span>)</span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>plt.axvline(low_lower, color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="ss">f"Low Lower: </span><span class="sc">{</span>low_lower<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>plt.axvline(low_upper, color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="ss">f"Low Upper: </span><span class="sc">{</span>low_upper<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a>plt.axvline(low_mean, color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">"-"</span>, label<span class="op">=</span><span class="ss">f"Low Mean: </span><span class="sc">{</span>low_mean<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Finalize Plot ---</span></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Confidence Interval Comparison: Top vs. Low Vendors (Profit Margin)"</span>)</span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Profit Margin (%)"</span>)</span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Frequency"</span>)</span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top Vendors 95% CI: (30.74, 31.61), Mean: 31.18
+Low Vendors 95% CI: (40.50, 42.64), Mean: 41.57</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/cell-26-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="index_files/figure-html/cell-26-output-2.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>(Figure: Histogram overlay comparing profit margin distributions for top and low vendors.)</em></p>
+<section id="what-the-numbers-say" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-numbers-say">What the Numbers Say</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Vendor Group</th>
+<th>Mean Profit Margin (%)</th>
+<th>95% Confidence Interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Top Vendors</td>
+<td>31.18</td>
+<td>(30.74, 31.61)</td>
+</tr>
+<tr class="even">
+<td>Low Vendors</td>
+<td>41.57</td>
+<td>(40.50, 42.64)</td>
+</tr>
+</tbody>
+</table>
+<p>The two intervals don’t overlap, which means the difference is <strong>statistically real</strong>, not noise.</p>
+<p><em>(Figure: Profit margin distributions with confidence intervals for top vs.&nbsp;low vendors.)</em></p>
+<section id="what-it-means" class="level5">
+<h5 class="anchored" data-anchor-id="what-it-means">What It Means</h5>
+<ul>
+<li><strong>Low-performing vendors</strong> have <strong>higher margins (~41.6%)</strong>, probably because they sell smaller, niche, or premium lines.</li>
+<li><strong>Top vendors</strong>, who drive most of the sales volume, run at <strong>lower margins (~31.2%)</strong> — classic bulk-market behavior. They win on scale, not per-unit profit.</li>
+<li>The <strong>shape of the distributions</strong> tells the same story: both are right-skewed, but low vendors have a wider spread, reflecting mixed strategies — some high-end, some struggling.</li>
+</ul>
+</section>
+<section id="my-takeaway" class="level5">
+<h5 class="anchored" data-anchor-id="my-takeaway">My Takeaway</h5>
+<p>It’s the classic trade-off: <strong>volume vs.&nbsp;margin</strong>. The top vendors dominate revenue but give up margin to stay competitive. Smaller vendors sell less but make more per sale.</p>
+<p>If I were optimizing this portfolio, I’d do two things:</p>
+<ul>
+<li>Help <strong>top vendors</strong> recover margin through smarter pricing, cost controls, or tiered bundles.</li>
+<li>Help <strong>low vendors</strong> scale up by improving distribution or exposure — they’ve already got strong unit profitability.</li>
+</ul>
+<p>The balance between the two is where sustainable growth lives.</p>
+<p>Got it — here’s the rewritten section in your proper tone: first-person, clean, analytical, and grounded with personality but zero fluff.</p>
+</section>
+</section>
+</section>
+<section id="analysis-7-hypothesis-testing-profit-margin-differences-between-vendor-groups" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-7-hypothesis-testing-profit-margin-differences-between-vendor-groups">Analysis 7 — Hypothesis Testing: Profit Margin Differences Between Vendor Groups</h2>
+<p>I wanted to confirm whether the profit gap I observed between <strong>top vendors</strong> and <strong>low vendors</strong> was just noise — or if it actually held up statistically.</p>
+<section id="hypotheses" class="level5">
+<h5 class="anchored" data-anchor-id="hypotheses">Hypotheses</h5>
+<ul>
+<li><strong>H₀:</strong> No significant difference exists in average profit margins between top- and low-performing vendors.</li>
+<li><strong>H₁:</strong> There is a significant difference in mean profit margins between the two groups.</li>
+</ul>
+</section>
+<section id="method" class="level5">
+<h5 class="anchored" data-anchor-id="method">Method</h5>
+<p>I ran a <strong>two-sample t-test</strong> assuming unequal variances.</p>
+<ul>
+<li><strong>Top vendors:</strong> sales above the 75th percentile</li>
+<li><strong>Low vendors:</strong> sales below the 25th percentile</li>
+</ul>
+<p>This test checks whether their mean profit margins come from the same population.</p>
+<div id="dd824275" class="cell" data-execution_count="26">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ttest_ind</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define thresholds for top and low vendors (based on quartiles)</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>top_threshold <span class="op">=</span> df[<span class="st">"total_sales_dollars"</span>].quantile(<span class="fl">0.75</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>low_threshold <span class="op">=</span> df[<span class="st">"total_sales_dollars"</span>].quantile(<span class="fl">0.25</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Split vendors into top and low based on sales</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>top_vendors <span class="op">=</span> df[df[<span class="st">"total_sales_dollars"</span>] <span class="op">&gt;=</span> top_threshold][<span class="st">"profit_margin"</span>].dropna()</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>low_vendors <span class="op">=</span> df[df[<span class="st">"total_sales_dollars"</span>] <span class="op">&lt;=</span> low_threshold][<span class="st">"profit_margin"</span>].dropna()</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform Two-Sample T-Test</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>t_stat, p_value <span class="op">=</span> ttest_ind(top_vendors, low_vendors, equal_var<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"T-Statistic: </span><span class="sc">{</span>t_stat<span class="sc">:.4f}</span><span class="ss">, P-Value: </span><span class="sc">{</span>p_value<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> p_value <span class="op">&lt;</span> <span class="fl">0.05</span>:</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Reject H₀: There is a significant difference in profit margins between top and low-performing vendors."</span>)</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Fail to Reject H₀: No significant difference in profit margins."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>T-Statistic: -17.6695, P-Value: 0.0000
+Reject H₀: There is a significant difference in profit margins between top and low-performing vendors.</code></pre>
+</div>
+</div>
+</section>
+<section id="results" class="level5">
+<h5 class="anchored" data-anchor-id="results">Results</h5>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>T-Statistic</strong></td>
+<td style="text-align: left;">-17.67</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>P-Value</strong></td>
+<td style="text-align: left;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Decision</strong></td>
+<td style="text-align: left;">Reject H₀</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Figure: Output of two-sample t-test comparing profit margins between top and low vendors.)</em></p>
+<hr>
+<p>The p-value rounds to zero — meaning the difference isn’t by chance. <strong>Low-performing vendors</strong> genuinely earn higher margins than the top ones.</p>
+</section>
+<section id="what-this-means-1" class="level5">
+<h5 class="anchored" data-anchor-id="what-this-means-1">What This Means</h5>
+<p>High-performing vendors run a <strong>volume game</strong> — low margins, big throughput, and tight pricing. Low-performing vendors sit on the other side — <strong>fewer sales but stronger markups</strong>, likely in premium or niche categories.</p>
+<p>This confirms two distinct business models:</p>
+<ol type="1">
+<li><strong>Top vendors:</strong> Win on efficiency and scale.</li>
+<li><strong>Low vendors:</strong> Win on exclusivity and price control.</li>
+</ol>
+</section>
+<section id="takeaway-2" class="level5">
+<h5 class="anchored" data-anchor-id="takeaway-2">Takeaway</h5>
+<p>The profit gap isn’t just visible — it’s statistically significant. The data backs a <strong>dual vendor strategy</strong>:</p>
+<ul>
+<li>Push cost optimization and scale for top performers.</li>
+<li>Expand reach for high-margin, low-volume vendors to capture untapped growth.</li>
+</ul>
+</section>
+</section>
+<section id="final-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="final-thoughts">Final Thoughts</h2>
+<blockquote class="blockquote">
+<p>If you’ve made it all the way down here, I already know two things about you: you love data, and you’ve got the patience of a true analyst.</p>
+</blockquote>
+<p>Thanks for scrolling through this deep dive — if you enjoy turning messy datasets into sharp stories and actionable insights, we’ll probably get along just fine.</p>
+<p>Let’s connect and build something insightful together.</p>
+<p><strong>PS:</strong> If you liked this breakdown, you’ll probably enjoy my deep-dive on a startup I built and ran — where I turned messy operations data into something that actually worked (and occasionally didn’t). <a href="traway.live">Read the Startup Case Study →</a></p>
+</section>
+<section id="author" class="level2">
+<h2 class="anchored" data-anchor-id="author">👋 Author</h2>
+<p><strong>Yash Tiwari</strong> <br> <em>Data | Product | Strategy | Design</em> <br> 📊 Data Analyst &amp; Business Analyst — 🏗️ builder @ ❤️ <br><br> 📧 <a href="mailto:yashtiwari.ty@gmail.com">yashtiwari.ty@gmail.com</a> <br> 🌐 <a href="https://www.linkedin.com/in/yash-tiwari-here/">LinkedIn</a> • <a href="https://leaf-allspice-531.notion.site/Hey-there-I-am-Yash-28a9c4819e1680a48f15c39ad54bd9d6?source=copy_link">Portfolio</a> • <a href="https://github.com/rsm-ytiwari">Github</a></p>
+<hr>
+<blockquote class="blockquote">
+<p><em>I build data stories that drive product, strategy, and design decisions.</em> <em>Passionate about blending analytical rigor with creative problem-solving.</em></p>
+</blockquote>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

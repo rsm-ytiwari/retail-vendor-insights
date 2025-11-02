@@ -1,0 +1,42 @@
+<!-- Clones the existing TOC into a <details> dropdown below the H1 when the floating TOC is hidden -->
+<script>
+(function () {
+  function makeMobileToc() {
+    // Don't duplicate
+    if (document.querySelector('.toc-mobile')) return;
+
+    const toc = document.querySelector('#TOC, nav.toc, .sidebar.sidebar-toc nav.toc');
+    if (!toc) return;
+
+    // Build dropdown
+    const details = document.createElement('details');
+    details.className = 'toc-mobile';
+    details.setAttribute('role', 'navigation');
+    details.open = false;
+
+    const summary = document.createElement('summary');
+    summary.textContent = 'On this page';
+    details.appendChild(summary);
+
+    const body = document.createElement('div');
+    body.className = 'toc-mobile-body';
+    body.innerHTML = toc.innerHTML; // clone items
+    details.appendChild(body);
+
+    // Insert after the first H1 (or at top of main)
+    const main = document.querySelector('main.content') || document.body;
+    const h1 = main.querySelector('h1');
+    if (h1 && h1.parentNode) {
+      h1.parentNode.insertBefore(details, h1.nextSibling);
+    } else {
+      main.insertBefore(details, main.firstChild);
+    }
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    makeMobileToc();
+  } else {
+    document.addEventListener('DOMContentLoaded', makeMobileToc);
+  }
+})();
+</script>

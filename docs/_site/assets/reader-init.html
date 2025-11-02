@@ -1,0 +1,57 @@
+<script>
+  // Instant reader mode initialization - runs immediately, no waiting for DOM
+  (function() {
+    // Set reader mode immediately in localStorage
+    if (window.location.protocol !== "file:" && !window.localStorage.getItem("quarto-reader-mode")) {
+      window.localStorage.setItem("quarto-reader-mode", "true");
+    }
+
+    let localReaderMode = null;
+
+    // Global helper functions
+    const isReaderMode = () => {
+      if (window.location.protocol !== "file:") {
+        return window.localStorage.getItem("quarto-reader-mode") === "true";
+      }
+      return localReaderMode;
+    };
+
+    const setReaderModeValue = (val) => {
+      if (window.location.protocol !== "file:") {
+        window.localStorage.setItem("quarto-reader-mode", val);
+      } else {
+        localReaderMode = val;
+      }
+    };
+
+    const highlightReaderToggle = (readerMode) => {
+      const els = document.querySelectorAll(".quarto-reader-toggle");
+      if (els) {
+        els.forEach((el) => {
+          if (readerMode) {
+            el.classList.add("reader");
+          } else {
+            el.classList.remove("reader");
+          }
+        });
+      }
+    };
+
+    // Toggle function - executed instantly when available
+    window.quartoToggleReader = () => {
+      const readerMode = !isReaderMode();
+      setReaderModeValue(readerMode);
+      
+      // Fast toggle without slow transitions
+      highlightReaderToggle(readerMode);
+      
+      if (typeof hideOverlappedSidebars === 'function') {
+        hideOverlappedSidebars();
+      }
+    };
+
+    // Make functions globally available
+    window.isReaderMode = isReaderMode;
+    window.setReaderModeValue = setReaderModeValue;
+  })();
+</script>
